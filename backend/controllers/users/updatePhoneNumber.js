@@ -16,7 +16,7 @@ exports.updatePhoneNumber = async (req, res) => {
       request: "unsuccessful",
       error: {
         code: errorCodes.INCORRECT_FORMAT,
-        name: "format error",
+        name: "formatError",
         message: "phone number is invalid.",
         logs: "",
       },

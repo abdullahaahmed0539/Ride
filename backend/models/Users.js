@@ -38,7 +38,7 @@ const userSchema = new mongoose.Schema({
     type: Boolean,
     required: [true, "isDriver is required."],
   },
-  rating: [{ type: Number, required: [true, "rating is required."] }],
+  ratings: { type: [Number], required: [true, "rating is required."] },
   creditCard: {
     type: String,
     trim: true,

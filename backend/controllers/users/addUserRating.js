@@ -1,23 +1,21 @@
 const User = require("../../models/Users");
-const { validateEmail } = require("../../helper/validators");
 
 const errorCodes = {
   NOT_FOUND: "USR_NOT_FOUND",
   SERVER_ERROR: "INTERNAL_SERVER_ERROR",
-  INCORRECT_FORMAT: "INCORRECT-FORMAT",
+  VALUE_NOT_ACCEPTABLE: "VALUE_NOT_ACCEPTABLE",
 };
 
-exports.updateEmail = async (req, res) => {
+exports.addUserRating = async (req, res) => {
   const phoneNumber = req.params.phoneNumber;
-  const email = req.body.email;
-
-  if (!validateEmail(email)) {
+  const newRatingVal = req.body.rating;
+  if (newRatingVal < 0 || newRatingVal > 5) {
     res.status(406).json({
       request: "unsuccessful",
       error: {
-        code: errorCodes.INCORRECT_FORMAT,
-        name: "formatError",
-        message: "email is invalid.",
+        code: errorCodes.VALUE_NOT_ACCEPTABLE,
+        name: "unacceptableValue",
+        message: "Rating not in range 0 to 5.",
         logs: "",
       },
       data: {},
@@ -25,25 +23,9 @@ exports.updateEmail = async (req, res) => {
     return;
   }
 
-  const updatedVals = { email };
-
   try {
-    const updatedUser = await User.updateOne({ phoneNumber }, updatedVals);
-    if (updatedUser.modifiedCount > 0) {
-      res.status(201).json({
-        request: "successful",
-        error: {},
-        data: {
-          phoneNumber,
-          updated_email: email,
-        },
-      });
-    } else if (
-      updatedUser.modifiedCount === 0 &&
-      updatedUser.matchedCount > 0
-    ) {
-      res.status(204).json({});
-    } else {
+    const userDetails = await User.findOne({ phoneNumber }).select("ratings");
+    if (!userDetails) {
       res.status(404).json({
         request: "unsuccessful",
         error: {
@@ -54,7 +36,19 @@ exports.updateEmail = async (req, res) => {
         },
         data: {},
       });
+      return;
     }
+    const userRating = userDetails.ratings;
+    userRating.push(newRatingVal);
+    await User.updateOne({ phoneNumber }, { ratings: userRating });
+    res.status(201).json({
+      request: "successful",
+      error: {},
+      data: {
+        phoneNumber,
+        rating: userRating,
+      },
+    });
   } catch (err) {
     res.status(500).json({
       request: "unsuccessful",

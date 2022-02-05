@@ -30,7 +30,7 @@ exports.register = (req, res) => {
       request: "unsuccessful",
       error: {
         code: errorCodes.INCORRECT_FORMAT,
-        name: "format error",
+        name: "formatError",
         message: "Either phone number or email is invalid",
         logs: "",
       },
