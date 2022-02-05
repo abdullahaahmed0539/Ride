@@ -11,11 +11,9 @@ NEED TO IMPLEMENT
 
 */
 
-const mongoose = require("mongoose");
 const User = require("../../models/Users");
 const { AES_encrypt } = require("../../helper/encryption");
 const { validateUserInfo } = require("../../helper/validators");
-const { default: phone } = require("phone");
 
 const errorCodes = {
   DATABASE_NOT_CONNECTED: "db-not-conn",
@@ -35,6 +33,7 @@ exports.register = (req, res) => {
     encryptedWalletAddress = AES_encrypt(walletAddress);
   } else {
     res.status(406).json({
+      request: "unsuccessful",
       error: {
         code: errorCodes.INCORRECT_FORMAT,
         name: "format error",
@@ -54,22 +53,22 @@ exports.register = (req, res) => {
     email,
     walletAddress: encryptedWalletAddress,
     isDriver: false,
-    rating: 0,
+    rating: [],
   });
 
   newUser
     .save()
     .then(user => {
       res.status(201).json({
+        request: "successful",
         error: {},
-        data: {
-          user,
-        },
+        data: {},
       });
     })
     .catch(err => {
       if (err.name === "MongoServerError" && err.code === 11000) {
         res.status(406).json({
+          request: "unsuccessful",
           error: {
             code: errorCodes.NOT_UNIQUE,
             name: err.name,
@@ -80,6 +79,7 @@ exports.register = (req, res) => {
         });
       } else if (err.name === "ValidationError") {
         res.status(406).json({
+          request: "unsuccessful",
           error: {
             code: errorCodes.MISSING_ATTRIBUTE,
             name: err.name,
@@ -90,6 +90,7 @@ exports.register = (req, res) => {
         });
       } else {
         res.status(500).json({
+          request: "unsuccessful",
           error: {
             code: errorCodes.DATABASE_NOT_CONNECTED,
             name: err.name,
