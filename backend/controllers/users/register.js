@@ -1,10 +1,4 @@
 /*
-DOCUMENTATION
-types of errors:
-* not connected to database = db-001
-* missing attribute = missing-attr
-* incorrect format = bad-format ----> need to implement this
-* not unique = not-unique
 
 NEED TO IMPLEMENT
 *validate wallet address
@@ -16,10 +10,10 @@ const { AES_encrypt } = require("../../helper/encryption");
 const { validateUserInfo } = require("../../helper/validators");
 
 const errorCodes = {
-  DATABASE_NOT_CONNECTED: "db-not-conn",
-  MISSING_ATTRIBUTE: "missing-attr",
-  INCORRECT_FORMAT: "incorrect-format",
-  NOT_UNIQUE: "not-unique",
+  DATABASE_NOT_CONNECTED: "DB-NOT-CONNECTED",
+  MISSING_ATTRIBUTE: "MISSING-ATTR",
+  INCORRECT_FORMAT: "INCORRECT-FORMAT",
+  NOT_UNIQUE: "NOT-UNIQUE",
 };
 
 exports.register = (req, res) => {
