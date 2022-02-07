@@ -1,16 +1,19 @@
 const mongoose = require("mongoose");
 
 const disputeSchema = new mongoose.Schema({
+  initiatorId: {
+    type: String,
+    require: [true, "Initiator id is required."],
+    trim: true,
+  },
   riderId: {
     type: String,
     require: [true, "Rider id is required."],
-    unique: true,
     trim: true,
   },
   driverId: {
     type: String,
     require: [true, "Driver id is required."],
-    unique: true,
     trim: true,
   },
   subject: {
@@ -18,9 +21,12 @@ const disputeSchema = new mongoose.Schema({
     require: [true, "Subject is required."],
     trim: true,
   },
-  description: {
+  ridersClaim: {
     type: String,
-    require: [true, "Description is required."],
+    trim: true,
+  },
+  driversClaim: {
+    type: String,
     trim: true,
   },
   ridersVote: {
@@ -31,7 +37,7 @@ const disputeSchema = new mongoose.Schema({
     type: Number,
     require: [true, "Riders vote is required."],
   },
-  datePublished: {
+  publishedOn: {
     type: Date,
     require: [true, "Publishing date is required."],
     trim: true,
