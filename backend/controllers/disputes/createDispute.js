@@ -6,8 +6,9 @@ const errorCodes = {
 };
 
 exports.createDispute = async (req, res) => {
-  const { initiatorId, riderId, driverId, subject, ridersClaim } = req.body;
-  if (!initiatorId || !riderId || !driverId || !subject) {
+  const { initiatorId, defenderId, subject, shortDescription, ridersClaim } =
+    req.body;
+  if (!initiatorId || !defenderId || !subject || !shortDescription) {
     res.status(406).json({
       request: "unsuccessful",
       error: {
@@ -24,9 +25,9 @@ exports.createDispute = async (req, res) => {
 
   const newDispute = Dispute({
     initiatorId,
-    riderId,
-    driverId,
+    defenderId,
     subject,
+    shortDescription,
     ridersClaim,
     ridersVote: 0,
     driversVote: 0,

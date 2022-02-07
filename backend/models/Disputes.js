@@ -6,19 +6,19 @@ const disputeSchema = new mongoose.Schema({
     require: [true, "Initiator id is required."],
     trim: true,
   },
-  riderId: {
+  defenderId: {
     type: String,
-    require: [true, "Rider id is required."],
-    trim: true,
-  },
-  driverId: {
-    type: String,
-    require: [true, "Driver id is required."],
+    require: [true, "defender id is required."],
     trim: true,
   },
   subject: {
     type: String,
     require: [true, "Subject is required."],
+    trim: true,
+  },
+  shortDescription: {
+    type: String,
+    require: [true, "Short description is required."],
     trim: true,
   },
   ridersClaim: {
