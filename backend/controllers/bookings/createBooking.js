@@ -35,7 +35,19 @@ exports.createBooking = async (req, res) => {
       });
       return;
     }
-  } catch (err) {}
+  } catch (err) {
+    res.status(500).json({
+      request: "unsuccessful",
+      error: {
+        code: errorCodes.SERVER_ERROR,
+        name: err.name,
+        message: err.message,
+        logs: err,
+      },
+      data: {},
+    });
+    return;
+  }
 
   if (!riderId || !pickup || !dropoff) {
     res.status(406).json({

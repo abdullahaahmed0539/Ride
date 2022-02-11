@@ -27,6 +27,14 @@ const driverSchema = new mongoose.Schema({
     type: Number,
     require: [true, "Rating is required."],
   },
+  isActive: {
+    type: Boolean,
+    require: [true, "Is active  is required."],
+  },
+  isBusy: {
+    type: Boolean,
+    require: [true, "Is busy  is required."],
+  },
 });
 
 const Driver = mongoose.model("Driver", driverSchema);
