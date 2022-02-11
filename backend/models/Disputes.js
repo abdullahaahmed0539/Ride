@@ -21,19 +21,19 @@ const disputeSchema = new mongoose.Schema({
     require: [true, "Short description is required."],
     trim: true,
   },
-  ridersClaim: {
+  initiatorsClaim: {
     type: String,
     trim: true,
   },
-  driversClaim: {
+  defendentsClaim: {
     type: String,
     trim: true,
   },
-  ridersVote: {
+  initiatorsVote: {
     type: Number,
     require: [true, "Riders vote is required."],
   },
-  driversVote: {
+  defendentsVote: {
     type: Number,
     require: [true, "Riders vote is required."],
   },

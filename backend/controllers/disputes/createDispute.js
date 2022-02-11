@@ -6,16 +6,27 @@ const errorCodes = {
 };
 
 exports.createDispute = async (req, res) => {
-  const { initiatorId, defenderId, subject, shortDescription, ridersClaim } =
-    req.body;
-  if (!initiatorId || !defenderId || !subject || !shortDescription) {
+  const {
+    initiatorId,
+    defenderId,
+    subject,
+    shortDescription,
+    initiatorsClaim,
+  } = req.body;
+  if (
+    !initiatorId ||
+    !defenderId ||
+    !subject ||
+    !shortDescription ||
+    !initiatorsClaim
+  ) {
     res.status(406).json({
       request: "unsuccessful",
       error: {
         code: errorCodes.MISSING_VAL,
         name: "missingVal",
         message:
-          "Either initiator id, rider's id, driver's id, or subject  is missing.",
+          "Either initiator id, rider's id, driver's id, subject or initiators claim is missing.",
         logs: "",
       },
       data: {},
@@ -28,9 +39,9 @@ exports.createDispute = async (req, res) => {
     defenderId,
     subject,
     shortDescription,
-    ridersClaim,
-    ridersVote: 0,
-    driversVote: 0,
+    initiatorsClaim,
+    initiatorsVote: 0,
+    defendentsVote: 0,
     publishedOn: new Date(),
     status: "pending",
   });
