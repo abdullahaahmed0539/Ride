@@ -9,7 +9,6 @@ const bookingSchema = new mongoose.Schema({
   },
   driverId: {
     type: String,
-    require: [true, "Driver id is required."],
     unique: true,
     trim: true,
   },
@@ -29,12 +28,13 @@ const bookingSchema = new mongoose.Schema({
     trim: true,
   },
   status: {
+    //insearch, ongoing, completed, cancelled
     type: String,
     require: [true, "Status is required."],
     trim: true,
   },
 });
 
-const Booking = mongoose.model("Trip", bookingSchema);
+const Booking = mongoose.model("Bookings", bookingSchema);
 
 module.exports = Booking;
