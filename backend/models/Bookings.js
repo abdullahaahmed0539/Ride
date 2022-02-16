@@ -4,12 +4,10 @@ const bookingSchema = new mongoose.Schema({
   riderId: {
     type: String,
     require: [true, "Rider id is required."],
-    unique: true,
     trim: true,
   },
   driverId: {
     type: String,
-    unique: true,
     trim: true,
   },
   bookingTime: {

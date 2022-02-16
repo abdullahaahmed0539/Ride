@@ -96,7 +96,8 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon ."
+    "start-dev": "NODE_ENV=development nodemon .",
+    "start-prod": "NODE_ENV=production nodemon ."
   },
   "keywords": [],
   "author": "",
