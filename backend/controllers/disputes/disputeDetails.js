@@ -1,4 +1,8 @@
 const Dispute = require("../../models/Disputes");
+const {
+  serverErrorResponse,
+  notFoundResponse,
+} = require("../../helper/responses");
 
 const errorCodes = {
   NOT_FOUND: "DISPUTE_NOT_FOUND",
@@ -19,27 +23,14 @@ exports.disputeDetails = async (req, res) => {
         },
       });
     } else {
-      res.status(404).json({
-        request: "unsuccessful",
-        error: {
-          code: errorCodes.NOT_FOUND,
-          name: "disputeNotFound",
-          message: "The following dispute does not exist.",
-          logs: "",
-        },
-        data: {},
-      });
+      notFoundResponse(
+        res,
+        errorCodes.NOT_FOUND,
+        "disputeNotFound",
+        "The following dispute does not exist."
+      );
     }
   } catch (err) {
-    res.status(500).json({
-      request: "unsuccessful",
-      error: {
-        code: errorCodes.SERVER_ERROR,
-        name: err.name,
-        message: err.message,
-        logs: err,
-      },
-      data: {},
-    });
+    serverErrorResponse(res, err, errorCodes.SERVER_ERROR);
   }
 };

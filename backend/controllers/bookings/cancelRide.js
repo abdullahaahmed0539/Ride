@@ -1,5 +1,9 @@
 const Booking = require("../../models/Bookings");
-const { serverErrorResponse } = require("../../helper/responses");
+const {
+  serverErrorResponse,
+  onCreationResponse,
+  notFoundResponse,
+} = require("../../helper/responses");
 
 const errorCodes = {
   NOT_FOUND: "BOOKING_NOT_FOUND",
@@ -15,13 +19,9 @@ exports.riderCancellation = async (req, res) => {
       { status: "cancelled" }
     );
     if (updatedBooking.modifiedCount > 0) {
-      res.status(201).json({
-        request: "successful",
-        error: {},
-        data: {
-          bookingId,
-          status: "cancelled",
-        },
+      onCreationResponse(res, {
+        bookingId,
+        status: "cancelled",
       });
     } else if (
       updatedBooking.modifiedCount === 0 &&
@@ -29,19 +29,15 @@ exports.riderCancellation = async (req, res) => {
     ) {
       res.status(204).json({});
     } else {
-      res.status(404).json({
-        request: "unsuccessful",
-        error: {
-          code: errorCodes.NOT_FOUND,
-          name: "bookingNotFound",
-          message: "The following booking does not exist.",
-          logs: "",
-        },
-        data: {},
-      });
+      notFoundResponse(
+        res,
+        errorCodes.NOT_FOUND,
+        "bookingNotFound",
+        "The following booking does not exist."
+      );
     }
   } catch (err) {
-    serverErrorResponse(err, errorCodes.SERVER_ERROR);
+    serverErrorResponse(res, err, errorCodes.SERVER_ERROR);
   }
 };
 
@@ -54,13 +50,9 @@ exports.driverCancellation = async (req, res) => {
       { driverId: null, status: "insearch" }
     );
     if (updatedBooking.modifiedCount > 0) {
-      res.status(201).json({
-        request: "successful",
-        error: {},
-        data: {
-          bookingId,
-          status: "cancelled",
-        },
+      onCreationResponse(res, {
+        bookingId,
+        status: "cancelled",
       });
     } else if (
       updatedBooking.modifiedCount === 0 &&
@@ -68,18 +60,14 @@ exports.driverCancellation = async (req, res) => {
     ) {
       res.status(204).json({});
     } else {
-      res.status(404).json({
-        request: "unsuccessful",
-        error: {
-          code: errorCodes.NOT_FOUND,
-          name: "bookingNotFound",
-          message: "The following booking does not exist.",
-          logs: "",
-        },
-        data: {},
-      });
+      notFoundResponse(
+        res,
+        errorCodes.NOT_FOUND,
+        "bookingNotFound",
+        "The following booking does not exist."
+      );
     }
   } catch (err) {
-    serverErrorResponse(err, errorCodes.SERVER_ERROR);
+    serverErrorResponse(res, err, errorCodes.SERVER_ERROR);
   }
 };

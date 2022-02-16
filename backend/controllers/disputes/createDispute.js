@@ -1,4 +1,9 @@
 const Dispute = require("../../models/Disputes");
+const {
+  serverErrorResponse,
+  onMissingValResponse,
+  onCreationResponse,
+} = require("../../helper/responses");
 
 const errorCodes = {
   MISSING_VAL: "MISSING_VALUE",
@@ -20,17 +25,11 @@ exports.createDispute = async (req, res) => {
     !shortDescription ||
     !initiatorsClaim
   ) {
-    res.status(406).json({
-      request: "unsuccessful",
-      error: {
-        code: errorCodes.MISSING_VAL,
-        name: "missingVal",
-        message:
-          "Either initiator id, rider's id, driver's id, subject or initiators claim is missing.",
-        logs: "",
-      },
-      data: {},
-    });
+    onMissingValResponse(
+      res,
+      errorCodes.MISSING_VAL,
+      "Either initiator id, rider's id, driver's id, subject or initiators claim is missing."
+    );
     return;
   }
 
@@ -48,21 +47,8 @@ exports.createDispute = async (req, res) => {
 
   try {
     await newDispute.save();
-    res.status(201).json({
-      request: "successful",
-      error: {},
-      data: {},
-    });
+    onCreationResponse(res, {});
   } catch (err) {
-    res.status(500).json({
-      request: "unsuccessful",
-      error: {
-        code: errorCodes.SERVER_ERROR,
-        name: err.name,
-        message: err.message,
-        logs: err,
-      },
-      data: {},
-    });
+    serverErrorResponse(res, err, errorCodes.SERVER_ERROR);
   }
 };

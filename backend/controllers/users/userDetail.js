@@ -1,4 +1,3 @@
-const { default: phone } = require("phone");
 const User = require("../../models/Users");
 
 const errorCodes = {

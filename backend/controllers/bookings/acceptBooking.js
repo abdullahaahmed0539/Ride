@@ -1,4 +1,9 @@
 const Booking = require("../../models/Bookings");
+const {
+  serverErrorResponse,
+  onCreationResponse,
+  notFoundResponse,
+} = require("../../helper/responses");
 
 const errorCodes = {
   NOT_FOUND: "BOOKING_NOT_FOUND",
@@ -19,13 +24,9 @@ exports.acceptBooking = async (req, res) => {
           Add code related to driver busy now
           
           */
-      res.status(201).json({
-        request: "successful",
-        error: {},
-        data: {
-          bookingId,
-          driverId,
-        },
+      onCreationResponse(res, {
+        bookingId,
+        driverId,
       });
     } else if (
       updatedBooking.modifiedCount === 0 &&
@@ -33,27 +34,14 @@ exports.acceptBooking = async (req, res) => {
     ) {
       res.status(204).json({});
     } else {
-      res.status(404).json({
-        request: "unsuccessful",
-        error: {
-          code: errorCodes.NOT_FOUND,
-          name: "bookingNotFound",
-          message: "The following booking does not exist.",
-          logs: "",
-        },
-        data: {},
-      });
+      notFoundResponse(
+        res,
+        errorCodes.NOT_FOUND,
+        "bookingNotFound",
+        "The following booking does not exist."
+      );
     }
   } catch (err) {
-    res.status(500).json({
-      request: "unsuccessful",
-      error: {
-        code: errorCodes.SERVER_ERROR,
-        name: err.name,
-        message: err.message,
-        logs: err,
-      },
-      data: {},
-    });
+    serverErrorResponse(res, err, errorCodes.SERVER_ERROR);
   }
 };

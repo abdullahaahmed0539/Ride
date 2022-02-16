@@ -1,7 +1,14 @@
 const Dispute = require("../../models/Disputes");
+const {
+  serverErrorResponse,
+  onMissingValResponse,
+  onCreationResponse,
+  notFoundResponse,
+} = require("../../helper/responses");
 
 const errorCodes = {
   NOT_FOUND: "DISPUTE_NOT_FOUND",
+  MISSING_VAL: "MISSING_VALUE",
   SERVER_ERROR: "INTERNAL_SERVER_ERROR",
 };
 
@@ -9,16 +16,11 @@ exports.addMyClaim = async (req, res) => {
   const { dispute_id, defendentsClaim } = req.body;
 
   if (!defendentsClaim) {
-    res.status(406).json({
-      request: "unsuccessful",
-      error: {
-        code: errorCodes.MISSING_VAL,
-        name: "missingVal",
-        message: "Defendent's claim is missing.",
-        logs: "",
-      },
-      data: {},
-    });
+    onMissingValResponse(
+      res,
+      errorCodes.MISSING_VAL,
+      "Defendent's claim is missing."
+    );
   }
 
   try {
@@ -28,38 +30,22 @@ exports.addMyClaim = async (req, res) => {
     );
 
     if (AddMyClaim.modifiedCount > 0) {
-      res.status(201).json({
-        request: "successful",
-        error: {},
-        data: {
-          dispute_id,
-          updated_defendents_claim: defendentsClaim,
-        },
+      onCreationResponse({
+        res,
+        dispute_id,
+        updated_defendents_claim: defendentsClaim,
       });
     } else if (AddMyClaim.modifiedCount === 0 && AddMyClaim.matchedCount > 0) {
       res.status(204).json({});
     } else {
-      res.status(404).json({
-        request: "unsuccessful",
-        error: {
-          code: errorCodes.NOT_FOUND,
-          name: "DisputeNotFound",
-          message: "The following dispute does not exist.",
-          logs: "",
-        },
-        data: {},
-      });
+      notFoundResponse(
+        res,
+        errorCodes.NOT_FOUND,
+        "DisputeNotFound",
+        "The following dispute does not exist."
+      );
     }
   } catch (err) {
-    res.status(500).json({
-      request: "unsuccessful",
-      error: {
-        code: errorCodes.SERVER_ERROR,
-        name: err.name,
-        message: err.message,
-        logs: err,
-      },
-      data: {},
-    });
+    serverErrorResponse(res, err, errorCodes.SERVER_ERROR);
   }
 };

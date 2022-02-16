@@ -1,4 +1,9 @@
 const User = require("../../models/Users");
+const {
+  serverErrorResponse,
+  onCreationResponse,
+  notFoundResponse,
+} = require("../../helper/responses");
 
 const errorCodes = {
   NOT_FOUND: "USR_NOT_FOUND",
@@ -26,39 +31,22 @@ exports.addUserRating = async (req, res) => {
   try {
     const userDetails = await User.findOne({ phoneNumber }).select("ratings");
     if (!userDetails) {
-      res.status(404).json({
-        request: "unsuccessful",
-        error: {
-          code: errorCodes.NOT_FOUND,
-          name: "userNotFound",
-          message: "The following user does not exist.",
-          logs: "",
-        },
-        data: {},
-      });
+      notFoundResponse(
+        errorCodes.NOT_FOUND,
+        "userNotFound",
+        "The following user does not exist."
+      );
+
       return;
     }
     const userRating = userDetails.ratings;
     userRating.push(newRatingVal);
     await User.updateOne({ phoneNumber }, { ratings: userRating });
-    res.status(201).json({
-      request: "successful",
-      error: {},
-      data: {
-        phoneNumber,
-        rating: userRating,
-      },
+    onCreationResponse({
+      phoneNumber,
+      rating: userRating,
     });
   } catch (err) {
-    res.status(500).json({
-      request: "unsuccessful",
-      error: {
-        code: errorCodes.SERVER_ERROR,
-        name: err.name,
-        message: err.message,
-        logs: err,
-      },
-      data: {},
-    });
+    serverErrorResponse(err, errorCodes.SERVER_ERROR);
   }
 };

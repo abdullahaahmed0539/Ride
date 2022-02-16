@@ -1,4 +1,8 @@
 const Dispute = require("../../models/Disputes");
+const {
+  serverErrorResponse,
+  notFoundResponse,
+} = require("../../helper/responses");
 
 const errorCodes = {
   NOT_FOUND: "DISPUTE_NOT_FOUND",
@@ -11,16 +15,12 @@ exports.myDisputes = async (req, res) => {
   try {
     const disputes = await Dispute.find({ initiatorId: userId });
     if (disputes.length === 0) {
-      res.status(404).json({
-        request: "unsuccessful",
-        error: {
-          code: errorCodes.NOT_FOUND,
-          name: "disputesNotFound",
-          message: "There are no disputes against this user.",
-          logs: "",
-        },
-        data: {},
-      });
+      notFoundResponse(
+        res,
+        errorCodes.NOT_FOUND,
+        "disputesNotFound",
+        "There are no disputes against this user."
+      );
     } else {
       res.status(200).json({
         request: "successful",
@@ -31,15 +31,6 @@ exports.myDisputes = async (req, res) => {
       });
     }
   } catch (err) {
-    res.status(500).json({
-      request: "unsuccessful",
-      error: {
-        code: errorCodes.SERVER_ERROR,
-        name: err.name,
-        message: err.message,
-        logs: err,
-      },
-      data: {},
-    });
+    serverErrorResponse(res, err, errorCodes.SERVER_ERROR);
   }
 };

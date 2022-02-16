@@ -1,4 +1,9 @@
 const Booking = require("../../models/Bookings");
+const {
+  serverErrorResponse,
+  onMissingValResponse,
+  onCreationResponse,
+} = require("../../helper/responses");
 
 const errorCodes = {
   NOT_FOUND: "BOOKING_NOT_FOUND",
@@ -36,30 +41,16 @@ exports.createBooking = async (req, res) => {
       return;
     }
   } catch (err) {
-    res.status(500).json({
-      request: "unsuccessful",
-      error: {
-        code: errorCodes.SERVER_ERROR,
-        name: err.name,
-        message: err.message,
-        logs: err,
-      },
-      data: {},
-    });
+    serverErrorResponse(res, err, errorCodes.SERVER_ERROR);
     return;
   }
 
   if (!riderId || !pickup || !dropoff) {
-    res.status(406).json({
-      request: "unsuccessful",
-      error: {
-        code: errorCodes.MISSING_VAL,
-        name: "missingVal",
-        message: "Either riderId, pickup or dropoff is missing.",
-        logs: "",
-      },
-      data: {},
-    });
+    onMissingValResponse(
+      res,
+      errorCodes.MISSING_VAL,
+      "Either riderId, pickup or dropoff is missing."
+    );
     return;
   }
 
@@ -73,21 +64,8 @@ exports.createBooking = async (req, res) => {
 
   try {
     await newBooking.save();
-    res.status(201).json({
-      request: "successful",
-      error: {},
-      data: {},
-    });
+    onCreationResponse(res, {});
   } catch (err) {
-    res.status(500).json({
-      request: "unsuccessful",
-      error: {
-        code: errorCodes.SERVER_ERROR,
-        name: err.name,
-        message: err.message,
-        logs: err,
-      },
-      data: {},
-    });
+    serverErrorResponse(res, err, errorCodes.SERVER_ERROR);
   }
 };

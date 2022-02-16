@@ -8,6 +8,11 @@ NEED TO IMPLEMENT
 const User = require("../../models/Users");
 const { AES_encrypt } = require("../../helper/encryption");
 const { validateUserInfo } = require("../../helper/validators");
+const {
+  serverErrorResponse,
+  onMissingValResponse,
+  onCreationResponse,
+} = require("../../helper/responses");
 
 const errorCodes = {
   DATABASE_NOT_CONNECTED: "DB-NOT-CONNECTED",
@@ -53,11 +58,7 @@ exports.register = (req, res) => {
   newUser
     .save()
     .then(user => {
-      res.status(201).json({
-        request: "successful",
-        error: {},
-        data: {},
-      });
+      onCreationResponse({});
     })
     .catch(err => {
       if (err.name === "MongoServerError" && err.code === 11000) {
@@ -83,16 +84,7 @@ exports.register = (req, res) => {
           data: {},
         });
       } else {
-        res.status(500).json({
-          request: "unsuccessful",
-          error: {
-            code: errorCodes.DATABASE_NOT_CONNECTED,
-            name: err.name,
-            message: err.message,
-            logs: "",
-          },
-          data: {},
-        });
+        serverErrorResponse(err, errorCodes.DATABASE_NOT_CONNECTED);
       }
     });
 };
