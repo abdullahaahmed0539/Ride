@@ -20,14 +20,19 @@ exports.startTrip = async (req, res) => {
     return;
   }
 
-  const newTrip = Trip({
-    bookingId,
-    startTime: Date.now(),
-  });
-
+  const startTime = Date.now();
   try {
-    await newTrip.save();
-    await Booking.updateOne({ bookingId }, { status: "inprogress" });
+    const trip = await Trip.findOne({ bookingId }).select("driverArrivalTime");
+    const updatedAttr = {
+      startTime,
+      waitTime: startTime - trip.driverArrivalTime,
+    };
+
+    await Trip.updateOne({ bookingId }, updatedAttr);
+    await Booking.updateOne(
+      { bookingId, status: "arrived" },
+      { status: "inprogress" }
+    );
     onCreationResponse(res, {});
   } catch (err) {
     serverErrorResponse(res, err, errorCodes.SERVER_ERROR);

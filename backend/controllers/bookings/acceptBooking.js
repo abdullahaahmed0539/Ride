@@ -15,7 +15,7 @@ exports.acceptBooking = async (req, res) => {
 
   try {
     const updatedBooking = await Booking.updateOne(
-      { _id: bookingId },
+      { _id: bookingId, status: "insearch" },
       { driverId, status: "waiting" }
     );
     if (updatedBooking.modifiedCount > 0) {

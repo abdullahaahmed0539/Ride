@@ -31,7 +31,10 @@ exports.endTrip = async (req, res) => {
       total: calculateTotal(distance),
     };
     await Trip.updateOne({ bookingId }, tripDetails);
-    await Booking.updateOne({ _id: bookingId }, { status: "completed" });
+    await Booking.updateOne(
+      { _id: bookingId, status: "inprogress" },
+      { status: "completed" }
+    );
     onCreationResponse(res, {});
   } catch (err) {
     serverErrorResponse(res, err, errorCodes.SERVER_ERROR);
