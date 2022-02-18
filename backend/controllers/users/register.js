@@ -10,7 +10,6 @@ const { AES_encrypt } = require("../../helper/encryption");
 const { validateUserInfo } = require("../../helper/validators");
 const {
   serverErrorResponse,
-  onMissingValResponse,
   onCreationResponse,
 } = require("../../helper/responses");
 

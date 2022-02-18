@@ -19,11 +19,19 @@ const tripSchema = new mongoose.Schema({
   duration: {
     type: Date,
   },
-
+  driverArrivalTime: {
+    type: Date,
+  },
+  waitTime: {
+    type: Date,
+  },
   total: {
     type: Number,
   },
-  rating: {
+  riderRating: {
+    type: Number,
+  },
+  driverRating: {
     type: Number,
   },
 });
