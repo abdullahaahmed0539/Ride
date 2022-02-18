@@ -44,3 +44,37 @@ exports.onMissingValResponse = (res, MISSING_VAL, message) => {
     data: {},
   });
 };
+
+exports.notUniqueResponse = (res, err, NOT_UNIQUE) => {
+  res.status(406).json({
+    request: "unsuccessful",
+    error: {
+      code: NOT_UNIQUE,
+      name: err.name,
+      message: err.message,
+      logs: err.keyValue,
+    },
+    data: {},
+  });
+};
+
+exports.incorrectFormatResponse = (res, INCORRECT_FORMAT, name, message) => {
+  res.status(406).json({
+    request: "unsuccessful",
+    error: {
+      code: INCORRECT_FORMAT,
+      name,
+      message,
+      logs: "",
+    },
+    data: {},
+  });
+};
+
+exports.successfulGetResponse = (res, data) => {
+  res.status(200).json({
+    request: "successful",
+    error: {},
+    data,
+  });
+};

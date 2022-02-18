@@ -1,7 +1,7 @@
-const cryptoJS = require("crypto-js");
+const CryptoJs = require("crypto-js");
 
 exports.AES_encrypt = val => {
-  const encryptedVal = cryptoJS.AES.encrypt(
+  const encryptedVal = CryptoJs.AES.encrypt(
     val,
     process.env.ENCRYPTION_SECRET_KEY
   ).toString();
@@ -9,9 +9,13 @@ exports.AES_encrypt = val => {
 };
 
 exports.AES_decrypt = val => {
-  const decryptedVal = cryptoJS.AES.decrypt(
+  const decryptedVal = CryptoJs.AES.decrypt(
     val,
     process.env.ENCRYPTION_SECRET_KEY
-  ).toString(val.toString(CryptoJS.enc.Utf8));
+  ).toString(val.toString(CryptoJs.enc.Utf8));
   return decryptedVal;
+};
+
+exports.SHA3 = val => {
+  return CryptoJs.SHA3(val);
 };

@@ -1,26 +1,38 @@
 const User = require("../../models/Users");
+const {
+  onCreationResponse,
+  notFoundResponse,
+  onMissingValResponse,
+  serverErrorResponse,
+} = require("../../helper/responses");
 
 const errorCodes = {
   NOT_FOUND: "USR_NOT_FOUND",
   SERVER_ERROR: "INTERNAL_SERVER_ERROR",
+  MISSING_VAL: "MISSING_VALUE",
 };
 
 exports.updateName = async (req, res) => {
-  const phoneNumber = req.params.phoneNumber;
-  const { firstName, lastName } = req.body;
-  const updatedVals = { firstName, lastName };
+  const { firstName, lastName, phoneNumber } = req.body;
+  if (!firstName || !lastName || !phoneNumber) {
+    onMissingValResponse(
+      res,
+      errorCodes.MISSING_VAL,
+      "First name, last name or phone number is missing."
+    );
+    return;
+  }
 
   try {
-    const updatedUser = await User.updateOne({ phoneNumber }, updatedVals);
+    const updatedUser = await User.updateOne(
+      { phoneNumber },
+      { firstName, lastName }
+    );
     if (updatedUser.modifiedCount > 0) {
-      res.status(201).json({
-        request: "successful",
-        error: {},
-        data: {
-          phoneNumber,
-          updated_first_name: firstName,
-          updated_last_name: lastName,
-        },
+      onCreationResponse(res, {
+        phoneNumber,
+        updated_first_name: firstName,
+        updated_last_name: lastName,
       });
     } else if (
       updatedUser.modifiedCount === 0 &&
@@ -28,27 +40,14 @@ exports.updateName = async (req, res) => {
     ) {
       res.status(204).json({});
     } else {
-      res.status(404).json({
-        request: "unsuccessful",
-        error: {
-          code: errorCodes.NOT_FOUND,
-          name: "userNotFound",
-          message: "The following user does not exist.",
-          logs: "",
-        },
-        data: {},
-      });
+      notFoundResponse(
+        res,
+        errorCodes.NOT_FOUND,
+        "UserNotFound",
+        "The following user does not exist."
+      );
     }
   } catch (err) {
-    res.status(500).json({
-      request: "unsuccessful",
-      error: {
-        code: errorCodes.SERVER_ERROR,
-        name: err.name,
-        message: err.message,
-        logs: err,
-      },
-      data: {},
-    });
+    serverErrorResponse(res, err, errorCodes.SERVER_ERROR);
   }
 };

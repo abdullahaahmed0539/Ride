@@ -3,10 +3,11 @@ const {
   serverErrorResponse,
   onCreationResponse,
   notFoundResponse,
+  incorrectFormatResponse,
 } = require("../../helper/responses");
 
 const errorCodes = {
-  NOT_FOUND: "USR_NOT_FOUND",
+  NOT_FOUND: "USER_NOT_FOUND",
   SERVER_ERROR: "INTERNAL_SERVER_ERROR",
   VALUE_NOT_ACCEPTABLE: "VALUE_NOT_ACCEPTABLE",
 };
@@ -14,17 +15,14 @@ const errorCodes = {
 exports.addUserRating = async (req, res) => {
   const phoneNumber = req.params.phoneNumber;
   const newRatingVal = req.body.rating;
+  // const { userId, isRider, newRatingVal } = req.body;
   if (newRatingVal < 0 || newRatingVal > 5) {
-    res.status(406).json({
-      request: "unsuccessful",
-      error: {
-        code: errorCodes.VALUE_NOT_ACCEPTABLE,
-        name: "unacceptableValue",
-        message: "Rating not in range 0 to 5.",
-        logs: "",
-      },
-      data: {},
-    });
+    incorrectFormatResponse(
+      res,
+      errorCodes.VALUE_NOT_ACCEPTABLE,
+      "UnacceptableValue",
+      "Rating not in range 0 to 5."
+    );
     return;
   }
 
@@ -32,21 +30,21 @@ exports.addUserRating = async (req, res) => {
     const userDetails = await User.findOne({ phoneNumber }).select("ratings");
     if (!userDetails) {
       notFoundResponse(
+        res,
         errorCodes.NOT_FOUND,
-        "userNotFound",
+        "UserNotFound",
         "The following user does not exist."
       );
-
       return;
     }
     const userRating = userDetails.ratings;
     userRating.push(newRatingVal);
     await User.updateOne({ phoneNumber }, { ratings: userRating });
-    onCreationResponse({
+    onCreationResponse(res, {
       phoneNumber,
       rating: userRating,
     });
   } catch (err) {
-    serverErrorResponse(err, errorCodes.SERVER_ERROR);
+    serverErrorResponse(res, err, errorCodes.SERVER_ERROR);
   }
 };

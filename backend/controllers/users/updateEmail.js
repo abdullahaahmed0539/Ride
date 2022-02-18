@@ -1,42 +1,48 @@
 const User = require("../../models/Users");
 const { validateEmail } = require("../../helper/validators");
+const {
+  incorrectFormatResponse,
+  onCreationResponse,
+  notFoundResponse,
+  onMissingValResponse,
+  serverErrorResponse,
+} = require("../../helper/responses");
 
 const errorCodes = {
   NOT_FOUND: "USR_NOT_FOUND",
   SERVER_ERROR: "INTERNAL_SERVER_ERROR",
   INCORRECT_FORMAT: "INCORRECT-FORMAT",
+  MISSING_VAL: "MISSING_VALUE",
 };
 
 exports.updateEmail = async (req, res) => {
-  const phoneNumber = req.params.phoneNumber;
-  const email = req.body.email;
+  const { phoneNumber, email } = req.body;
 
-  if (!validateEmail(email)) {
-    res.status(406).json({
-      request: "unsuccessful",
-      error: {
-        code: errorCodes.INCORRECT_FORMAT,
-        name: "formatError",
-        message: "email is invalid.",
-        logs: "",
-      },
-      data: {},
-    });
+  if (!phoneNumber || !email) {
+    onMissingValResponse(
+      res,
+      errorCodes.MISSING_VAL,
+      "Phone number or email is missing."
+    );
     return;
   }
 
-  const updatedVals = { email };
+  if (!validateEmail(email)) {
+    incorrectFormatResponse(
+      res,
+      errorCodes.INCORRECT_FORMAT,
+      "FormatError",
+      "Email is format invalid."
+    );
+    return;
+  }
 
   try {
-    const updatedUser = await User.updateOne({ phoneNumber }, updatedVals);
+    const updatedUser = await User.updateOne({ phoneNumber }, { email });
     if (updatedUser.modifiedCount > 0) {
-      res.status(201).json({
-        request: "successful",
-        error: {},
-        data: {
-          phoneNumber,
-          updated_email: email,
-        },
+      onCreationResponse(res, {
+        phoneNumber,
+        updated_email: email,
       });
     } else if (
       updatedUser.modifiedCount === 0 &&
@@ -44,27 +50,14 @@ exports.updateEmail = async (req, res) => {
     ) {
       res.status(204).json({});
     } else {
-      res.status(404).json({
-        request: "unsuccessful",
-        error: {
-          code: errorCodes.NOT_FOUND,
-          name: "userNotFound",
-          message: "The following user does not exist.",
-          logs: "",
-        },
-        data: {},
-      });
+      notFoundResponse(
+        res,
+        errorCodes.NOT_FOUND,
+        "UserNotFound",
+        "The following user does not exist."
+      );
     }
   } catch (err) {
-    res.status(500).json({
-      request: "unsuccessful",
-      error: {
-        code: errorCodes.SERVER_ERROR,
-        name: err.name,
-        message: err.message,
-        logs: err,
-      },
-      data: {},
-    });
+    serverErrorResponse(res, err, errorCodes.SERVER_ERROR);
   }
 };

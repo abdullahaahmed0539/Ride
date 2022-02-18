@@ -6,13 +6,11 @@ const { updateEmail } = require("../controllers/users/updateEmail");
 const { updatePhoneNumber } = require("../controllers/users/updatePhoneNumber");
 const { addUserRating } = require("../controllers/users/addUserRating");
 
-// const smsVerification = require("../middlewares/smsVerification");
-
 router.route("/register").post(register);
-router.route("/:phoneNumber").get(userDetails);
-router.route("/update_name/:phoneNumber").patch(updateName);
+router.route("/:phoneNumber").get(userDetails); //add auth middleware
+router.route("/update_name").patch(updateName);
 router.route("/update_phone_number/:phoneNumber").patch(updatePhoneNumber);
-router.route("/update_email/:phoneNumber").patch(updateEmail);
-router.route("/add_user_rating/:phoneNumber").patch(addUserRating);
+router.route("/update_email").patch(updateEmail); //add auth middleware
+router.route("/add_user_rating/:phoneNumber").patch(addUserRating); //add auth middleware
 
 module.exports = router;
