@@ -19,6 +19,6 @@ router.route("/cancel_booking/rider").patch(riderCancellation);
 router.route("/cancel_booking/driver").patch(driverCancellation);
 router.route("/my_bookings_history").get(myBookingHistory);
 router.route("/my_scheduled_bookings").get(myScheduledBookings);
-router.route("/:booking_id").get(bookingDetails);
+router.route("/details").get(bookingDetails);
 
 module.exports = router;

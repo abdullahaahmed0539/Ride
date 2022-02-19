@@ -78,3 +78,16 @@ exports.successfulGetResponse = (res, data) => {
     data,
   });
 };
+
+exports.unAuthorizedResponse = (res, UNAUTHORIZED_ACCESS) => {
+  res.status(401).json({
+    request: "unsuccessful",
+    error: {
+      code: UNAUTHORIZED_ACCESS,
+      name: "Unauthorized access.",
+      message: "You do not have permission.",
+      logs: "",
+    },
+    data: {},
+  });
+};

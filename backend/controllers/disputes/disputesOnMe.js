@@ -2,6 +2,7 @@ const Disputes = require("../../models/Disputes");
 const {
   serverErrorResponse,
   notFoundResponse,
+  successfulGetResponse,
 } = require("../../helper/responses");
 
 const errorCodes = {
@@ -22,12 +23,8 @@ exports.disputesOnMe = async (req, res) => {
         "There are no disputes on this user."
       );
     } else {
-      res.status(200).json({
-        request: "successful",
-        error: {},
-        data: {
-          disputes,
-        },
+      successfulGetResponse(res, {
+        disputes,
       });
     }
   } catch (err) {

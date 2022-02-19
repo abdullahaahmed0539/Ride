@@ -3,18 +3,25 @@ const {
   serverErrorResponse,
   onMissingValResponse,
   notFoundResponse,
+  unAuthorizedResponse,
+  successfulGetResponse,
 } = require("../../helper/responses");
 
 const errorCodes = {
   NOT_FOUND: "BOOKING_NOT_FOUND",
   SERVER_ERROR: "INTERNAL_SERVER_ERROR",
   MISSING_VAL: "MISSING_VAL",
+  UNAUTHORIZED: "UNAUTHORIZED_ACCESS",
 };
 
 exports.bookingDetails = async (req, res) => {
-  const bookingId = req.params.booking_id;
-  if (!bookingId) {
-    onMissingValResponse(res, errorCodes.MISSING_VAL, "booking id is missing.");
+  const { bookingId, userId } = req.body;
+  if (!bookingId || !userId) {
+    onMissingValResponse(
+      res,
+      errorCodes.MISSING_VAL,
+      "booking id or user id is missing."
+    );
     return;
   }
 
@@ -27,14 +34,10 @@ exports.bookingDetails = async (req, res) => {
         "BOOKING_NOT_FOUND",
         "There is no booking against the booking id."
       );
+    } else if (booking.riderId === userId || booking.driverId === userId) {
+      successfulGetResponse(res, { booking });
     } else {
-      res.status(200).json({
-        request: "successful",
-        error: {},
-        data: {
-          booking,
-        },
-      });
+      unAuthorizedResponse(res, errorCodes.UNAUTHORIZED);
     }
   } catch (err) {
     serverErrorResponse(res, err, errorCodes.SERVER_ERROR);

@@ -7,9 +7,9 @@ const { updatePhoneNumber } = require("../controllers/users/updatePhoneNumber");
 const { addUserRating } = require("../controllers/users/addUserRating");
 
 router.route("/register").post(register);
-router.route("/:phoneNumber").get(userDetails); //add auth middleware
-router.route("/update_name").patch(updateName);
-router.route("/update_phone_number/:phoneNumber").patch(updatePhoneNumber);
+router.route("/details").get(userDetails); //add auth middleware
+router.route("/update_name").patch(updateName); //add auth middleware
+router.route("/update_phone_number").patch(updatePhoneNumber); //add auth middleware
 router.route("/update_email").patch(updateEmail); //add auth middleware
 router.route("/add_user_rating/:phoneNumber").patch(addUserRating); //add auth middleware
 

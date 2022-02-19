@@ -18,6 +18,7 @@ const errorCodes = {
 exports.updateEmail = async (req, res) => {
   const { phoneNumber, email } = req.body;
 
+  //check for missing values
   if (!phoneNumber || !email) {
     onMissingValResponse(
       res,
@@ -27,6 +28,7 @@ exports.updateEmail = async (req, res) => {
     return;
   }
 
+  //validate email format
   if (!validateEmail(email)) {
     incorrectFormatResponse(
       res,
@@ -38,6 +40,7 @@ exports.updateEmail = async (req, res) => {
   }
 
   try {
+    //update user email
     const updatedUser = await User.updateOne({ phoneNumber }, { email });
     if (updatedUser.modifiedCount > 0) {
       onCreationResponse(res, {

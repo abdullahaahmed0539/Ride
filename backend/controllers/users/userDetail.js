@@ -13,7 +13,8 @@ const errorCodes = {
 };
 
 exports.userDetails = async (req, res) => {
-  const phoneNumber = req.params.phoneNumber;
+  const phoneNumber = req.body.phone_number;
+  //making sure if phone number is available
   if (!phoneNumber) {
     onMissingValResponse(
       res,
@@ -24,6 +25,7 @@ exports.userDetails = async (req, res) => {
   }
 
   try {
+    //retrieving from database
     const userDetails = await User.findOne({ phoneNumber }).select(
       "-phoneNumber"
     );

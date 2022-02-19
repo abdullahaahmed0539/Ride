@@ -2,6 +2,7 @@ const Dispute = require("../../models/Disputes");
 const {
   serverErrorResponse,
   notFoundResponse,
+  successfulGetResponse,
 } = require("../../helper/responses");
 
 const errorCodes = {
@@ -15,12 +16,8 @@ exports.disputeDetails = async (req, res) => {
   try {
     const disputeDetails = await Dispute.findOne({ _id });
     if (disputeDetails) {
-      res.status(200).json({
-        request: "successful",
-        error: {},
-        data: {
-          disputeDetails,
-        },
+      successfulGetResponse(res, {
+        disputeDetails,
       });
     } else {
       notFoundResponse(
