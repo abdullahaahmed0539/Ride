@@ -1,19 +1,7 @@
 const mongoose = require("mongoose");
 
-const driverSchema = new mongoose.Schema({
+const requestSchema = new mongoose.Schema({
   userId: {
-    type: String,
-    require: [true, "User id is required."],
-    unique: true,
-    trim: true,
-  },
-  licenseURL: {
-    type: String,
-    require: [true, "User id is required."],
-    unique: true,
-    trim: true,
-  },
-  carRegistrationDoc: {
     type: String,
     require: [true, "User id is required."],
     unique: true,
@@ -23,6 +11,16 @@ const driverSchema = new mongoose.Schema({
     type: String,
     require: [true, "CNIC number is required."],
     unique: true,
+    trim: true,
+  },
+  licenseURL: {
+    type: String,
+    require: [true, "User id is required."],
+    trim: true,
+  },
+  carRegistrationURL: {
+    type: String,
+    require: [true, "User id is required."],
     trim: true,
   },
   carModel: {
@@ -41,20 +39,16 @@ const driverSchema = new mongoose.Schema({
     unique: true,
     trim: true,
   },
-  rating: {
-    type: Number,
-    require: [true, "Rating is required."],
+  dateApproved: {
+    type: Date,
+    trim: true,
   },
-  isActive: {
+  approved: {
     type: Boolean,
-    require: [true, "Is active is required."],
-  },
-  isBusy: {
-    type: Boolean,
-    require: [true, "Is busy  is required."],
+    trim: true,
   },
 });
 
-const Driver = mongoose.model("Driver", driverSchema);
+const Request = mongoose.model("Request", requestSchema);
 
-module.exports = Driver;
+module.exports = Request;
