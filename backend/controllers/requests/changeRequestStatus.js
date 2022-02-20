@@ -1,11 +1,11 @@
 const Request = require("../../models/Requests");
 const Driver = require("../../models/Drivers");
+const User = require("../../models/Users");
 const {
   onMissingValResponse,
   serverErrorResponse,
   notFoundResponse,
   onCreationResponse,
-  onBadParameters,
 } = require("../../helper/responses");
 const { updateOne } = require("../../models/Requests");
 
@@ -33,7 +33,7 @@ exports.changeRequestStatus = async (req, res) => {
         const newDriver = Driver({
           userId: driverDetails.userId,
           licenseURL: driverDetails.licenseURL,
-          carRegistrationDoc: driverDetails.carRegistrationDoc,
+          carRegistrationURL: driverDetails.carRegistrationURL,
           cnic: driverDetails.cnic,
           carModel: driverDetails.carModel,
           color: driverDetails.color,
@@ -43,6 +43,7 @@ exports.changeRequestStatus = async (req, res) => {
           isBusy: false,
         });
         await newDriver.save();
+        await User.updateOne({ _id: driverDetails.userId }, { isDriver: true });
       }
       onCreationResponse(res, {});
     } else {

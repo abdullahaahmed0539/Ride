@@ -1,4 +1,5 @@
 const Booking = require("../../models/Bookings");
+const Driver = require("../../models/Drivers");
 const {
   serverErrorResponse,
   onMissingValResponse,
@@ -6,7 +7,6 @@ const {
   notFoundResponse,
   unAuthorizedResponse,
 } = require("../../helper/responses");
-const { findById } = require("../../models/Bookings");
 
 const errorCodes = {
   NOT_FOUND: "BOOKING_NOT_FOUND",
@@ -50,6 +50,9 @@ exports.riderCancellation = async (req, res) => {
       { status: "cancelled" }
     );
     if (updatedBooking.modifiedCount > 0) {
+      if (booking.driverId) {
+        await Driver.updateOne({ _id: driverId }, { isBusy: false });
+      }
       onCreationResponse(res, {
         bookingId,
         status: "cancelled",
@@ -98,6 +101,7 @@ exports.driverCancellation = async (req, res) => {
       { driverId: null, status: "insearch" }
     );
     if (updatedBooking.modifiedCount > 0) {
+      await Driver.updateOne({ _id: driverId }, { isBusy: false });
       onCreationResponse(res, {
         bookingId,
         status: "cancelled",

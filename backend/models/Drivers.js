@@ -10,13 +10,11 @@ const driverSchema = new mongoose.Schema({
   licenseURL: {
     type: String,
     require: [true, "User id is required."],
-    unique: true,
     trim: true,
   },
-  carRegistrationDoc: {
+  carRegistrationURL: {
     type: String,
     require: [true, "User id is required."],
-    unique: true,
     trim: true,
   },
   cnic: {

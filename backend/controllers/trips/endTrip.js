@@ -1,5 +1,6 @@
 const Trip = require("../../models/Trips");
 const Booking = require("../../models/Bookings");
+const Driver = require("../../models/Drivers");
 const {
   onMissingValResponse,
   serverErrorResponse,
@@ -43,6 +44,7 @@ exports.endTrip = async (req, res) => {
     };
     await Trip.updateOne({ bookingId }, tripDetails);
     await Booking.updateOne({ _id: bookingId }, { status: "completed" });
+    await Driver.updateOne({ _id: driverId }, { isBusy: false });
     onCreationResponse(res, {});
   } catch (err) {
     serverErrorResponse(res, err, errorCodes.SERVER_ERROR);

@@ -1,9 +1,11 @@
 const Booking = require("../../models/Bookings");
+const Driver = require("../../models/Drivers");
 const {
   serverErrorResponse,
   onCreationResponse,
   notFoundResponse,
   onMissingValResponse,
+  unAuthorizedResponse,
 } = require("../../helper/responses");
 
 const errorCodes = {
@@ -25,16 +27,22 @@ exports.acceptBooking = async (req, res) => {
   }
 
   try {
+    const driverStatus = await Driver.findById({ _id: driverId }).select(
+      "isActive isBusy"
+    );
+    if (
+      !driverStatus.isActive ||
+      (driverStatus.isActive && driverStatus.isBusy)
+    ) {
+      unAuthorizedResponse(res, "FORBIDDEN");
+      return;
+    }
     const updatedBooking = await Booking.updateOne(
       { _id: bookingId, status: "insearch" },
       { driverId, status: "waiting" }
     );
     if (updatedBooking.modifiedCount > 0) {
-      /*
-          
-          Add code related to driver busy now
-          
-          */
+      await Driver.updateOne({ _id: driverId }, { isBusy: true });
       onCreationResponse(res, {
         bookingId,
         driverId,
