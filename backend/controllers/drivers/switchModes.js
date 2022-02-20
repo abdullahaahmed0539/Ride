@@ -2,6 +2,8 @@ const Driver = require("../../models/Drivers");
 const {
   onMissingValResponse,
   notFoundResponse,
+  onCreationResponse,
+  serverErrorResponse,
 } = require("../../helper/responses");
 
 exports.switchModes = async (req, res) => {
@@ -12,7 +14,7 @@ exports.switchModes = async (req, res) => {
   }
 
   try {
-    const user = await Driver.findOne({ userId });
+    const user = await Driver.findOne({ userId }).select("isActive");
     if (!user) {
       notFoundResponse(
         res,
@@ -22,5 +24,9 @@ exports.switchModes = async (req, res) => {
       );
       return;
     }
-  } catch (err) {}
+    await Driver.updateOne({ userId }, { isActive: !user.isActive });
+    onCreationResponse(res, {});
+  } catch (err) {
+    serverErrorResponse(res, err, "INTERNAL_SERVER_ERROR");
+  }
 };
