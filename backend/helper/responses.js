@@ -91,3 +91,16 @@ exports.unAuthorizedResponse = (res, UNAUTHORIZED_ACCESS) => {
     data: {},
   });
 };
+
+// exports.onBadParameters = (res, BAD_PARAMS) => {
+//   res.status(401).json({
+//     request: "unsuccessful",
+//     error: {
+//       code: BAD_PARAMS,
+//       name: "ParamNotAcceptable.",
+//       message: "Parameter value is not acceptable.",
+//       logs: "",
+//     },
+//     data: {},
+//   });
+// };

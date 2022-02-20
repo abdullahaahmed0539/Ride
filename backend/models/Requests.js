@@ -39,12 +39,13 @@ const requestSchema = new mongoose.Schema({
     unique: true,
     trim: true,
   },
-  dateApproved: {
+  decisionDate: {
     type: Date,
     trim: true,
   },
-  approved: {
-    type: Boolean,
+  status: {
+    type: String,
+    require: [true, "approve is required."],
     trim: true,
   },
 });

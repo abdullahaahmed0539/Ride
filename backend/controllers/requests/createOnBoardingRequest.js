@@ -7,8 +7,6 @@ const {
 } = require("../../helper/responses");
 const { validateCNIC } = require("../../helper/validators");
 
-//cnic fromat check
-
 exports.createOnBoardingRequest = async (req, res) => {
   const { userId, cnic, carModel, color, registrationNumber } = req.body;
   if (!userId || !cnic || !carModel || !color || !registrationNumber) {
@@ -39,9 +37,34 @@ exports.createOnBoardingRequest = async (req, res) => {
     carModel,
     color,
     registrationNumber,
+    status: "pending",
   });
 
   try {
+    const anyPreviousPendingOrApprovedRequest = await Request.findOne({
+      userId,
+      $or: [
+        {
+          status: "pending",
+        },
+        {
+          status: "approved",
+        },
+      ],
+    });
+    if (anyPreviousPendingOrApprovedRequest) {
+      res.status(406).json({
+        request: "unsuccessful",
+        error: {
+          code: "REQUEST_ALREADY_MADE",
+          name: "MultipleRequests.",
+          message: "Request already made.",
+          logs: "",
+        },
+        data: {},
+      });
+      return;
+    }
     const request = await onBoardingRequest.save();
     onCreationResponse(res, { request });
   } catch (err) {

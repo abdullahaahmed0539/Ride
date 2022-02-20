@@ -41,10 +41,7 @@ const driverSchema = new mongoose.Schema({
     unique: true,
     trim: true,
   },
-  rating: {
-    type: Number,
-    require: [true, "Rating is required."],
-  },
+  ratings: { type: [Number], required: [true, "rating is required."] },
   isActive: {
     type: Boolean,
     require: [true, "Is active is required."],
