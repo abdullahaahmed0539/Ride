@@ -1,11 +1,13 @@
-const User = require("../../models/Users");
+const Driver = require("../../models/Drivers");
 const Trip = require("../../models/Trips");
 const {
   serverErrorResponse,
   onCreationResponse,
   notFoundResponse,
   incorrectFormatResponse,
+  unAuthorizedResponse,
 } = require("../../helper/responses");
+const Booking = require("../../models/Bookings");
 
 const errorCodes = {
   NOT_FOUND: "USER_NOT_FOUND",
@@ -13,8 +15,8 @@ const errorCodes = {
   VALUE_NOT_ACCEPTABLE: "VALUE_NOT_ACCEPTABLE",
 };
 
-exports.addUserRating = async (req, res) => {
-  const { userId, driverId, newRatingVal, bookingId } = req.body;
+exports.addDriverRating = async (req, res) => {
+  const { riderId, driverId, newRatingVal, bookingId } = req.body;
   if (newRatingVal < 0 || newRatingVal > 5) {
     incorrectFormatResponse(
       res,
@@ -26,13 +28,15 @@ exports.addUserRating = async (req, res) => {
   }
 
   try {
-    const booking = await Booking.findOne({ _id: bookingId, driverId });
+    const booking = await Booking.findOne({ _id: bookingId, riderId });
     if (booking) {
       unAuthorizedResponse(res, "UNAUTHORIZED_ACCESS");
       return;
     }
-    const userDetails = await User.findById({ _id: userId }).select("ratings");
-    if (!userDetails) {
+    const driverDetails = await Driver.findById({ _id: driverId }).select(
+      "ratings"
+    );
+    if (!driverDetails) {
       notFoundResponse(
         res,
         errorCodes.NOT_FOUND,
@@ -41,10 +45,10 @@ exports.addUserRating = async (req, res) => {
       );
       return;
     }
-    const userRating = userDetails.ratings;
-    userRating.push(newRatingVal);
-    await User.updateOne({ _id: userId }, { ratings: userRating });
-    await Trip.updateOne({ bookingId }, { riderRating: newRatingVal });
+    const driverRating = driverDetails.ratings;
+    driverRating.push(newRatingVal);
+    await Driver.updateOne({ _id: driverId }, { ratings: driverRating });
+    await Trip.updateOne({ bookingId }, { driverRating: newRatingVal });
     onCreationResponse(res, {});
   } catch (err) {
     serverErrorResponse(res, err, errorCodes.SERVER_ERROR);
