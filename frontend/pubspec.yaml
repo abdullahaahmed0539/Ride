@@ -33,6 +33,7 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
+  intl: ^0.17.0
 
 dev_dependencies:
   flutter_test:
@@ -79,6 +80,15 @@ flutter:
     - family: SF-Pro-Display-Bold
       fonts:
         - asset: assets/fonts/sf-pro-display/SF-Pro-Display-Bold.otf
+    - family: SF-Pro-Rounded-Bold
+      fonts:
+        - asset: assets/fonts/sf-pro-rounded/SF-Pro-Rounded-Bold.otf
+    - family: SF-Pro-Rounded-Medium
+      fonts:
+        - asset: assets/fonts/sf-pro-rounded/SF-Pro-Rounded-Medium.otf
+    - family: SF-Pro-Rounded-Regular
+      fonts:
+        - asset: assets/fonts/sf-pro-rounded/SF-Pro-Rounded-Regular.otf
   #   - family: Trajan Pro
   #     fonts:
   #       - asset: fonts/TrajanPro.ttf

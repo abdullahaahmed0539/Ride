@@ -19,7 +19,7 @@ class LongButton extends StatelessWidget {
           opacity: isActive? 1.0: 0.2,
           child: ElevatedButton(
             style: ButtonStyle(
-              backgroundColor: isActive? MaterialStateProperty.all(const Color(0xFF7722F0)): MaterialStateProperty.all(Colors.grey),
+              backgroundColor: isActive? MaterialStateProperty.all(Theme.of(context).primaryColor): MaterialStateProperty.all(Colors.grey),
               foregroundColor: MaterialStateProperty.all(Colors.white),
               padding: MaterialStateProperty.all(const EdgeInsets.all(10)),
             ),

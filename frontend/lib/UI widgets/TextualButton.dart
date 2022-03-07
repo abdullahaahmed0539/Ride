@@ -14,7 +14,7 @@ class TextualButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextButton(
         style: TextButton.styleFrom(
-          primary: const Color(0xFF7722F0),
+          primary: Theme.of(context).primaryColor,
         ),
         child: Text(
           buttonText,
