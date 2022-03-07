@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'UI widgets/LongButton.dart';
-import 'UI widgets/TextualButton.dart'
+import 'UI widgets/TextualButton.dart';
 
 void main() => runApp(const MyApp());
 
@@ -12,12 +12,12 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        backgroundColor: Color(0xFF202124),
-        appBar: AppBar(
-          title: const Text('Ride'),
-        ),
-        body: TextualButton()
-      ),
+          // backgroundColor: Color(0xFF202124),
+          appBar: AppBar(
+            title: const Text('Ride'),
+          ),
+          // body: 
+          ),
     );
   }
 }
