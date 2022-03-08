@@ -6,11 +6,9 @@ class DarkTextField extends StatelessWidget {
   final Function onChangeHandler;
 
   const DarkTextField(
-      {Key? key,
-      required this.label,
+      {required this.label,
       required this.placeholder,
-      required this.onChangeHandler})
-      : super(key: key);
+      required this.onChangeHandler});
 
   @override
   Widget build(BuildContext context) {

@@ -3,11 +3,10 @@ import 'package:flutter/material.dart';
 class LongButton extends StatelessWidget {
   final VoidCallback handler;
   final String buttonText;
-  bool isActive;
+  final bool isActive;
 
   // ignore: prefer_const_constructors_in_immutables
-  LongButton({Key? key, required this.handler, required this.buttonText, required this.isActive})
-      : super(key: key);
+  const LongButton({ required this.handler, required this.buttonText, required this.isActive});
 
   @override
   Widget build(BuildContext context) {

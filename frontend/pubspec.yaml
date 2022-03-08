@@ -80,6 +80,9 @@ flutter:
     - family: SF-Pro-Display-Bold
       fonts:
         - asset: assets/fonts/sf-pro-display/SF-Pro-Display-Bold.otf
+    - family: SF-Pro-Display-Regular
+      fonts:
+        - asset: assets/fonts/sf-pro-display/SF-Pro-Display-Regular.otf
     - family: SF-Pro-Rounded-Bold
       fonts:
         - asset: assets/fonts/sf-pro-rounded/SF-Pro-Rounded-Bold.otf
