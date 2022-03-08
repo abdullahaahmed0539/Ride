@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/widgets/components/DisputesOnYou.dart';
-import 'package:frontend/widgets/components/NavigationMenu.dart';
-import 'package:frontend/widgets/components/VotingShortcut.dart';
-import 'package:frontend/widgets/components/YourDisputesShortcut.dart';
+import 'package:frontend/screens/home.dart';
 
 void main() => runApp(const MyApp());
 
@@ -34,14 +31,7 @@ class MyApp extends StatelessWidget {
             ),
             backgroundColor: const Color.fromARGB(255, 134, 64, 232),
           ),
-          body: SingleChildScrollView(
-            child: Column(children: [
-              NavigationMenu(),
-              const DisputesOnYou(),
-              const VotingShortcut(),
-              const YourDisputesShortcut()
-            ]),
-          )),
+          body: Home()),
     );
   }
 }
