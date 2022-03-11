@@ -42,7 +42,7 @@ class _DisputesOnYou extends State<DisputesOnYou> {
               'Add claim',
               () {}),
           
-          LongButton(handler: () {}, buttonText: 'More', isActive: true)
+          Container(margin: const EdgeInsets.symmetric(vertical: 15, horizontal: 12), child: LongButton(handler: () {}, buttonText: 'More', isActive: true))
         ]));
   }
 }

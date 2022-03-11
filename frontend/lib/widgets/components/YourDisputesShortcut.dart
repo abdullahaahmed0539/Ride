@@ -42,7 +42,7 @@ class _YourDisputesShortcut extends State<YourDisputesShortcut> {
               'View results',
               () {}),
           
-          LongButton(handler: () {}, buttonText: 'More', isActive: true)
+          Container(margin: const EdgeInsets.symmetric(vertical: 15, horizontal: 12), child: LongButton(handler: () {}, buttonText: 'More', isActive: true))
         ]));
   }
 }

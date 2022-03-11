@@ -46,7 +46,7 @@ class _VotingShortcutState extends State<VotingShortcut> {
               'I was held hostage by the driver for 4 hours. then what should i do ',
               'Read more',
               () {}),
-          LongButton(handler: () {}, buttonText: 'More', isActive: true)
+          Container(margin: const EdgeInsets.symmetric(vertical: 15, horizontal: 12), child: LongButton(handler: () {}, buttonText: 'More', isActive: true))
         ]));
   }
 }

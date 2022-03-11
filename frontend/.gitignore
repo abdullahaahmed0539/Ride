@@ -47,4 +47,4 @@ app.*.map.json
 
 # custom ignores
 /assets
-/lib/screens
+# /lib/screens

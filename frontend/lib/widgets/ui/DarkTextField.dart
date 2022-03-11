@@ -15,9 +15,11 @@ class DarkTextField extends StatelessWidget {
     return Column(
       children: <Widget>[
         TextField(
+          
           onChanged: (val) {
             onChangeHandler(val);
           },
+          cursorColor: Theme.of(context).primaryColor,
           autofocus: true,
           autocorrect: false,
           style: const TextStyle(
@@ -35,8 +37,8 @@ class DarkTextField extends StatelessWidget {
                 fontFamily: 'SF-Pro-Rounded-Medium'),
             hintText: placeholder,
             hintStyle: const TextStyle(color: Color(0xFFA0A0A0)),
-            focusedBorder: const OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.white60),
+            focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Theme.of(context).primaryColor),
             ),
           ),
         ),
