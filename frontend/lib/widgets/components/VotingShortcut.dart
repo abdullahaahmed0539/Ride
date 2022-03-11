@@ -26,14 +26,9 @@ class _VotingShortcutState extends State<VotingShortcut> {
           Container(
             alignment: Alignment.topLeft,
             margin: const EdgeInsets.only(top: 12, left: 12, bottom: 15),
-            child: const Text(
+            child: Text(
               'EARN AND HELP OTHERS WITH YOUR VOTE',
-              style: TextStyle(
-                color: Color(0xffA0A0A0),
-                fontFamily: 'SF-Pro-Rounded-Regular',
-                fontSize: 14,
-                
-              ),
+              style: Theme.of(context).textTheme.titleSmall,
             ),
           ),
           CardItem(

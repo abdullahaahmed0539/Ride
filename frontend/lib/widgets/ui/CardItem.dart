@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/widgets/ui/Message.dart';
 import 'package:frontend/widgets/ui/TextualButton.dart';
 
 class CardItem extends StatelessWidget {
@@ -25,12 +24,10 @@ class CardItem extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            Message(heading, Colors.white, 22, 'SF-Pro-Rounded-Medium',
-                FontWeight.w700),
+            Text(heading, style: Theme.of(context).textTheme.titleLarge,),
             Container(
               margin: const EdgeInsets.only(top: 4),
-              child: Message(shortDescription, Colors.white, 18,
-                  'SF-Pro-Rounded-Regular', FontWeight.normal),
+              child: Text(shortDescription, style: Theme.of(context).textTheme.bodyMedium,),
             ),
             Container(
               alignment: Alignment.bottomRight,

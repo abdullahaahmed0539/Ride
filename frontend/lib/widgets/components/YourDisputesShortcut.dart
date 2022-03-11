@@ -26,13 +26,9 @@ class _YourDisputesShortcut extends State<YourDisputesShortcut> {
           Container(
             alignment: Alignment.topLeft,
             margin: const EdgeInsets.only(top: 12, left: 12, bottom: 15),
-            child: const Text(
+            child: Text(
               'WHAT DOES THE COMMUNITY THINK ABOUT YOUR DISPUTES',
-              style: TextStyle(
-                color: Color(0xffA0A0A0),
-                fontFamily: 'SF-Pro-Rounded-Regular',
-                fontSize: 14,
-              ),
+              style: Theme.of(context).textTheme.titleSmall,
             ),
           ),
           CardItem(

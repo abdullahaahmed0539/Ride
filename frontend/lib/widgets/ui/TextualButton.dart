@@ -13,12 +13,12 @@ class TextualButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextButton(
         style:  TextButton.styleFrom(
-          primary: Color(0xff9F61F0),
+          primary: const Color(0xff9F61F0),
         ),
         child: Text(
           buttonText,
           style: const TextStyle(
-            fontFamily: "SF-Pro-Display-Bold",
+            fontFamily: "SF-Pro-Display",
             fontSize: 16,
             fontWeight: FontWeight.w400,
           ),

@@ -73,25 +73,26 @@ flutter:
   # list giving the asset and other descriptors for the font. For
   # example:
   fonts:
-    - family: SF-Pro-Bold
+    - family: SF-Pro
       fonts:
         - asset: assets/fonts/sf-pro/SF-Pro.ttf
-          weight: 400
-    - family: SF-Pro-Display-Bold
-      fonts:
-        - asset: assets/fonts/sf-pro-display/SF-Pro-Display-Bold.otf
-    - family: SF-Pro-Display-Regular
+    - family: SF-Pro-Display
       fonts:
         - asset: assets/fonts/sf-pro-display/SF-Pro-Display-Regular.otf
-    - family: SF-Pro-Rounded-Bold
-      fonts:
-        - asset: assets/fonts/sf-pro-rounded/SF-Pro-Rounded-Bold.otf
-    - family: SF-Pro-Rounded-Medium
-      fonts:
-        - asset: assets/fonts/sf-pro-rounded/SF-Pro-Rounded-Medium.otf
-    - family: SF-Pro-Rounded-Regular
+        - asset: assets/fonts/sf-pro-display/SF-Pro-Display-Bold.otf
+        - weight: 700
+    - family: SF-Pro-Rounded
       fonts:
         - asset: assets/fonts/sf-pro-rounded/SF-Pro-Rounded-Regular.otf
+        - asset: assets/fonts/sf-pro-rounded/SF-Pro-Rounded-Medium.otf
+        - weight: 400
+        - asset: assets/fonts/sf-pro-rounded/SF-Pro-Rounded-Bold.otf
+        - weight: 700
+    #   fonts:
+    # - family: SF-Pro-Rounded-Medium
+    #   fonts:
+    # - family: SF-Pro-Rounded-Regular
+    #   fonts:
   #   - family: Trajan Pro
   #     fonts:
   #       - asset: fonts/TrajanPro.ttf

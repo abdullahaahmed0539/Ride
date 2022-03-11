@@ -27,7 +27,7 @@ class LongButton extends StatelessWidget {
               buttonText,
               style: const TextStyle(
                   fontSize: 21,
-                  fontFamily: "SF-Pro-Bold",
+                  fontFamily: "SF-Pro-Rounded",
                   fontWeight: FontWeight.w800),
               textAlign: TextAlign.center,
             ),

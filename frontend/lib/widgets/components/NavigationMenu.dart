@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:frontend/widgets/ui/CardButton.dart';
 
 class NavigationMenu extends StatelessWidget {
+  const NavigationMenu({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -19,13 +21,9 @@ class NavigationMenu extends StatelessWidget {
             Container(
               alignment: Alignment.topLeft,
               margin: const EdgeInsets.only(top: 2, left: 5, bottom: 15),
-              child: const Text(
+              child: Text(
                 'WHAT WOULD YOU LIKE TO DO?',
-                style: TextStyle(
-                  color: Color(0xffA0A0A0),
-                  fontFamily: 'SF-Pro-Rounded-Regular',
-                  fontSize: 14,
-                ),
+                style: Theme.of(context).textTheme.titleSmall,
               ),
             ),
             Row(children: [

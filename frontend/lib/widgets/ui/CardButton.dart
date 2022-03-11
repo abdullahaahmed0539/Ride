@@ -32,7 +32,7 @@ class CardButton extends StatelessWidget {
             Container(
                 padding: const EdgeInsets.only(bottom: 8),
                 child: Message(
-                    text, Colors.white, 20, "SF Pro Rounded", FontWeight.w600))
+                    text, Colors.white, 20, "SF-Pro-Rounded", FontWeight.w600))
           ]),
         ));
   }
