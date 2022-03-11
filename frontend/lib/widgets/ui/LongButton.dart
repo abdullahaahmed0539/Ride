@@ -10,9 +10,7 @@ class LongButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        // width: ,
-        margin: const EdgeInsets.all(10),
+    return SizedBox(
         width: double.infinity,
         child: Opacity(
           opacity: isActive? 1.0: 0.2,

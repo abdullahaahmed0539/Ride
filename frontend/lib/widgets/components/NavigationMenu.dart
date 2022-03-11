@@ -37,13 +37,13 @@ class NavigationMenu extends StatelessWidget {
               ),
               Expanded(
                 child: CardButton(const Color(0xff43ABBE),
-                    Icons.account_balance_wallet, 'Wallet', () {}),
+                    Icons.account_balance_wallet, 'Wallet', (){}),
               ),
             ]),
             Row(children: [
               Expanded(
-                child: CardButton(
-                    const Color(0xffEABD2A), Icons.commute, 'Book a ride', () {}),
+                child: CardButton(const Color(0xffEABD2A), Icons.commute,
+                    'Book a ride', () {}),
               ),
             ]),
           ])),

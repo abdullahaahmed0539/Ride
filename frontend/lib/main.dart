@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/screens/Home.dart';
+import 'package:frontend/screens/Login.dart';
 
 void main() => runApp(const MyApp());
 
@@ -22,11 +23,11 @@ class MyApp extends StatelessWidget {
                     fontSize: 22,
                     fontFamily: 'SF-Pro-Rounded',
                     fontWeight: FontWeight.bold),
-                titleMedium: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 22,
-                    fontFamily: 'SF-Pro-Rounded',
-                    fontWeight: FontWeight.w500),
+                // titleMedium: const TextStyle(
+                //     color: Colors.white,
+                //     fontSize: 22,
+                //     fontFamily: 'SF-Pro-Rounded',
+                //     fontWeight: FontWeight.w500),
                 titleSmall: const TextStyle(
                     color: Color(0xffA0A0A0),
                     fontSize: 14,
@@ -47,6 +48,6 @@ class MyApp extends StatelessWidget {
             backgroundColor: Color.fromARGB(255, 134, 64, 232),
           ),
         ),
-        home: const Home());
+        home: const Login());
   }
 }
