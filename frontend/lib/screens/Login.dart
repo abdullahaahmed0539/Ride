@@ -16,9 +16,9 @@ class _LoginState extends State<Login> {
   PhoneNumber phoneNumber =
       PhoneNumber(countryISOCode: '', countryCode: '', number: '');
 
-  void onChangeHandler(PhoneNumber number) {
+  void onChangeHandler(PhoneNumber val) {
     setState(() {
-      phoneNumber = number;
+      phoneNumber = val;
     });
   }
 
@@ -35,9 +35,8 @@ class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        FocusManager.instance.primaryFocus?.unfocus();
-      },
+      onTap: () => FocusManager.instance.primaryFocus?.unfocus()
+      ,
       child: Scaffold(
           resizeToAvoidBottomInset: false,
           appBar: AppBar(title: const Text("Login")),
