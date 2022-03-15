@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/screens/Verification.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 
-import 'package:frontend/screens/verification.dart';
 import 'package:frontend/widgets/ui/LongButton.dart';
 import 'package:intl_phone_field/phone_number.dart';
 
 class Login extends StatefulWidget {
+  static const routeName = '/login';
   const Login({Key? key}) : super(key: key);
 
   @override
@@ -23,20 +24,13 @@ class _LoginState extends State<Login> {
   }
 
   void proceed(BuildContext context) {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (_) {
-          return Verification(phoneNumber: phoneNumber,);
-        },
-      ),
-    );
+    Navigator.of(context).pushNamed(Verification.routeName, arguments: phoneNumber);
   }
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => FocusManager.instance.primaryFocus?.unfocus()
-      ,
+      onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
           resizeToAvoidBottomInset: false,
           appBar: AppBar(title: const Text("Login")),

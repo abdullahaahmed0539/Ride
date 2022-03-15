@@ -20,7 +20,7 @@ class TextualButton extends StatelessWidget {
           style: const TextStyle(
             fontFamily: "SF-Pro-Display",
             fontSize: 16,
-            fontWeight: FontWeight.w400,
+            fontWeight: FontWeight.w600,
           ),
         ),
         onPressed: handler);

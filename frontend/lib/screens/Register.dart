@@ -6,6 +6,7 @@ import 'package:frontend/widgets/ui/DarkTextField.dart';
 import 'package:frontend/widgets/ui/LongButton.dart';
 
 class Register extends StatefulWidget {
+  static const routeName = '/register';
   final PhoneNumber phoneNumber;
   const Register({Key? key, required this.phoneNumber}) : super(key: key);
 
@@ -46,12 +47,8 @@ class _RegisterState extends State<Register> {
   void onCreateAccount() {
     //add http req
     Navigator.of(context).pop();
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (_) {
-          return const Home();
-        },
-      ),
+    Navigator.of(context).pushNamed(
+     Home.routeName,
     );
   }
 
@@ -77,7 +74,8 @@ class _RegisterState extends State<Register> {
                 child: DarkTextField(
                     label: 'First name',
                     placeholder: 'Enter your first name',
-                    onChangeHandler: (val) => onFirstNameChange(val.toLowerCase())),
+                    onChangeHandler: (val) =>
+                        onFirstNameChange(val.toLowerCase())),
               ),
               Container(
                 margin: const EdgeInsets.symmetric(vertical: 8),

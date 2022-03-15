@@ -6,6 +6,7 @@ import '../widgets/components/VotingShortcut.dart';
 import '../widgets/components/YourDisputesShortcut.dart';
 
 class Home extends StatelessWidget {
+  static const routeName = '/home';
   const Home({Key? key}) : super(key: key);
 
   @override
