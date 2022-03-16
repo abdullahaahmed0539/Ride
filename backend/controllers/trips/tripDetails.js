@@ -16,21 +16,30 @@ const errorCodes = {
 };
 
 exports.tripDetails = async (req, res) => {
-  const { bookingId, userId } = req.body;
-  if (!bookingId || !userId) {
+  const { bookingId, userId, driverMode } = req.body;
+  if (!bookingId || !userId || driverMode) {
     onMissingValResponse(
       res,
       errorCodes.MISSING_VAL,
-      "Booking id or user id is missing."
+      "Booking id, driver mode or user id is missing."
     );
     return;
   }
 
   try {
-    const booking = await Booking.findOne({
-      _id: bookingId,
-      riderId: userId,
-    });
+    let userDetail;
+    if (driverMode) {
+      userDetail = {
+        _id: bookingId,
+        driverId: userId,
+      };
+    } else {
+      userDetail = {
+        _id: bookingId,
+        riderId: userId,
+      };
+    }
+    const booking = await Booking.findOne(userDetail);
     if (!booking) {
       unAuthorizedResponse(res, errorCodes.UNAUTHORIZED);
       return;

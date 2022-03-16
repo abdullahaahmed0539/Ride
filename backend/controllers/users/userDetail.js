@@ -13,7 +13,7 @@ const errorCodes = {
 };
 
 exports.userDetails = async (req, res) => {
-  const phoneNumber = req.body.phone_number;
+  const phoneNumber = req.body.phoneNumber;
   //making sure if phone number is available
   if (!phoneNumber) {
     onMissingValResponse(

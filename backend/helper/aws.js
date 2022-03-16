@@ -2,6 +2,7 @@ const aws = require("aws-sdk");
 const dotenv = require("dotenv");
 const crypto = require("crypto");
 const { promisify } = require("util");
+const { onCreationResponse, serverErrorResponse } = require("./responses");
 
 dotenv.config();
 const randomBytes = promisify(crypto.randomBytes);
@@ -29,5 +30,8 @@ exports.uploadImage = async document => {
 
   try {
     const uploadURL = await s3.getSignedUrlPromise("putObject", params);
-  } catch (err) {}
+    onCreationResponse(res, { uploadURL });
+  } catch (err) {
+    serverErrorResponse(res, err, "INTERNAL_SERVER_ERROR");
+  }
 };
