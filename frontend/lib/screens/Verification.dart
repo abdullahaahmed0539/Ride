@@ -73,7 +73,7 @@ class _VerificationState extends State<Verification> {
           });
         },
         timeout: const Duration(seconds: 60),
-        forceResendingToken: );
+        );
 
   }
 
