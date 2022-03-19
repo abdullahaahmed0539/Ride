@@ -8,7 +8,6 @@ const {
 } = require("../../helper/responses");
 
 exports.login = async (req, res) => {
-  //storing values passed from client side
   const { phoneNumber } = req.body;
   if (!phoneNumber) {
     onMissingValResponse(
@@ -34,7 +33,7 @@ exports.login = async (req, res) => {
         _id: user._id,
         phoneNumber: user.phoneNumber,
         isDriver: user.isDriver
-      },process.env.TOKEN_KEY, {expiresIn:'1h'});
+      },process.env.TOKEN_KEY, {expiresIn:'24h'});
       const data = {
         _id: user._id,
         firstName: user.firstName,
@@ -44,8 +43,8 @@ exports.login = async (req, res) => {
         country: user.country,
         walletAddress: user.walletAddress,
         isDriver: user.isDriver,
-        ratings: user.ratings,
         token,
+        expiresIn: new Date(new Date().getTime() + 24 * 60 * 60 * 1000),
       };
       successfulGetResponse(res, data);
     }

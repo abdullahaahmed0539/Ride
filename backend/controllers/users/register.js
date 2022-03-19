@@ -67,7 +67,11 @@ exports.register = async (req, res) => {
   try {
     //save the user in db and sending response
     const user = await newUser.save();
-    onCreationResponse(res, {});
+    const data = {
+      _id: user._id,
+      phoneNumber: user.phoneNumber
+    }
+    onCreationResponse(res, data);
   } catch (err) {
     //Error handling for not unique or any other server error
     err.name === "MongoServerError" && err.code === 11000

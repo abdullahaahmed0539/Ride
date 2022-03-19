@@ -27,7 +27,7 @@ exports.userDetails = async (req, res) => {
   try {
     //retrieving from database
     const userDetails = await User.findOne({ phoneNumber }).select(
-      "-phoneNumber"
+      "-ratings -walletHash"
     );
     userDetails
       ? successfulGetResponse(res, userDetails)
