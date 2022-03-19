@@ -51,8 +51,12 @@ class _VerificationState extends State<Verification> {
             verifying = false;
           });
           if (value.user != null) {
+            //login http request
             Navigator.of(context).pushNamedAndRemoveUntil(Home.routeName, (r) => false);
           }
+          
+            //Navigator.of(context).pushNamed(Home.routeName, arguments: phoneNumber);
+          
         },
         verificationFailed: (FirebaseAuthException e) {
           setState(() {
@@ -97,6 +101,8 @@ class _VerificationState extends State<Verification> {
   }
 
   Widget showEnabledNextButton() {
+    final phoneNumber =
+        ModalRoute.of(context)!.settings.arguments as PhoneNumber;
     return Container(
       margin: const EdgeInsets.only(top: 200),
       child: LongButton(

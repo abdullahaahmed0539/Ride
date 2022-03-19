@@ -7,8 +7,7 @@ import 'package:frontend/widgets/ui/LongButton.dart';
 
 class Register extends StatefulWidget {
   static const routeName = '/register';
-  final PhoneNumber phoneNumber;
-  const Register({Key? key, required this.phoneNumber}) : super(key: key);
+
 
   @override
   State<Register> createState() => _RegisterState();
@@ -46,14 +45,16 @@ class _RegisterState extends State<Register> {
 
   void onCreateAccount() {
     //add http req
-    Navigator.of(context).pop();
-    Navigator.of(context).pushNamed(
-     Home.routeName,
+    Navigator.of(context).pushNamedAndRemoveUntil(
+     Home.routeName, (route) => false
     );
   }
 
   @override
+  
   Widget build(BuildContext context) {
+    final phoneNumber =
+        ModalRoute.of(context)!.settings.arguments as PhoneNumber;
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(

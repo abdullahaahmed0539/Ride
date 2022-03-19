@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:frontend/screens/DisputeGuidelines.dart';
 import 'package:frontend/screens/Home.dart';
 import 'package:frontend/screens/Login.dart';
+import 'package:frontend/screens/PublishDispute.dart';
+import 'package:frontend/screens/Rating.dart';
 import 'package:frontend/screens/Verification.dart';
 import 'package:frontend/screens/Register.dart';
 
@@ -30,6 +33,11 @@ class MyApp extends StatelessWidget {
                   fontSize: 22,
                   fontFamily: 'SF-Pro-Rounded',
                   fontWeight: FontWeight.bold),
+              titleMedium: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 18,
+                  fontFamily: 'SF-Pro-Rounded',
+                  fontWeight: FontWeight.bold),
               titleSmall: const TextStyle(
                 color: Color(0xffA0A0A0),
                 fontSize: 15,
@@ -50,13 +58,15 @@ class MyApp extends StatelessWidget {
           backgroundColor: Color.fromARGB(255, 134, 64, 232),
         ),
       ),
-      initialRoute: '/login',
+      initialRoute: Login.routeName,
       routes: {
-        '/': (context) => const Home(),
         Home.routeName: (context) => const Home(),
         Login.routeName: (context) => const Login(),
-        // Register.routeName:(context) => Register(),
-        Verification.routeName: (context) => const Verification()
+        Register.routeName:(context) => Register(),
+        Verification.routeName: (context) => const Verification(),
+        Rating.routeName: (context) => const Rating(),
+        DisputeGuidelines.routeName: (context) => const DisputeGuidelines(),
+        PublishDispute.routeName:(context) => const PublishDispute(),
       },
       onUnknownRoute: (settings) =>
           MaterialPageRoute(builder: (context) => const Home()),
