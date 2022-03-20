@@ -29,10 +29,11 @@ dependencies:
   validators: ^3.0.0
   pin_code_fields: ^7.3.0
   firebase_auth: ^3.3.10
-  # cloud_firestore: ^3.1.10
   firebase_core: ^1.13.1
   circular_countdown_timer: ^0.2.1
   flutter_rating_bar: ^4.0.0
+  http: ^0.13.4
+  provider: ^6.0.2
 
 dev_dependencies:
   flutter_test:
@@ -44,14 +45,6 @@ flutter:
   uses-material-design: true
 
   fonts:
-    - family: SF-Pro
-      fonts:
-        - asset: assets/fonts/sf-pro/SF-Pro.ttf
-    - family: SF-Pro-Display
-      fonts:
-        - asset: assets/fonts/sf-pro-display/SF-Pro-Display-Regular.otf
-        - asset: assets/fonts/sf-pro-display/SF-Pro-Display-Bold.otf
-        - weight: 700
     - family: SF-Pro-Rounded
       fonts:
         - asset: assets/fonts/sf-pro-rounded/SF-Pro-Rounded-Regular.otf
