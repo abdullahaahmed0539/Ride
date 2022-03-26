@@ -1,63 +1,73 @@
 import 'package:flutter/material.dart';
+import 'dart:convert';
+import 'package:http/http.dart';
 import 'package:intl_phone_field/phone_number.dart';
+import 'package:provider/provider.dart';
 import 'package:validators/validators.dart';
-import 'package:frontend/screens/Home.dart';
-import 'package:frontend/widgets/ui/DarkTextField.dart';
-import 'package:frontend/widgets/ui/LongButton.dart';
+
+import '../services/utilities.dart';
+import '../screens/Home.dart';
+import '../widgets/ui/DarkTextField.dart';
+import '../widgets/ui/LongButton.dart';
+import '../api calls/User.dart';
+import '../providers/User.dart';
+import '../services/error.dart';
+import './Login.dart';
 
 class Register extends StatefulWidget {
   static const routeName = '/register';
-
-
+  const Register({Key? key}) : super(key: key);
   @override
   State<Register> createState() => _RegisterState();
 }
 
 class _RegisterState extends State<Register> {
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
   String firstName = '';
   String lastName = '';
   String email = '';
   String walletAddress = '';
 
-  void onFirstNameChange(String val) {
-    setState(() {
-      firstName = val;
-    });
+  void loginHandling(Response response) {
+    if (response.statusCode == 200) {
+      Provider.of<UserProvider>(context, listen: false).onLogin(response);
+      Navigator.of(context)
+          .pushNamedAndRemoveUntil(Home.routeName, (route) => false);
+    } else {
+      Navigator.of(context)
+          .pushNamedAndRemoveUntil(Login.routeName, (route) => false);
+    }
   }
 
-  void onLastNameChange(String val) {
-    setState(() {
-      lastName = val;
-    });
-  }
-
-  void onEmailChange(String val) {
-    setState(() {
-      email = val;
-    });
-  }
-
-  void onWalletAddressChange(String val) {
-    setState(() {
-      walletAddress = val;
-    });
-  }
-
-  void onCreateAccount() {
-    //add http req
-    Navigator.of(context).pushNamedAndRemoveUntil(
-     Home.routeName, (route) => false
-    );
+  void onCreateAccount(PhoneNumber phoneNumber) async {
+    try {
+      Response registerResponse = await register(
+          phoneNumber, firstName, lastName, email, walletAddress);
+      if (registerResponse.statusCode == 201) {
+        var responseData = json.decode(registerResponse.body)['data'];
+        PhoneNumber extractedPhoneNumber = convertToPhoneNumber(
+            responseData['phoneNumber'], responseData['country']);
+        Response loginResponse = await login(extractedPhoneNumber);
+        loginHandling(loginResponse);
+      } else if (registerResponse.statusCode == 500) {
+        throw Error();
+      } else {
+        errorSnackBar(scaffoldKey,
+            'A user with the provided e-mail or metamask wallet already exists.');
+      }
+    } catch (error) {
+      errorSnackBar(scaffoldKey, 'Internal server error. Try login in again.');
+    }
   }
 
   @override
-  
   Widget build(BuildContext context) {
-    final phoneNumber =
+    PhoneNumber phoneNumber =
         ModalRoute.of(context)!.settings.arguments as PhoneNumber;
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
+          key: scaffoldKey,
           resizeToAvoidBottomInset: false,
           backgroundColor: Theme.of(context).backgroundColor,
           appBar: AppBar(title: const Text('Register')),
@@ -73,32 +83,35 @@ class _RegisterState extends State<Register> {
               Container(
                 margin: const EdgeInsets.only(top: 25, bottom: 5),
                 child: DarkTextField(
-                    label: 'First name',
-                    placeholder: 'Enter your first name',
-                    onChangeHandler: (val) =>
-                        onFirstNameChange(val.toLowerCase())),
+                  label: 'First name',
+                  placeholder: 'Enter your first name',
+                  onChangeHandler: (val) =>
+                      setState(() => firstName = val.toLowerCase()),
+                ),
               ),
               Container(
                 margin: const EdgeInsets.symmetric(vertical: 8),
                 child: DarkTextField(
-                    label: 'Last name',
-                    placeholder: 'Enter your last name',
-                    onChangeHandler: (val) =>
-                        onLastNameChange(val.toLowerCase())),
+                  label: 'Last name',
+                  placeholder: 'Enter your last name',
+                  onChangeHandler: (val) =>
+                      setState(() => lastName = val.toLowerCase()),
+                ),
               ),
               Container(
                 margin: const EdgeInsets.symmetric(vertical: 8),
                 child: DarkTextField(
                     label: 'E-mail',
                     placeholder: 'Enter your email',
-                    onChangeHandler: (val) => onEmailChange(val)),
+                    onChangeHandler: (val) => setState(() => email = val)),
               ),
               Container(
                 margin: const EdgeInsets.symmetric(vertical: 8),
                 child: DarkTextField(
                     label: 'Metamask wallet Address',
                     placeholder: 'Enter your metamask wallet address',
-                    onChangeHandler: (val) => onWalletAddressChange(val)),
+                    onChangeHandler: (val) =>
+                        setState(() => walletAddress = val)),
               ),
               (firstName != '' &&
                       lastName != '' &&
@@ -107,7 +120,7 @@ class _RegisterState extends State<Register> {
                   ? Container(
                       margin: const EdgeInsets.only(top: 200),
                       child: LongButton(
-                          handler: () => onCreateAccount(),
+                          handler: () => onCreateAccount(phoneNumber),
                           buttonText: 'Create account',
                           isActive: true),
                     )

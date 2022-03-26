@@ -4,8 +4,6 @@ import '../widgets/components/DisputesOnYou.dart';
 import '../widgets/components/NavigationMenu.dart';
 import '../widgets/components/VotingShortcut.dart';
 import '../widgets/components/YourDisputesShortcut.dart';
-import '../providers/User.dart';
-import 'package:provider/provider.dart';
 
 class Home extends StatelessWidget {
   static const routeName = '/home';
@@ -13,6 +11,7 @@ class Home extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    
     return Scaffold(
         backgroundColor: Theme.of(context).backgroundColor,
         appBar: AppBar(

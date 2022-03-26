@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:circular_countdown_timer/circular_countdown_timer.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:frontend/screens/Home.dart';
-import 'package:frontend/screens/Register.dart';
+import 'package:frontend/services/error.dart';
+import './Home.dart';
+import './Register.dart';
 import 'package:frontend/widgets/ui/CountDown.dart';
 import 'package:frontend/widgets/ui/LongButton.dart';
 import 'package:intl_phone_field/phone_number.dart';
-import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import '../providers/User.dart';
-import 'dart:convert';
 import '../widgets/ui/PinCodeField.dart';
-import 'Login.dart';
+import './Login.dart';
+import '../api calls/User.dart';
 
 class Verification extends StatefulWidget {
   static const routeName = '/verification';
@@ -22,11 +22,11 @@ class Verification extends StatefulWidget {
 }
 
 class _VerificationState extends State<Verification> {
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
   late String verificationCode;
   String currentText = "";
   bool verifying = false;
   bool otpExpired = false;
-  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
   final CountDownController controller = CountDownController();
 
   void setCurrentText(String val) {
@@ -47,96 +47,43 @@ class _VerificationState extends State<Verification> {
     await FirebaseAuth.instance.verifyPhoneNumber(
       phoneNumber: '${phoneNumber.countryCode}${phoneNumber.number}',
       verificationCompleted: (PhoneAuthCredential credential) async {
-        setState(() {
-          verifying = true;
-        });
+        setState(() => verifying = true);
         UserCredential value =
             await FirebaseAuth.instance.signInWithCredential(credential);
+
         if (value.user != null) {
-          login(phoneNumber, context);
+          var response = await login(phoneNumber);
+          if (response.statusCode == 200) {
+            Provider.of<UserProvider>(context, listen: false).onLogin(response);
+            Navigator.of(context)
+                .pushNamedAndRemoveUntil(Home.routeName, (route) => false);
+          } else if (response.statusCode == 404) {
+            Navigator.of(context).pushNamedAndRemoveUntil(
+                Register.routeName, (route) => false,
+                arguments: phoneNumber);
+          } else if (response.statusCode == 406) {
+            Navigator.of(context)
+                .pushNamedAndRemoveUntil(Login.routeName, (route) => false);
+          } else {
+            setState(() => verifying = false);
+            errorSnackBar(scaffoldKey, 'Internal server error. Try again!');
+          }
         } else {
-          setState(() {
-            verifying = false;
-          });
+          setState(() => verifying = false);
         }
       },
       verificationFailed: (FirebaseAuthException e) {
-        setState(() {
-          verifying = false;
-        });
-        scaffoldKey.currentState?.showSnackBar(SnackBar(
-          content: Text(e.code),
-        ));
+        setState(() => verifying = false);
+        errorSnackBar(scaffoldKey, e.code);
       },
       codeSent: (verificationID, resendToken) {
-        setState(() {
-          verificationCode = verificationID;
-        });
+        setState(() => verificationCode = verificationID);
       },
       codeAutoRetrievalTimeout: (String verificationID) {
-        setState(() {
-          verificationCode = verificationID;
-        });
+        setState(() => verificationCode = verificationID);
       },
-      timeout: const Duration(seconds: 60),
+      timeout: const Duration(seconds: 90),
     );
-  }
-
-  Future<void> login(PhoneNumber phoneNumber, BuildContext context) async {
-    try {
-      final headers = <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      };
-
-      final body = jsonEncode(<String, String>{
-        'phoneNumber': '${phoneNumber.countryCode}${phoneNumber.number}',
-      });
-
-      final response = await http.post(
-          Uri.parse('http://10.0.2.2:5000/users/login'),
-          headers: headers,
-          body: body);
-      if (response.statusCode == 404) {
-        Navigator.of(context).pushNamedAndRemoveUntil(
-            Register.routeName, (route) => false,
-            arguments: phoneNumber);
-      } else if (response.statusCode == 200) {
-        final user = Provider.of<UserProvider>(context, listen: false);
-        var responseData = json.decode(response.body)['data'];
-        String isoCode = responseData['phoneNumber'].substring(0, 3);
-        String number = responseData['phoneNumber'].substring(3, 13);
-        PhoneNumber extractedPhoneNumber = PhoneNumber(
-            countryISOCode: responseData['country'],
-            countryCode: isoCode,
-            number: number);
-        user.createUser(
-            responseData['_id'],
-            responseData['firstName'],
-            responseData['lastName'],
-            responseData['email'],
-            extractedPhoneNumber,
-            responseData['country'],
-            responseData['walletAddress'],
-            responseData['isDriver'],
-            responseData['token'],
-            responseData['expiresIn']);
-        Navigator.of(context)
-            .pushNamedAndRemoveUntil(Home.routeName, (route) => false);
-      } else if (response.statusCode == 406) {
-        Navigator.of(context)
-            .pushNamedAndRemoveUntil(Login.routeName, (route) => false);
-      } else {
-        throw Error();
-      }
-    } catch (error) {
-      print(error);
-      setState(() {
-        verifying = false;
-      });
-      scaffoldKey.currentState?.showSnackBar(const SnackBar(
-        content: Text('Internal server error. Try again!'),
-      ));
-    }
   }
 
   @override
@@ -166,28 +113,36 @@ class _VerificationState extends State<Verification> {
       child: LongButton(
         handler: () async {
           try {
-            setState(() {
-              verifying = true;
-            });
+            setState(() => verifying = true);
             UserCredential value = await FirebaseAuth.instance
                 .signInWithCredential(PhoneAuthProvider.credential(
                     verificationId: verificationCode, smsCode: currentText));
 
             if (value.user != null) {
-              login(phoneNumber, context);
+              var response = await login(phoneNumber);
+              if (response.statusCode == 200) {
+                Provider.of<UserProvider>(context, listen: false)
+                    .onLogin(response);
+                Navigator.of(context)
+                    .pushNamedAndRemoveUntil(Home.routeName, (route) => false);
+              } else if (response.statusCode == 404) {
+                Navigator.of(context).pushNamedAndRemoveUntil(
+                    Register.routeName, (route) => false,
+                    arguments: phoneNumber);
+              } else if (response.statusCode == 406) {
+                Navigator.of(context)
+                    .pushNamedAndRemoveUntil(Login.routeName, (route) => false);
+              } else {
+                setState(() => verifying = false);
+                errorSnackBar(scaffoldKey, 'Internal server error. Try again!');
+              }
             } else {
-              setState(() {
-                verifying = false;
-              });
+              setState(() => verifying = false);
             }
           } on FirebaseAuthException catch (e) {
-            setState(() {
-              verifying = false;
-            });
+            setState(() => verifying = false);
             FocusScope.of(context).unfocus();
-            // ignore: deprecated_member_use
-            scaffoldKey.currentState
-                ?.showSnackBar(SnackBar(content: Text(e.code)));
+            errorSnackBar(scaffoldKey, e.code);
           }
         },
         buttonText: 'Next',

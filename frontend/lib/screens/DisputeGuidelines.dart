@@ -1,21 +1,19 @@
+//packages
 import 'package:flutter/material.dart';
-import 'package:frontend/screens/PublishDispute.dart';
-import 'package:frontend/widgets/ui/LongButton.dart';
+
+//custom
+import '../screens/PublishDispute.dart';
+import '../widgets/ui/LongButton.dart';
 
 class DisputeGuidelines extends StatefulWidget {
   static const routeName = '/dispute_guidelines';
   const DisputeGuidelines({Key? key}) : super(key: key);
-
   @override
   State<DisputeGuidelines> createState() => _DisputeGuidelinesState();
 }
 
 class _DisputeGuidelinesState extends State<DisputeGuidelines> {
   bool agreed = false;
-
-  void onSubmit() {
-    Navigator.of(context).pushNamed(PublishDispute.routeName);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -75,7 +73,8 @@ class _DisputeGuidelinesState extends State<DisputeGuidelines> {
                           margin: const EdgeInsets.only(top: 20, bottom: 40),
                           child: LongButton(
                               buttonText: 'Next',
-                              handler: onSubmit,
+                              handler: () => Navigator.of(context)
+                                  .pushNamed(PublishDispute.routeName),
                               isActive: true))
                       : Container(
                           margin: const EdgeInsets.only(top: 20, bottom: 40),

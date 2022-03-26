@@ -10,7 +10,7 @@ class CountDown extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CircularCountDownTimer(
-            duration: 60,
+            duration: 90,
             initialDuration: 0,
             controller: controller,
             width: 100,
