@@ -13,9 +13,9 @@ class CardButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      width: 115,
         margin: const EdgeInsets.all(5),
         child: Ink(
-          width: 120,
           decoration: ShapeDecoration(
             color: color,
             shape:

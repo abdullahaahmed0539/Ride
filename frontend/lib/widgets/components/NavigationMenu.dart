@@ -1,7 +1,11 @@
 //Need to add functionality to buttons
 
 import 'package:flutter/material.dart';
-import 'package:frontend/widgets/ui/CardButton.dart';
+import 'package:frontend/screens/Profile.dart';
+import '../../screens/Booking.dart';
+import '../../screens/VotingGuidelines.dart';
+import '../../widgets/ui/CardButton.dart';
+import '../../screens/Wallet.dart';
 
 class NavigationMenu extends StatelessWidget {
   const NavigationMenu({Key? key}) : super(key: key);
@@ -27,24 +31,21 @@ class NavigationMenu extends StatelessWidget {
               ),
             ),
             Row(children: [
-              Expanded(
-                child: CardButton(const Color(0xff771AF0),
-                    Icons.account_circle_sharp, 'Profile', () {}),
-              ),
+               CardButton(const Color(0xffEABD2A), Icons.commute,
+                  'Booking', () => Navigator.pushNamed(context, Booking.routeName)),
+              
               Expanded(
                 child: CardButton(
-                    const Color(0xff5CCB57), Icons.attach_money, 'Earn', () {}),
+                    const Color(0xff5CCB57), Icons.attach_money, 'Earn', () => Navigator.pushNamed(context, VotingGuidelines.routeName)),
               ),
               Expanded(
                 child: CardButton(const Color(0xff43ABBE),
-                    Icons.account_balance_wallet, 'Wallet', (){}),
+                    Icons.account_balance_wallet, 'Wallet', () => Navigator.pushNamed(context, Wallet.routeName)),
               ),
             ]),
             Row(children: [
-              Expanded(
-                child: CardButton(const Color(0xffEABD2A), Icons.commute,
-                    'Book a ride', () {}),
-              ),
+             CardButton(const Color(0xff771AF0),
+                 Icons.account_circle_sharp, 'Profile', () => Navigator.pushNamed(context, Profile.routeName)),
             ]),
           ])),
     );
