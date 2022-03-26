@@ -1445,31 +1445,15 @@ contract investorToken is ERC721Enumerable, Ownable {
     using Counters for Counters.Counter;
     Counters.Counter private _tokenId;
 
-    uint256 public constant MAX_NFT = 10000;
-    
-    uint256 public MAX_SALE_MINTS_PER_ADDRESS = 50;
-    uint256 public MAX_PRESALE_MINTS_PER_ADDRESS = 20;
-
-    uint256 public price = 1000000000000000; //0.001 Ether
-
+    uint256 public constant MAX_HS = 10000;
+    uint256 public price = 35000000000000000; //0.035 Ether
     string baseTokenURI;
-
     bool public saleOpen = false;
-    bool public preSale = false;
 
-    address private _adminSigner;
+    event investorTokenMinted(uint256 totalMinted);
 
-    struct Coupon {
-		bytes32 r;
-		bytes32 s;
-		uint8 v;
-	}
-
-    //event NFTTokensMinted(uint256 totalMinted);
-
-    constructor(address adminSigner, string memory baseURI) ERC721("NFT Tokens", "NFT") {
+    constructor(string memory baseURI) ERC721("Happy Sharks", "HS") {
         setBaseURI(baseURI);
-        _adminSigner = adminSigner;
     }
 
     //Get token Ids of all tokens owned by _owner
@@ -1492,18 +1476,6 @@ contract investorToken is ERC721Enumerable, Ownable {
         baseTokenURI = baseURI;
     }
 
-    function setAdminSigner(address adminSigner) public onlyOwner {
-        _adminSigner = adminSigner;
-    }
-
-    function setNewMaxPreSaleMintsPerAddress(uint256 _newMaxPreSaleMintsPerAddress) public onlyOwner {
-        MAX_PRESALE_MINTS_PER_ADDRESS = _newMaxPreSaleMintsPerAddress;
-    }
-
-    function setNewMaxSaleMintsPerAddress(uint256 _newMaxSaleMintsPerAddress) public onlyOwner {
-        MAX_SALE_MINTS_PER_ADDRESS = _newMaxSaleMintsPerAddress;
-    }
-
     function setPrice(uint256 _newPrice) public onlyOwner {
         price = _newPrice;
     }
@@ -1513,35 +1485,23 @@ contract investorToken is ERC721Enumerable, Ownable {
         saleOpen = !saleOpen;
     }
 
-    function flipPreSaleState() public onlyOwner {
-        preSale = !preSale;
-    }
-
     function withdrawAll() public onlyOwner {
         (bool success, ) = msg.sender.call{value: address(this).balance}("");
         require(success, "Transfer failed");
     }
 
-    //mint NFTTokens
-    function mintNFTTokens(uint256 _count) public payable {
+    //mint investorToken
+    function mintinvestorToken(uint256 _count) public payable {
         if (msg.sender != owner()) {
             require(saleOpen, "Sale is not open yet");
         }
         require(
-            totalSupply() != MAX_NFT,
-            "Sale has completed"
+            _count > 0 && _count <= 20,
+            "Min 1 & Max 20 investorToken can be minted per transaction"
         );
         require(
-            _count > 0,
-            "Min 1 token can be minted"
-        );
-        require(
-            _count <= (MAX_SALE_MINTS_PER_ADDRESS - personMintCount(msg.sender)),
-            "Amount exceeds max limit per user"
-        );
-        require(
-            totalSupply() + _count <= MAX_NFT,
-            "Transaction will exceed maximum supply of NFTTokens"
+            totalSupply() + _count <= MAX_HS,
+            "Transaction will exceed maximum supply of investorToken"
         );
         require(
             msg.value >= price * _count,
@@ -1559,74 +1519,200 @@ contract investorToken is ERC721Enumerable, Ownable {
         _tokenId.increment();
         uint256 tokenId = _tokenId.current();
         _safeMint(_to, tokenId);
-        //emit NFTTokensMinted(tokenId);
+        emit investorTokenMinted(tokenId);
     }
 
     function _baseURI() internal view virtual override returns (string memory) {
         return baseTokenURI;
     }
-
-    function tokensMinted() public view returns (uint256) {
-        return _tokenId.current();
-    }
-
-    function totalTokenSupply() public pure returns (uint256) {
-        return MAX_NFT;
-    }
-
-    function personMintCount(address person) public view returns (uint256){
-        return balanceOf(person);
-    }
-
-    function mintPresale(uint256 _count, Coupon memory _coupon) external payable {
-        require( 
-            preSale, 
-            'Presale is not open yet'
-        );         
-        require( 
-            !saleOpen && preSale, 
-            'Presale has completed'
-        );
-        require(
-            totalSupply() != MAX_NFT,
-            "Sale has completed"
-        );
-        require(
-            _count > 0,
-            "Min 1 token can be minted"
-        );
-        require(
-            _count + balanceOf(msg.sender) <= MAX_PRESALE_MINTS_PER_ADDRESS,
-            'Amount exceeds max presale limit per user'
-        ); 
-        require(
-            totalSupply() + _count <= MAX_NFT,
-            "Transaction will exceed maximum supply of NFTTokens"
-        );
-        require(
-            msg.value >= price * _count,
-            "Ether sent with this transaction is not correct"
-        );
-        
-        bytes32 addressDigest = keccak256(abi.encode(msg.sender)); 
-  
-        require(
-            _checkCoupon(addressDigest, _coupon), 
-            'Invalid coupon'
-        ); 
-
-        address _to = msg.sender;
-
-        for (uint256 i = 0; i < _count; i++) {
-            _mint(_to);
-        }
-    }
-
-    function _checkCoupon(bytes32 addressDigest, Coupon memory coupon) internal view returns (bool){
-		address recoveredSigner = ecrecover(addressDigest, coupon.v, coupon.r, coupon.s);
-		require(
-            recoveredSigner != address(0), 'Invalid ECDSA signature'
-        ); 
-        return recoveredSigner == _adminSigner;
-	}
 }
+
+// contract investorToken is ERC721Enumerable, Ownable {
+//     using Counters for Counters.Counter;
+//     Counters.Counter private _tokenId;
+
+//     uint256 public constant MAX_NFT = 10000;
+    
+//     uint256 public MAX_SALE_MINTS_PER_ADDRESS = 50;
+//     uint256 public MAX_PRESALE_MINTS_PER_ADDRESS = 20;
+
+//     uint256 public price = 1000000000000000; //0.001 Ether
+
+//     string baseTokenURI;
+
+//     bool public saleOpen = false;
+//     bool public preSale = false;
+
+//     address private _adminSigner;
+
+//     struct Coupon {
+// 		bytes32 r;
+// 		bytes32 s;
+// 		uint8 v;
+// 	}
+
+//     //event NFTTokensMinted(uint256 totalMinted);
+
+//     constructor(address adminSigner, string memory baseURI) ERC721("NFT Tokens", "NFT") {
+//         setBaseURI(baseURI);
+//         _adminSigner = adminSigner;
+//     }
+
+//     //Get token Ids of all tokens owned by _owner
+//     function walletOfOwner(address _owner)
+//         external
+//         view
+//         returns (uint256[] memory)
+//     {
+//         uint256 tokenCount = balanceOf(_owner);
+
+//         uint256[] memory tokensId = new uint256[](tokenCount);
+//         for (uint256 i = 0; i < tokenCount; i++) {
+//             tokensId[i] = tokenOfOwnerByIndex(_owner, i);
+//         }
+
+//         return tokensId;
+//     }
+
+//     function setBaseURI(string memory baseURI) public onlyOwner {
+//         baseTokenURI = baseURI;
+//     }
+
+//     function setAdminSigner(address adminSigner) public onlyOwner {
+//         _adminSigner = adminSigner;
+//     }
+
+//     function setNewMaxPreSaleMintsPerAddress(uint256 _newMaxPreSaleMintsPerAddress) public onlyOwner {
+//         MAX_PRESALE_MINTS_PER_ADDRESS = _newMaxPreSaleMintsPerAddress;
+//     }
+
+//     function setNewMaxSaleMintsPerAddress(uint256 _newMaxSaleMintsPerAddress) public onlyOwner {
+//         MAX_SALE_MINTS_PER_ADDRESS = _newMaxSaleMintsPerAddress;
+//     }
+
+//     function setPrice(uint256 _newPrice) public onlyOwner {
+//         price = _newPrice;
+//     }
+
+//     //Close sale if open, open sale if closed
+//     function flipSaleState() public onlyOwner {
+//         saleOpen = !saleOpen;
+//     }
+
+//     function flipPreSaleState() public onlyOwner {
+//         preSale = !preSale;
+//     }
+
+//     function withdrawAll() public onlyOwner {
+//         (bool success, ) = msg.sender.call{value: address(this).balance}("");
+//         require(success, "Transfer failed");
+//     }
+
+//     //mint NFTTokens
+//     function mintNFTTokens(uint256 _count) public payable {
+//         if (msg.sender != owner()) {
+//             require(saleOpen, "Sale is not open yet");
+//         }
+//         require(
+//             totalSupply() != MAX_NFT,
+//             "Sale has completed"
+//         );
+//         require(
+//             _count > 0,
+//             "Min 1 token can be minted"
+//         );
+//         require(
+//             _count <= (MAX_SALE_MINTS_PER_ADDRESS - personMintCount(msg.sender)),
+//             "Amount exceeds max limit per user"
+//         );
+//         require(
+//             totalSupply() + _count <= MAX_NFT,
+//             "Transaction will exceed maximum supply of NFTTokens"
+//         );
+//         require(
+//             msg.value >= price * _count,
+//             "Ether sent with this transaction is not correct"
+//         );
+
+//         address _to = msg.sender;
+
+//         for (uint256 i = 0; i < _count; i++) {
+//             _mint(_to);
+//         }
+//     }
+
+//     function _mint(address _to) private {
+//         _tokenId.increment();
+//         uint256 tokenId = _tokenId.current();
+//         _safeMint(_to, tokenId);
+//         //emit NFTTokensMinted(tokenId);
+//     }
+
+//     function _baseURI() internal view virtual override returns (string memory) {
+//         return baseTokenURI;
+//     }
+
+//     function tokensMinted() public view returns (uint256) {
+//         return _tokenId.current();
+//     }
+
+//     function totalTokenSupply() public pure returns (uint256) {
+//         return MAX_NFT;
+//     }
+
+//     function personMintCount(address person) public view returns (uint256){
+//         return balanceOf(person);
+//     }
+
+//     function mintPresale(uint256 _count, Coupon memory _coupon) external payable {
+//         require( 
+//             preSale, 
+//             'Presale is not open yet'
+//         );         
+//         require( 
+//             !saleOpen && preSale, 
+//             'Presale has completed'
+//         );
+//         require(
+//             totalSupply() != MAX_NFT,
+//             "Sale has completed"
+//         );
+//         require(
+//             _count > 0,
+//             "Min 1 token can be minted"
+//         );
+//         require(
+//             _count + balanceOf(msg.sender) <= MAX_PRESALE_MINTS_PER_ADDRESS,
+//             'Amount exceeds max presale limit per user'
+//         ); 
+//         require(
+//             totalSupply() + _count <= MAX_NFT,
+//             "Transaction will exceed maximum supply of NFTTokens"
+//         );
+//         require(
+//             msg.value >= price * _count,
+//             "Ether sent with this transaction is not correct"
+//         );
+        
+//         bytes32 addressDigest = keccak256(abi.encode(msg.sender)); 
+  
+//         require(
+//             _checkCoupon(addressDigest, _coupon), 
+//             'Invalid coupon'
+//         ); 
+
+//         address _to = msg.sender;
+
+//         for (uint256 i = 0; i < _count; i++) {
+//             _mint(_to);
+//         }
+//     }
+
+//     function _checkCoupon(bytes32 addressDigest, Coupon memory coupon) internal view returns (bool){
+// 		address recoveredSigner = ecrecover(addressDigest, coupon.v, coupon.r, coupon.s);
+// 		require(
+//             recoveredSigner != address(0), 'Invalid ECDSA signature'
+//         ); 
+//         return recoveredSigner == _adminSigner;
+// 	}
+// }
