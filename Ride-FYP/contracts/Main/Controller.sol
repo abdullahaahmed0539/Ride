@@ -11,6 +11,7 @@ contract Controller {
     address vault;
     uint collatForDriver;
     mapping (address => uint) collatAmount;
+    mapping (address => uint) driverToCode;
 
     constructor() public {
         // coins = RideToken(<Address of ERC20 tokens>);
@@ -40,7 +41,7 @@ contract Controller {
         // custom function code
     }
 
-    function collectCollatFromDriver(uint calldata _amount) external payable { //At the moment, the collateral will be saved in the form of our Ride Coins
+    function collectCollatFromDriver(uint memory _amount) external { //At the moment, the collateral will be saved in the form of our Ride Coins
         require(_amount >= collatForDriver, "Insufficient amount.");
         coins.approve(vault, _amount);
         coins.transferFrom(msg.sender, vault, _amount);
@@ -48,14 +49,14 @@ contract Controller {
 
     }
 
-    function giveAllCollatToDriver(address calldata _driver) external {
+    function giveAllCollatToDriver(address memory _driver) external {
         require(driver == msg.sender, "Please specify your valid wallet address.");
         coins.transferFrom(vault, msg.sender, collatAmount(msg.sender));
         collatAmount(msg.sender) = 0;
 
     }
 
-    function giveCollatToDriver(address calldata _driver, uint calldata _amount) external {
+    function giveCollatToDriver(address memory _driver, uint memory _amount) external {
         require(driver == msg.sender, "Please specify your valid wallet address.");
         require(_amount <= collatAmount(msg.sender), "Insufficient amount held in balance.");
         _amount = collatAmount(msg.sender) - _amount;
@@ -64,18 +65,33 @@ contract Controller {
 
     }
 
-    function setAmountForCollat(uint amount) private onlyOwner { //Allow admin to adjust the collateral amount
+    function setAmountForCollat(uint memory amount) private onlyOwner { //Allow admin to adjust the collateral amount
         require(msg.sender == watcher, "Only the admin can set this value.");
         // collatForDriver = amount * (1 ether);
         collatForDriver = amount;
     }
 
-    function startRideDriver() public { 
-
+    //When the driver calls this function, a random number is generated. This random number is sent to the Rider.
+    //The Rider will use that number to begin the ride from his end. This way, the ride only starts when both the parties agree.
+    //paramOne is the phone number of the Driver.
+    function startRideDriver(string memory _paramOne) public returns (uint) { 
+        uint memory random = uint(keccak256(abi.encode(_paramOne, msg.sender, block.timestamp)));
+        driverToCode(msg.sender) = random;
+        return random;
     }
 
     function endRideDriver() public {
 
+    }
+
+    function startRideRider(uint memory _code, address memory _driver) public view returns (uint8){
+        require(driverToCode(_driver) == _code, "Driver has sent an invalid code.");
+        return 1; // 1 means the session is good to go.
+
+    }
+
+    function endRideRider() public {
+        
     }
     //Collect Collateral from Driver
     //Allow rides to happen
