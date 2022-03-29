@@ -1,7 +1,8 @@
-pragma solidity ^0.8.0;
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.9;
 
-import "Ride-FYP/contracts/Main/rideToken.sol";
-import "Ride-FYP/contracts/Main/investorToken.sol";
+import "./rideToken.sol";
+import "./investorToken.sol";
 
 contract Controller {
 
@@ -65,10 +66,10 @@ contract Controller {
 
     }
 
-    function setAmountForCollat(uint memory amount) private onlyOwner { //Allow admin to adjust the collateral amount
+    function setAmountForCollat(uint memory _amount) private onlyOwner { //Allow admin to adjust the collateral amount
         require(msg.sender == watcher, "Only the admin can set this value.");
         // collatForDriver = amount * (1 ether);
-        collatForDriver = amount;
+        collatForDriver = _amount;
     }
 
     //When the driver calls this function, a random number is generated. This random number is sent to the Rider.
@@ -80,8 +81,11 @@ contract Controller {
         return random;
     }
 
-    function endRideDriver() public {
-
+    //Both the Rider and the Driver have to end the ride session for it to end.
+    //Both the functions will simply return a 1, which indicates that the end order has been issued.
+    //If both the functions result in a 1, the Frontend will know that the ride has been ended.
+    function endRideDriver() public pure returns (uint) {
+        return 1;
     }
 
     function startRideRider(uint memory _code, address memory _driver) public view returns (uint8){
@@ -90,15 +94,16 @@ contract Controller {
 
     }
 
-    function endRideRider() public {
-        
+    function endRideRider() public pure returns (uint) {
+        return 1;
     }
-    //Collect Collateral from Driver
-    //Allow rides to happen
+    //Collect Collateral from Driver (done)
+    //Make events for future query using theGraph
+    //Allow rides to happen (done)
     //Allow people to buy Ride Tokens
     //Allow people to buy Stock/NFT
     //Allow the voting to take place
-    //Handle mapping for Address > Name
+    //Handle mapping for Address > Name (optional)
     //View functions for reading different things like Balance/Owner
     //Extra info will be kept in the Database. This includes location and cost of ride.
     //Decide what to save on-chain. This may include voting related data.

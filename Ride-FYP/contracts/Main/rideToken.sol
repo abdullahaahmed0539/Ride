@@ -1,8 +1,9 @@
+// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import "Ride-FYP/contracts/interfaces/IERC20.sol";
-import "Ride-FYP/contracts/interfaces/IERC20Metadata.sol";
-import "Ride-FYP/contracts/utils/Context.sol";
+import "../interfaces/IERC20.sol";
+import "../interfaces/IERC20Metadata.sol";
+import "../utils/Context.sol";
 
 /**
  * @dev Implementation of the {IERC20} interface.
