@@ -13,20 +13,20 @@ class PublishDispute extends StatefulWidget {
 }
 
 class _PublishDisputeState extends State<PublishDispute> {
-  String title = '';
   String subject = '';
+  String shortDescription = '';
   String description = '';
   bool agreed = false;
-
-  void setTitle(String val) {
-    setState(() {
-      title = val;
-    });
-  }
 
   void setSubject(String val) {
     setState(() {
       subject = val;
+    });
+  }
+
+  void setShortDescription(String val) {
+    setState(() {
+      shortDescription = val;
     });
   }
 
@@ -68,17 +68,17 @@ class _PublishDisputeState extends State<PublishDispute> {
                   Container(
                     margin: const EdgeInsets.only(top: 20),
                     child: DarkTextField(
-                      label: 'Title',
-                      placeholder: 'Enter title',
-                      onChangeHandler: (val) => setTitle(val.toLowerCase()),
+                      label: 'Subject',
+                      placeholder: 'Enter subject',
+                      onChangeHandler: (val) => setSubject(val.toLowerCase()),
                     ),
                   ),
                   Container(
                     margin: const EdgeInsets.only(top: 15),
                     child: DarkTextField(
-                      label: 'Subject',
-                      placeholder: 'Enter subject',
-                      onChangeHandler: (val) => setSubject(val.toLowerCase()),
+                      label: 'Short description',
+                      placeholder: 'Enter short description',
+                      onChangeHandler: (val) => setShortDescription(val.toLowerCase()),
                     ),
                   ),
                   Container(
@@ -113,7 +113,7 @@ class _PublishDisputeState extends State<PublishDispute> {
                           ))
                         ],
                       )),
-                  agreed && title!='' && subject!='' && description != ''
+                  agreed &&  subject != '' && shortDescription != ''  && description != ''
                       ? Container(
                           margin: const EdgeInsets.only(top: 20, bottom: 40),
                           child: LongButton(

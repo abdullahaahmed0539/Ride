@@ -23,8 +23,9 @@ class _LoginState extends State<Login> {
     });
   }
 
-  void proceed(BuildContext context) {
-    Navigator.of(context).pushNamed(Verification.routeName, arguments: phoneNumber);
+  void proceed(BuildContext context) async {
+    Navigator.of(context).pushNamed(Verification.routeName,
+        arguments: {'phoneNumber': phoneNumber, 'previousScreen': 'login'});
   }
 
   @override

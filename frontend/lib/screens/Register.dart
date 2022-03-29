@@ -52,11 +52,11 @@ class _RegisterState extends State<Register> {
       } else if (registerResponse.statusCode == 500) {
         throw Error();
       } else {
-        errorSnackBar(scaffoldKey,
+        snackBar(scaffoldKey,
             'A user with the provided e-mail or metamask wallet already exists.');
       }
     } catch (error) {
-      errorSnackBar(scaffoldKey, 'Internal server error. Try login in again.');
+      snackBar(scaffoldKey, 'Internal server error. Try login in again.');
     }
   }
 
@@ -73,7 +73,9 @@ class _RegisterState extends State<Register> {
           appBar: AppBar(title: const Text('Register')),
           body: Container(
             margin: const EdgeInsets.symmetric(horizontal: 20),
-            child: Column(children: [
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
               Container(
                   margin: const EdgeInsets.only(top: 60),
                   child: Text(
@@ -99,14 +101,22 @@ class _RegisterState extends State<Register> {
                 ),
               ),
               Container(
-                margin: const EdgeInsets.symmetric(vertical: 8),
+                margin: const EdgeInsets.only(top: 8),
                 child: DarkTextField(
                     label: 'E-mail',
                     placeholder: 'Enter your email',
                     onChangeHandler: (val) => setState(() => email = val)),
               ),
+              !isEmail(email) && email != ''
+                  ? Container(
+                      margin: const EdgeInsets.only(top: 1),
+                      child: const Text(
+                        'Incorrect email format.',
+                        style: TextStyle(color: Colors.redAccent, fontSize: 16),
+                      ))
+                  : Container(),
               Container(
-                margin: const EdgeInsets.symmetric(vertical: 8),
+                margin: const EdgeInsets.only(top: 16),
                 child: DarkTextField(
                     label: 'Metamask wallet Address',
                     placeholder: 'Enter your metamask wallet address',

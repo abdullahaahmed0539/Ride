@@ -20,7 +20,7 @@ class DarkTextField extends StatelessWidget {
             onChangeHandler(val);
           },
           cursorColor: Theme.of(context).primaryColor,
-          autofocus: true,
+          autofocus: false,
           autocorrect: false,
           style: const TextStyle(
               fontFamily: 'SF-Pro-Rounded', fontSize: 18, color: Colors.white),

@@ -1,4 +1,5 @@
 import 'package:intl_phone_field/phone_number.dart';
+import '../services/string_extension.dart';
 
 class User {
   final String id;
@@ -23,4 +24,8 @@ class User {
       required this.walletAddress,
       required this.isDriver,
       required this.expiresIn});
+
+  String getName() {
+    return '${firstName.capitalize()} ${lastName.capitalize()}';
+  }
 }

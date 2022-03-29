@@ -1,17 +1,24 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:circular_countdown_timer/circular_countdown_timer.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:frontend/screens/UpdatePhoneNumber.dart';
 import 'package:frontend/services/error.dart';
+import 'package:http/http.dart';
+import 'package:intl_phone_field/phone_number.dart';
+import '../services/utilities.dart';
 import './Home.dart';
 import './Register.dart';
 import 'package:frontend/widgets/ui/CountDown.dart';
 import 'package:frontend/widgets/ui/LongButton.dart';
-import 'package:intl_phone_field/phone_number.dart';
 import 'package:provider/provider.dart';
 import '../providers/User.dart';
 import '../widgets/ui/PinCodeField.dart';
 import './Login.dart';
 import '../api calls/User.dart';
+import '../models/User.dart' as CustomUser;
+import 'Profile.dart';
 
 class Verification extends StatefulWidget {
   static const routeName = '/verification';
@@ -42,8 +49,10 @@ class _VerificationState extends State<Verification> {
   }
 
   void verifyPhone() async {
-    final phoneNumber =
-        ModalRoute.of(context)!.settings.arguments as PhoneNumber;
+    final routeArgs =
+        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+    final phoneNumber = routeArgs['phoneNumber'];
+    final previousScreen = routeArgs['previousScreen'];
     await FirebaseAuth.instance.verifyPhoneNumber(
       phoneNumber: '${phoneNumber.countryCode}${phoneNumber.number}',
       verificationCompleted: (PhoneAuthCredential credential) async {
@@ -52,29 +61,16 @@ class _VerificationState extends State<Verification> {
             await FirebaseAuth.instance.signInWithCredential(credential);
 
         if (value.user != null) {
-          var response = await login(phoneNumber);
-          if (response.statusCode == 200) {
-            Provider.of<UserProvider>(context, listen: false).onLogin(response);
-            Navigator.of(context)
-                .pushNamedAndRemoveUntil(Home.routeName, (route) => false);
-          } else if (response.statusCode == 404) {
-            Navigator.of(context).pushNamedAndRemoveUntil(
-                Register.routeName, (route) => false,
-                arguments: phoneNumber);
-          } else if (response.statusCode == 406) {
-            Navigator.of(context)
-                .pushNamedAndRemoveUntil(Login.routeName, (route) => false);
-          } else {
-            setState(() => verifying = false);
-            errorSnackBar(scaffoldKey, 'Internal server error. Try again!');
-          }
+          previousScreen == 'login'
+              ? loginHandler(phoneNumber)
+              : updatePhoneNumberHandler(phoneNumber);
         } else {
           setState(() => verifying = false);
         }
       },
       verificationFailed: (FirebaseAuthException e) {
         setState(() => verifying = false);
-        errorSnackBar(scaffoldKey, e.code);
+        snackBar(scaffoldKey, e.code);
       },
       codeSent: (verificationID, resendToken) {
         setState(() => verificationCode = verificationID);
@@ -105,9 +101,86 @@ class _VerificationState extends State<Verification> {
     );
   }
 
+  void loginHandler(PhoneNumber phoneNumber) async {
+    var response = await login(phoneNumber);
+    if (response.statusCode == 200) {
+      Provider.of<UserProvider>(context, listen: false).onLogin(response);
+      Navigator.of(context)
+          .pushNamedAndRemoveUntil(Home.routeName, (route) => false);
+    } else if (response.statusCode == 404) {
+      Navigator.of(context).pushNamedAndRemoveUntil(
+          Register.routeName, ModalRoute.withName('/login'),
+          arguments: phoneNumber);
+    } else if (response.statusCode == 406) {
+      Navigator.of(context)
+          .pushNamedAndRemoveUntil(Login.routeName, (route) => false);
+    } else {
+      setState(() => verifying = false);
+      snackBar(scaffoldKey, 'Internal server error. Try again!');
+    }
+  }
+
+  void updatePhoneNumberHandler(PhoneNumber phoneNumber) async {
+    CustomUser.User user =
+        Provider.of<UserProvider>(context, listen: false).user;
+    //http to update
+    Response response =
+        await updatePhoneNumber(user.phoneNumber, phoneNumber, user.token);
+
+    print(response.statusCode);
+    if (response.statusCode != 201 &&
+        response.statusCode != 204 &&
+        response.statusCode != 404 &&
+        response.statusCode != 406 &&
+        response.statusCode != 401) {
+      snackBar(scaffoldKey, 'Internal server error.');
+      setState(() => verifying = false);
+    }
+
+    if (response.statusCode == 201) {
+      var responseData = json.decode(response.body)['data'];
+      PhoneNumber extractedPhoneNumber = convertToPhoneNumber(
+          responseData['updated_phoneNumber'], responseData['country']);
+      Provider.of<UserProvider>(context, listen: false)
+          .updateUserPhoneNumberAndCountry(extractedPhoneNumber,
+              responseData['country'], responseData['token']);
+      Navigator.of(context).pushNamedAndRemoveUntil(
+          Profile.routeName, ModalRoute.withName('/home'));
+    }
+
+    if (response.statusCode == 204) {
+      snackBar(scaffoldKey, 'No changes detected');
+      await Future.delayed(const Duration(seconds: 2));
+      Navigator.of(context).pop();
+    }
+
+    //Incase of user not found
+    if (response.statusCode == 404) {
+      snackBar(scaffoldKey, 'No user with your mobile number found.');
+      await Future.delayed(const Duration(seconds: 2));
+      Navigator.of(context)
+          .pushNamedAndRemoveUntil(Login.routeName, (route) => false);
+    }
+
+    //Incase of incorrect mobile format
+    if (response.statusCode == 406) {
+      await Future.delayed(const Duration(seconds: 2));
+      snackBar(scaffoldKey, 'Incorrect mobile format.');
+      Navigator.of(context).pushNamedAndRemoveUntil(
+          UpdatePhoneNumber.routeName, (route) => false);
+    }
+    //Incase of access denied
+    if (response.statusCode == 401) {
+      snackBar(scaffoldKey, 'Unauthorized Access.');
+      setState(() => verifying = false);
+    }
+  }
+
   Widget showEnabledNextButton() {
-    final phoneNumber =
-        ModalRoute.of(context)!.settings.arguments as PhoneNumber;
+    final routeArgs =
+        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+    final phoneNumber = routeArgs['phoneNumber'];
+    final String previousScreen = routeArgs['previousScreen'];
     return Container(
       margin: const EdgeInsets.only(top: 200),
       child: LongButton(
@@ -117,32 +190,17 @@ class _VerificationState extends State<Verification> {
             UserCredential value = await FirebaseAuth.instance
                 .signInWithCredential(PhoneAuthProvider.credential(
                     verificationId: verificationCode, smsCode: currentText));
-
             if (value.user != null) {
-              var response = await login(phoneNumber);
-              if (response.statusCode == 200) {
-                Provider.of<UserProvider>(context, listen: false)
-                    .onLogin(response);
-                Navigator.of(context)
-                    .pushNamedAndRemoveUntil(Home.routeName, (route) => false);
-              } else if (response.statusCode == 404) {
-                Navigator.of(context).pushNamedAndRemoveUntil(
-                    Register.routeName, (route) => false,
-                    arguments: phoneNumber);
-              } else if (response.statusCode == 406) {
-                Navigator.of(context)
-                    .pushNamedAndRemoveUntil(Login.routeName, (route) => false);
-              } else {
-                setState(() => verifying = false);
-                errorSnackBar(scaffoldKey, 'Internal server error. Try again!');
-              }
+              previousScreen == 'login'
+                  ? loginHandler(phoneNumber)
+                  : updatePhoneNumberHandler(phoneNumber);
             } else {
               setState(() => verifying = false);
             }
           } on FirebaseAuthException catch (e) {
             setState(() => verifying = false);
             FocusScope.of(context).unfocus();
-            errorSnackBar(scaffoldKey, e.code);
+            snackBar(scaffoldKey, e.code);
           }
         },
         buttonText: 'Next',
@@ -186,8 +244,9 @@ class _VerificationState extends State<Verification> {
   }
 
   Widget otpVerification() {
-    final phoneNumber =
-        ModalRoute.of(context)!.settings.arguments as PhoneNumber;
+    final routeArgs =
+        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+    final phoneNumber = routeArgs['phoneNumber'];
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 20),
       child: Column(
