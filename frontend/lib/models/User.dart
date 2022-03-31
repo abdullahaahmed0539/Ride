@@ -2,13 +2,13 @@ import 'package:intl_phone_field/phone_number.dart';
 import '../services/string_extension.dart';
 
 class User {
-  final String id;
+  String id;
   String firstName;
   String lastName;
   String email;
   PhoneNumber phoneNumber;
   String country;
-  final String walletAddress;
+  String walletAddress;
   bool isDriver = false;
   String token;
   String expiresIn;

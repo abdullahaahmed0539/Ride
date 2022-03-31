@@ -1,22 +1,24 @@
 import 'package:flutter/material.dart';
-import '../screens/Booking.dart';
-import '../screens/DisputeGuidelines.dart';
+import 'package:frontend/screens/disputes/DisputeDetail.dart';
+import '../screens/booking/Booking.dart';
+import '../screens/disputes/DisputeGuidelines.dart';
+import '../screens/disputes/DisputeTabs.dart';
 import '../screens/Home.dart';
-import '../screens/Login.dart';
-import '../screens/PublishDispute.dart';
+import '../screens/users/Login.dart';
+import '../screens/disputes/PublishDispute.dart';
 import '../screens/Rating.dart';
-import '../screens/Verification.dart';
-import '../screens/Register.dart';
+import '../screens/users/Verification.dart';
+import '../screens/users/Register.dart';
 import '../screens/Profile.dart';
-import '../screens/PersonalInformation.dart';
-import '../screens/Voting.dart';
-import '../screens/VotingGuidelines.dart';
-import '../screens/Wallet.dart';
-import '../screens/Activities.dart';
-import '../screens/Disputes.dart';
-import '../screens/UpdateEmail.dart';
-import '../screens/UpdateName.dart';
-import '../screens/UpdatePhoneNumber.dart';
+import '../screens/users/PersonalInformation.dart';
+import '../screens/voting/Voting.dart';
+import '../screens/voting/VotingGuidelines.dart';
+import '../screens/users/Wallet.dart';
+import '../screens/booking/Activities.dart';
+import '../screens/disputes/DisputesByYou.dart';
+import '../screens/users/UpdateEmail.dart';
+import '../screens/users/UpdateName.dart';
+import '../screens/users/UpdatePhoneNumber.dart';
 
 Map<String, Widget Function(BuildContext)> routes() {
   return {
@@ -33,7 +35,8 @@ Map<String, Widget Function(BuildContext)> routes() {
     Wallet.routeName: (context) => const Wallet(),
     Profile.routeName: (context) => const Profile(),
     PersonalInformation.routeName: (context) => const PersonalInformation(),
-    Disputes.routeName: (context) => const Disputes(),
+    DisputeDetail.routeName: (context) => const DisputeDetail(),
+    DisputeTabs.routeName: (context) => const DisputeTabs(),
     Activities.routeName: (context) => const Activities(),
     UpdateName.routeName: (context) => const UpdateName(),
     UpdateEmail.routeName: (context) => const UpdateEmail(),

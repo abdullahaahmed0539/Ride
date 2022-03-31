@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/screens/DisputeGuidelines.dart';
+import 'package:frontend/screens/disputes/DisputeGuidelines.dart';
 import 'package:frontend/widgets/ui/LongButton.dart';
 import 'package:frontend/widgets/ui/TextualButton.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';

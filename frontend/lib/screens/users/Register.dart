@@ -5,14 +5,14 @@ import 'package:intl_phone_field/phone_number.dart';
 import 'package:provider/provider.dart';
 import 'package:validators/validators.dart';
 
-import '../services/utilities.dart';
-import '../screens/Home.dart';
-import '../widgets/ui/DarkTextField.dart';
-import '../widgets/ui/LongButton.dart';
-import '../api calls/User.dart';
-import '../providers/User.dart';
-import '../services/error.dart';
-import './Login.dart';
+import '../../services/utilities.dart';
+import '../Home.dart';
+import '../../widgets/ui/DarkTextField.dart';
+import '../../widgets/ui/LongButton.dart';
+import '../../api calls/User.dart';
+import '../../providers/User.dart';
+import '../../services/error.dart';
+import 'Login.dart';
 
 class Register extends StatefulWidget {
   static const routeName = '/register';

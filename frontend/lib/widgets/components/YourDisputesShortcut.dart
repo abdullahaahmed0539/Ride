@@ -2,8 +2,10 @@
 // different display when no voting available
 
 import 'package:flutter/material.dart';
+import 'package:frontend/screens/disputes/DisputeTabs.dart';
 import 'package:frontend/widgets/ui/LongButton.dart';
 
+import '../../screens/disputes/DisputesByYou.dart';
 import '../ui/CardItem.dart';
 
 class YourDisputesShortcut extends StatefulWidget {
@@ -35,14 +37,18 @@ class _YourDisputesShortcut extends State<YourDisputesShortcut> {
               'Robbery',
               'I was held hostage by the driver for 4 hours. then what should i do ',
               'View results',
+              10,
+              3,
               () {}),
           CardItem(
               'Robbery',
               'I was held hostage by the driver for 4 hours. then what should i do ',
               'View results',
+              10,
+              3,
               () {}),
           
-          Container(margin: const EdgeInsets.symmetric(vertical: 15, horizontal: 12), child: LongButton(handler: () {}, buttonText: 'More', isActive: true))
+          Container(margin: const EdgeInsets.symmetric(vertical: 15, horizontal: 12), child: LongButton(handler: () =>  Navigator.of(context).pushNamed(DisputeTabs.routeName, arguments: {'initialIndex': 0}), buttonText: 'More', isActive: true))
         ]));
   }
 }

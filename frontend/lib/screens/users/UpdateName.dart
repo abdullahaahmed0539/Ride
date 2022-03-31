@@ -10,9 +10,9 @@ import 'package:frontend/widgets/ui/LongButton.dart';
 import 'package:http/http.dart';
 import 'package:provider/provider.dart';
 
-import '../models/User.dart';
+import '../../models/User.dart';
 import 'Login.dart';
-import 'Profile.dart';
+import '../Profile.dart';
 
 class UpdateName extends StatefulWidget {
   static const routeName = '/update_name';
@@ -152,7 +152,7 @@ class _UpdateNameState extends State<UpdateName> {
                               )
                       ],
                     )
-                  : Spinner(text: 'Updating'),
+                  : Spinner(text: 'Updating', height: 300,),
             ))));
   }
 }

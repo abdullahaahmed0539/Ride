@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/screens/Voting.dart';
+import 'package:frontend/screens/voting/Voting.dart';
 
-import '../widgets/ui/LongButton.dart';
+import '../../widgets/ui/LongButton.dart';
 
 class VotingGuidelines extends StatefulWidget {
   static const routeName = '/voting_guidelines';

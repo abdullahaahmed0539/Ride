@@ -3,22 +3,23 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:circular_countdown_timer/circular_countdown_timer.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:frontend/screens/UpdatePhoneNumber.dart';
+import 'package:frontend/screens/users/UpdatePhoneNumber.dart';
 import 'package:frontend/services/error.dart';
+import 'package:frontend/widgets/ui/spinner.dart';
 import 'package:http/http.dart';
 import 'package:intl_phone_field/phone_number.dart';
-import '../services/utilities.dart';
-import './Home.dart';
-import './Register.dart';
+import '../../services/utilities.dart';
+import '../Home.dart';
+import 'Register.dart';
 import 'package:frontend/widgets/ui/CountDown.dart';
 import 'package:frontend/widgets/ui/LongButton.dart';
 import 'package:provider/provider.dart';
-import '../providers/User.dart';
-import '../widgets/ui/PinCodeField.dart';
-import './Login.dart';
-import '../api calls/User.dart';
-import '../models/User.dart' as CustomUser;
-import 'Profile.dart';
+import '../../providers/User.dart';
+import '../../widgets/ui/PinCodeField.dart';
+import 'Login.dart';
+import '../../api calls/User.dart';
+import '../../models/User.dart' as CustomUser;
+import '../Profile.dart';
 
 class Verification extends StatefulWidget {
   static const routeName = '/verification';
@@ -43,9 +44,11 @@ class _VerificationState extends State<Verification> {
   }
 
   void onTimerComplete() {
-    setState(() {
-      otpExpired = true;
-    });
+    if (mounted) {
+      setState(() {
+        otpExpired = true;
+      });
+    }
   }
 
   void verifyPhone() async {
@@ -127,7 +130,6 @@ class _VerificationState extends State<Verification> {
     Response response =
         await updatePhoneNumber(user.phoneNumber, phoneNumber, user.token);
 
-    print(response.statusCode);
     if (response.statusCode != 201 &&
         response.statusCode != 204 &&
         response.statusCode != 404 &&
@@ -281,25 +283,6 @@ class _VerificationState extends State<Verification> {
     );
   }
 
-  Widget onVerifying() {
-    return Center(
-      child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-        CircularProgressIndicator(
-          color: Theme.of(context).primaryColor,
-        ),
-        Container(
-            margin: const EdgeInsets.only(top: 10),
-            child: const Text(
-              'Verifying',
-              style: TextStyle(
-                  color: Colors.white,
-                  fontFamily: 'SF-Pro-Rounded',
-                  fontSize: 14),
-            ))
-      ]),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -311,7 +294,9 @@ class _VerificationState extends State<Verification> {
           appBar: AppBar(
             title: const Text('Phone verification'),
           ),
-          body: verifying ? onVerifying() : otpVerification()),
+          body: verifying
+              ? Spinner(text: 'Verifying', height: 0)
+              : otpVerification()),
     );
   }
 }

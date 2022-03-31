@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 class TextArea extends StatelessWidget {
   final String label;
   final String placeholder;
+  final double radius;
   final Function onChangeHandler;
 
   const TextArea(
       {required this.label,
+      required this.radius,
       required this.placeholder,
       required this.onChangeHandler});
 
@@ -26,7 +28,7 @@ class TextArea extends StatelessWidget {
               fontFamily: 'SF-Pro-Rounded', fontSize: 18, color: Colors.white),
           decoration: InputDecoration(
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(5),
+              borderRadius: BorderRadius.circular(radius),
             ),
             fillColor: const Color(0xFF43444B),
             filled: true,

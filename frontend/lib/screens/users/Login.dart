@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/screens/Verification.dart';
+import 'package:frontend/screens/users/Verification.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 
 import 'package:frontend/widgets/ui/LongButton.dart';

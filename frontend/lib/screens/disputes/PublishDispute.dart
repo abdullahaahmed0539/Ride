@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/widgets/ui/DarkTextField.dart';
-import '../widgets/ui/LongButton.dart';
-import '../widgets/ui/TextArea.dart';
-import 'Home.dart';
+import '../../widgets/ui/LongButton.dart';
+import '../../widgets/ui/TextArea.dart';
+import '../Home.dart';
 
 class PublishDispute extends StatefulWidget {
   static const routeName = '/publish_dispute';
@@ -70,7 +70,7 @@ class _PublishDisputeState extends State<PublishDispute> {
                     child: DarkTextField(
                       label: 'Subject',
                       placeholder: 'Enter subject',
-                      onChangeHandler: (val) => setSubject(val.toLowerCase()),
+                      onChangeHandler: (val) => setSubject(val),
                     ),
                   ),
                   Container(
@@ -78,16 +78,17 @@ class _PublishDisputeState extends State<PublishDispute> {
                     child: DarkTextField(
                       label: 'Short description',
                       placeholder: 'Enter short description',
-                      onChangeHandler: (val) => setShortDescription(val.toLowerCase()),
+                      onChangeHandler: (val) => setShortDescription(val),
                     ),
                   ),
                   Container(
                     margin: const EdgeInsets.only(top: 15),
                     child: TextArea(
+                      radius: 5,
                       label: 'Description',
                       placeholder: 'Please Enter the details of the event.',
                       onChangeHandler: (val) =>
-                          setDescription(val.toLowerCase()),
+                          setDescription(val),
                     ),
                   ),
                   Container(

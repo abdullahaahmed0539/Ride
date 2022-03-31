@@ -27,6 +27,19 @@ class UserProvider with ChangeNotifier {
         expiresIn: responseData['expiresIn']);
   }
 
+  void onLogout() {
+    user.id = '';
+    user.firstName = '';
+    user.lastName = '';
+    user.email = '';
+    user.phoneNumber = PhoneNumber(countryISOCode: '', countryCode: '', number: '');
+    user.country = '';
+    user.walletAddress = '';
+    user.token = '';
+    user.expiresIn = '';
+    user.isDriver = false;
+  }
+
   void updateUserName(
     String firstName,
     String lastName,

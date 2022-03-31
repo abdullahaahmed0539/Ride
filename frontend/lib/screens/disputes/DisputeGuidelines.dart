@@ -2,8 +2,8 @@
 import 'package:flutter/material.dart';
 
 //custom
-import '../screens/PublishDispute.dart';
-import '../widgets/ui/LongButton.dart';
+import 'PublishDispute.dart';
+import '../../widgets/ui/LongButton.dart';
 
 class DisputeGuidelines extends StatefulWidget {
   static const routeName = '/dispute_guidelines';

@@ -1,11 +1,12 @@
 //Need to add functionality to buttons
 
 import 'package:flutter/material.dart';
+import 'package:frontend/screens/disputes/DisputeTabs.dart';
 import 'package:frontend/screens/Profile.dart';
-import '../../screens/Booking.dart';
-import '../../screens/VotingGuidelines.dart';
+import '../../screens/booking/Booking.dart';
+import '../../screens/voting/VotingGuidelines.dart';
 import '../../widgets/ui/CardButton.dart';
-import '../../screens/Wallet.dart';
+import '../../screens/users/Wallet.dart';
 
 class NavigationMenu extends StatelessWidget {
   const NavigationMenu({Key? key}) : super(key: key);
@@ -36,7 +37,7 @@ class NavigationMenu extends StatelessWidget {
               
               Expanded(
                 child: CardButton(
-                    const Color(0xff5CCB57), Icons.attach_money, 'Earn', () => Navigator.pushNamed(context, VotingGuidelines.routeName)),
+                    const Color(0xff5CCB57), Icons.attach_money, 'Earn', () => Navigator.pushNamed(context, DisputeTabs.routeName, arguments: {'initialIndex': 2})),
               ),
               Expanded(
                 child: CardButton(const Color(0xff43ABBE),

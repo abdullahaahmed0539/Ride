@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/models/User.dart';
 import 'package:frontend/providers/User.dart';
-import 'package:frontend/screens/PersonalInformation.dart';
-import 'package:frontend/screens/Wallet.dart';
+import 'package:frontend/screens/disputes/DisputeTabs.dart';
+import 'package:frontend/screens/users/PersonalInformation.dart';
+import 'package:frontend/screens/users/Wallet.dart';
 import 'package:frontend/widgets/components/listItemA.dart';
 import 'package:provider/provider.dart';
 
-import 'Disputes.dart';
-import 'Activities.dart';
+import 'disputes/DisputesByYou.dart';
+import 'booking/Activities.dart';
+import 'users/Login.dart';
 
 class Profile extends StatefulWidget {
   static const routeName = '/profile';
@@ -26,8 +28,7 @@ class _ProfileState extends State<Profile> {
         child: Scaffold(
             resizeToAvoidBottomInset: false,
             appBar: AppBar(
-              title: Text(
-                  user.getName()),
+              title: Text(user.getName()),
             ),
             backgroundColor: Theme.of(context).backgroundColor,
             body: SingleChildScrollView(
@@ -57,7 +58,7 @@ class _ProfileState extends State<Profile> {
                             text: 'Your disputes',
                             icon: Icons.report,
                             handler: () => Navigator.of(context)
-                                .pushNamed(Disputes.routeName)),
+                                .pushNamed(DisputeTabs.routeName, arguments: {'initialIndex': 0})),
                         ListItem(
                             text: 'Your activities',
                             icon: Icons.history_toggle_off_outlined,
@@ -80,7 +81,11 @@ class _ProfileState extends State<Profile> {
                         ListItem(
                             text: 'Log out',
                             icon: Icons.logout,
-                            handler: () {}),
+                            handler: () {
+                              Provider.of<UserProvider>(context, listen: false).onLogout();
+                              Navigator.of(context).pushNamedAndRemoveUntil(
+                                  Login.routeName, (route) => false);
+                            }),
                       ],
                     )))));
   }

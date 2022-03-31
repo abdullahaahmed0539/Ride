@@ -6,14 +6,14 @@ import 'package:http/http.dart';
 import 'package:provider/provider.dart';
 import 'package:validators/validators.dart';
 
-import '../models/User.dart';
-import '../providers/User.dart';
-import '../services/error.dart';
-import '../widgets/ui/DarkTextField.dart';
-import '../widgets/ui/LongButton.dart';
-import '../widgets/ui/spinner.dart';
+import '../../models/User.dart';
+import '../../providers/User.dart';
+import '../../services/error.dart';
+import '../../widgets/ui/DarkTextField.dart';
+import '../../widgets/ui/LongButton.dart';
+import '../../widgets/ui/spinner.dart';
 import 'Login.dart';
-import 'Profile.dart';
+import '../Profile.dart';
 
 class UpdateEmail extends StatefulWidget {
   static const routeName = '/update_email';
@@ -161,6 +161,6 @@ class _UpdateEmailState extends State<UpdateEmail> {
                                             handler: () {}),
                                       )
                               ])
-                        : Spinner(text: 'Updating')))));
+                        : Spinner(text: 'Updating', height: 300,)))));
   }
 }
