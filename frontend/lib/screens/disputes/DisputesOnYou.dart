@@ -24,15 +24,19 @@ class _DisputeOnYouState extends State<DisputeOnYou> {
 
   @override
   void initState() {
-    Future.delayed(Duration.zero, () async {
-      User user = Provider.of<UserProvider>(context, listen: false).user;
+    Future.delayed(Duration.zero, fetchDisputeOnMeFromServer);
+    super.initState();
+  }
 
-      final response =
-          await fetchDisputesOnMe(user.id, user.phoneNumber, user.token);
-      fetchDisputesOnMeHandler(response);
+  Future fetchDisputeOnMeFromServer() async {
+    User user = Provider.of<UserProvider>(context, listen: false).user;
+
+    final response =
+        await fetchDisputesOnMe(user.id, user.phoneNumber, user.token);
+    fetchDisputesOnMeHandler(response);
+    setState(() {
       isLoading = false;
     });
-    super.initState();
   }
 
   void fetchDisputesOnMeHandler(Response response) {
@@ -61,12 +65,14 @@ class _DisputeOnYouState extends State<DisputeOnYou> {
         .where((dispute) => dispute['status'] == 'completed')
         .toList();
     return !isLoading
-        ? SingleChildScrollView(
-            child: Container(
-                margin:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-                child:
-                    (pendingDispute.isNotEmpty ||
+        ? RefreshIndicator(
+            onRefresh: () => fetchDisputeOnMeFromServer(),
+            child: SingleChildScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
+                child: Container(
+                    margin: const EdgeInsets.symmetric(
+                        horizontal: 20, vertical: 20),
+                    child: (pendingDispute.isNotEmpty ||
                             completeDispute.isNotEmpty ||
                             pendingDispute.isNotEmpty)
                         ? Column(
@@ -184,7 +190,8 @@ class _DisputeOnYouState extends State<DisputeOnYou> {
                               'There are no disputes on you',
                               style: Theme.of(context).textTheme.titleSmall,
                             ),
-                          )))
+                          ))),
+          )
         : Spinner(text: 'Fetching your disputes', height: 0);
   }
 }

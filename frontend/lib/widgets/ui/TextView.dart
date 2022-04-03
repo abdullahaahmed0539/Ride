@@ -18,7 +18,7 @@ class TextView extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min, children: [
         Container(
-            padding: const EdgeInsets.all(8),
+            padding: const EdgeInsets.all(12),
             child: Message(
                 text, Colors.white, 18, "SF-Pro-Rounded", FontWeight.w500))
       ]),

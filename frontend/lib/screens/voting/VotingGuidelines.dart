@@ -16,6 +16,9 @@ class _VotingGuidelinesState extends State<VotingGuidelines> {
 
   @override
   Widget build(BuildContext context) {
+    final routeArgs =
+        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+    final disputeId = routeArgs['disputeId'];
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
@@ -72,8 +75,9 @@ class _VotingGuidelinesState extends State<VotingGuidelines> {
                           margin: const EdgeInsets.only(top: 20, bottom: 40),
                           child: LongButton(
                               buttonText: 'Next',
-                              handler: () => Navigator.of(context)
-                                  .pushNamed(Voting.routeName),
+                              handler: () => Navigator.of(context).pushNamed(
+                                  Voting.routeName,
+                                  arguments: {'disputeId': disputeId}),
                               isActive: true))
                       : Container(
                           margin: const EdgeInsets.only(top: 20, bottom: 40),
@@ -88,4 +92,3 @@ class _VotingGuidelinesState extends State<VotingGuidelines> {
     );
   }
 }
-
