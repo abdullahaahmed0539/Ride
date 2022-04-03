@@ -85,7 +85,10 @@ class _CommunityDisputesState extends State<CommunityDisputes> {
                               5,
                               () => Navigator.of(context).pushNamed(
                                   VotingGuidelines.routeName,
-                                  arguments: {'disputeId': dispute['_id']}));
+                                  arguments: {
+                                    'disputeId': dispute['_id'],
+                                    'from': 'communityDisputes'
+                                    }));
                         }).toList()
                       ])): Container(
                         margin: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),

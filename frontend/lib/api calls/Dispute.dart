@@ -47,6 +47,19 @@ Future<Response> fetchMyDisputes(
   return response;
 }
 
+Future<Response> fetchDisputesForVotingBrief(
+    String userId, PhoneNumber phoneNumber, String token) async {
+  final response = await post(Uri.parse('$_uri/disputes_available_for_voting_brief/$userId'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer $token'
+      },
+      body: jsonEncode(<String, String>{
+        'phoneNumber': '${phoneNumber.countryCode}${phoneNumber.number}',
+      }));
+  return response;
+}
+
 Future<Response> fetchDisputesOnMe(
     String userId, PhoneNumber phoneNumber, String token) async {
   final response = await post(Uri.parse('$_uri/disputes_on_me/$userId'),

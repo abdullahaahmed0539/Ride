@@ -24,14 +24,21 @@ class _HomeState extends State<Home> {
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
   List<dynamic> disputesOnMe = [];
   List<dynamic> disputesByMe = [];
+  List<dynamic> otherDisputes = [];
 
   @override
   void initState() {
     Future.delayed(
       Duration.zero,
-      fetchDisputeOnYouFromServer,
+      onStart,
     );
     super.initState();
+  }
+
+  void onStart() {
+    fetchDisputeOnYouFromServer();
+    fetchDisputeByYouFromServer();
+    fetchOtherDisputesFromServer();
   }
 
   Future fetchDisputeOnYouFromServer() async {
@@ -48,6 +55,14 @@ class _HomeState extends State<Home> {
     final response =
         await fetchMyCompletedDisputes(user.id, user.phoneNumber, user.token);
     fetchDisputesResponseHandler(response, 2);
+  }
+
+  Future fetchOtherDisputesFromServer() async {
+    User user = Provider.of<UserProvider>(context, listen: false).user;
+
+    final response = await fetchDisputesForVotingBrief(
+        user.id, user.phoneNumber, user.token);
+    fetchDisputesResponseHandler(response, 3);
   }
 
   void fetchDisputesResponseHandler(Response response, int whichFunction) {
@@ -67,6 +82,10 @@ class _HomeState extends State<Home> {
         setState(() {
           disputesByMe = json.decode(response.body)['data']['disputes'];
         });
+      } else if (whichFunction == 3) {
+        setState(() {
+          otherDisputes = json.decode(response.body)['data']['disputes'];
+        });
       }
     }
     //incase of no fetch
@@ -78,6 +97,10 @@ class _HomeState extends State<Home> {
       } else if (whichFunction == 2) {
         setState(() {
           disputesByMe = [];
+        });
+      } else if (whichFunction == 3) {
+        setState(() {
+          otherDisputes = [];
         });
       }
     }
@@ -97,14 +120,18 @@ class _HomeState extends State<Home> {
           onRefresh: () async {
             fetchDisputeByYouFromServer();
             fetchDisputeOnYouFromServer();
+            fetchOtherDisputesFromServer();
           },
           child: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
             child: Column(children: [
               const NavigationMenu(),
               DisputesOnYouShortCut(
                 disputesOnMe: disputesOnMe,
               ),
-              VotingShortcut(),
+              VotingShortcut(
+                disputes: otherDisputes,
+              ),
               MyDisputesShortcut(
                 myDisputes: disputesByMe,
               )
