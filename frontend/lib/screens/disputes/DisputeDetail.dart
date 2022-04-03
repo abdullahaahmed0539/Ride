@@ -246,7 +246,7 @@ class _DisputeDetailState extends State<DisputeDetail> {
                                                   isLoading = true;
                                                 });
                                                 Response response =
-                                                    await AddClaim(
+                                                    await addClaim(
                                                         disputeId,
                                                         yourClaim,
                                                         user.id,

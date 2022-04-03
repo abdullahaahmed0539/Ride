@@ -19,7 +19,7 @@ class _CommunityDisputesState extends State<CommunityDisputes> {
                 children: [
                   Container(
                     margin: const EdgeInsets.only(top: 10),
-                    child: Text('Help your community by voting on their dusputes.', style: Theme.of(context).textTheme.titleLarge,),
+                    child: Text('Help your community by voting on their disputes.', style: Theme.of(context).textTheme.titleLarge,),
                   )
                 ])));
   }

@@ -30,6 +30,32 @@ Future<Response> fetchDisputesOnMe(
   return response;
 }
 
+Future<Response> fetchMyCompletedDisputes(
+    String userId, PhoneNumber phoneNumber, String token) async {
+  final response = await post(Uri.parse('$_uri/my_disputes_results/$userId'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer $token'
+      },
+      body: jsonEncode(<String, String>{
+        'phoneNumber': '${phoneNumber.countryCode}${phoneNumber.number}',
+      }));
+  return response;
+}
+
+Future<Response> fetchActiveDisputesOnMe(
+    String userId, PhoneNumber phoneNumber, String token) async {
+  final response = await post(Uri.parse('$_uri/disputes_on_me_pending/$userId'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer $token'
+      },
+      body: jsonEncode(<String, String>{
+        'phoneNumber': '${phoneNumber.countryCode}${phoneNumber.number}',
+      }));
+  return response;
+}
+
 Future<Response> fetchDisputeDetail(
     String? disputeId, PhoneNumber phoneNumber, String token) async {
   final response = await post(Uri.parse('$_uri/$disputeId'),
@@ -43,9 +69,8 @@ Future<Response> fetchDisputeDetail(
   return response;
 }
 
-
-Future<Response> AddClaim(
-    String disputeId, String defendentsClaim, String userId, PhoneNumber phoneNumber, String token) async {
+Future<Response> addClaim(String disputeId, String defendentsClaim,
+    String userId, PhoneNumber phoneNumber, String token) async {
   final response = await patch(Uri.parse('$_uri/add_my_claim'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',

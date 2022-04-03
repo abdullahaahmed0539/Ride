@@ -11,7 +11,6 @@ import '../../models/User.dart';
 import '../../providers/User.dart';
 
 class DisputesByYou extends StatefulWidget {
-  // static const routeName = '/your_disputes';
   const DisputesByYou({
     Key? key,
   }) : super(key: key);
@@ -32,7 +31,9 @@ class _DisputesByYou extends State<DisputesByYou> {
       final response =
           await fetchMyDisputes(user.id, user.phoneNumber, user.token);
       fetchDisputesResponseHandler(response);
-      isLoading = false;
+      setState(() {
+        isLoading = false;
+      });
     });
     super.initState();
   }
@@ -67,102 +68,126 @@ class _DisputesByYou extends State<DisputesByYou> {
             child: Container(
                 margin:
                     const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-                child: (activeDisputes.isNotEmpty || completeDisputes.isNotEmpty || pendingDisputes.isNotEmpty)
-                    ? Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          pendingDisputes.isNotEmpty
-                                ? Container(
-                                    margin: const EdgeInsets.only(top: 10),
-                                    child: Text(
-                                      'Pending',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .titleMedium,
-                                    ),
-                                  )
-                                : Container(),
-                            pendingDisputes.isNotEmpty
-                                ? Container(
-                                    margin: const EdgeInsets.only(top: 10),
-                                    child: Column(
-                                      children: [
-                                        ...pendingDisputes.map((dispute) {
-                                          return CardItem(
-                                              dispute['subject'],
-                                              dispute['shortDescription'],
-                                              'View details',
-                                              0,
-                                              5,
-                                              () =>  Navigator.of(context).pushNamed(DisputeDetail.routeName, arguments: {'disputeId': dispute['_id']}));
-                                        }).toList()
-                                      ],
-                                    ))
-                                : Container(),
-                            activeDisputes.isNotEmpty
-                                ? Container(
-                                    margin: const EdgeInsets.only(top: 10),
-                                    child: Text(
-                                      'Active',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .titleMedium,
-                                    ),
-                                  )
-                                : Container(),
-                            activeDisputes.isNotEmpty
-                                ? Container(
-                                    margin: const EdgeInsets.only(top: 10),
-                                    child: Column(
-                                      children: [
-                                        ...activeDisputes.map((dispute) {
-                                          return CardItem(
-                                              dispute['subject'],
-                                              dispute['shortDescription'],
-                                              'View details',
-                                              0,
-                                              5,
-                                              () =>  Navigator.of(context).pushNamed(DisputeDetail.routeName, arguments: {'disputeId': dispute['_id']}));
-                                        }).toList()
-                                      ],
-                                    ))
-                                : Container(),
-                            completeDisputes.isNotEmpty
-                                ? Container(
-                                    margin: const EdgeInsets.only(top: 30),
-                                    child: Text(
-                                      'Completed',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .titleMedium,
-                                    ),
-                                  )
-                                : Container(),
-                            completeDisputes.isNotEmpty
-                                ? Container(
-                                    margin: const EdgeInsets.only(top: 10),
-                                    child: Column(
-                                      children: [
-                                        ...completeDisputes.map((dispute) {
-                                          return CardItem(
-                                              dispute['subject'],
-                                              dispute['shortDescription'],
-                                              'View details',
-                                              0,
-                                              5,
-                                              () =>  Navigator.of(context).pushNamed(DisputeDetail.routeName, arguments: {'disputeId': dispute['_id']}));
-                                        }).toList()
-                                      ],
-                                    ))
-                                : Container(),
-                          ])
-                    : Center(
-                        child: Text(
-                          'There are no disputes created by you',
-                          style: Theme.of(context).textTheme.titleSmall,
-                        ),
-                      )))
+                child:
+                    (activeDisputes.isNotEmpty ||
+                            completeDisputes.isNotEmpty ||
+                            pendingDisputes.isNotEmpty)
+                        ? Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                                pendingDisputes.isNotEmpty
+                                    ? Container(
+                                        margin: const EdgeInsets.only(top: 10),
+                                        child: Text(
+                                          'Pending',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .titleMedium,
+                                        ),
+                                      )
+                                    : Container(),
+                                pendingDisputes.isNotEmpty
+                                    ? Container(
+                                        margin: const EdgeInsets.only(top: 10),
+                                        child: Column(
+                                          children: [
+                                            ...pendingDisputes.map((dispute) {
+                                              return CardItem(
+                                                  dispute['subject'],
+                                                  dispute['shortDescription'],
+                                                  'View details',
+                                                  0,
+                                                  5,
+                                                  () => Navigator.of(context)
+                                                          .pushNamed(
+                                                              DisputeDetail
+                                                                  .routeName,
+                                                              arguments: {
+                                                            'disputeId':
+                                                                dispute['_id']
+                                                          }));
+                                            }).toList()
+                                          ],
+                                        ))
+                                    : Container(),
+                                activeDisputes.isNotEmpty
+                                    ? Container(
+                                        margin: const EdgeInsets.only(top: 10),
+                                        child: Text(
+                                          'Active',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .titleMedium,
+                                        ),
+                                      )
+                                    : Container(),
+                                activeDisputes.isNotEmpty
+                                    ? Container(
+                                        margin: const EdgeInsets.only(top: 10),
+                                        child: Column(
+                                          children: [
+                                            ...activeDisputes.map((dispute) {
+                                              return CardItem(
+                                                  dispute['subject'],
+                                                  dispute['shortDescription'],
+                                                  'View details',
+                                                  0,
+                                                  5,
+                                                  () => Navigator.of(context)
+                                                          .pushNamed(
+                                                              DisputeDetail
+                                                                  .routeName,
+                                                              arguments: {
+                                                            'disputeId':
+                                                                dispute['_id']
+                                                          }));
+                                            }).toList()
+                                          ],
+                                        ))
+                                    : Container(),
+                                completeDisputes.isNotEmpty
+                                    ? Container(
+                                        margin: const EdgeInsets.only(top: 30),
+                                        child: Text(
+                                          'Completed',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .titleMedium,
+                                        ),
+                                      )
+                                    : Container(),
+                                completeDisputes.isNotEmpty
+                                    ? Container(
+                                        margin: const EdgeInsets.only(top: 10),
+                                        child: Column(
+                                          children: [
+                                            ...completeDisputes.map((dispute) {
+                                              return CardItem(
+                                                  dispute['subject'],
+                                                  dispute['shortDescription'],
+                                                  'View details',
+                                                  0,
+                                                  5,
+                                                  () => Navigator.of(context)
+                                                          .pushNamed(
+                                                              DisputeDetail
+                                                                  .routeName,
+                                                              arguments: {
+                                                            'disputeId':
+                                                                dispute['_id']
+                                                          }));
+                                            }).toList()
+                                          ],
+                                        ))
+                                    : Container(),
+                              ])
+                        : Center(
+                            child: Text(
+                              'There are no disputes created by you',
+                              style: Theme.of(context).textTheme.titleSmall,
+                            ),
+                          )))
         : Spinner(text: 'Fetching your disputes', height: 0);
   }
 }
