@@ -13,6 +13,7 @@ contract Controller {
     uint collatForDriver;
     mapping (address => uint) collatAmount;
     mapping (address => uint) driverToCode;
+    mapping (address => uint) userBalances;
 
     constructor() public {
         // coins = RideToken(<Address of ERC20 tokens>);
@@ -88,7 +89,7 @@ contract Controller {
         return 1;
     }
 
-    function startRideRider(uint memory _code, address memory _driver) public view returns (uint8){
+    function startRideRider(uint memory _code, address memory _driver) public view returns (uint8){ //NEED TO ADD PRICE VARIABLE
         require(driverToCode(_driver) == _code, "Driver has sent an invalid code.");
         return 1; // 1 means the session is good to go.
 
@@ -107,5 +108,16 @@ contract Controller {
     //View functions for reading different things like Balance/Owner
     //Extra info will be kept in the Database. This includes location and cost of ride.
     //Decide what to save on-chain. This may include voting related data.
+
+    function mintRideCoins(address memory _rider, uint memory _amount) public {
+        // require(_amount >= collatForDriver, "Insufficient amount.");
+        coins.approve(vault, _amount);
+        coins.transferFrom(_rider, vault, _amount);
+        userBalances(_rider) = _amount;
+    } 
+
+    function riderBalances(address memory _rider) public view returns (uint){
+        return riderBalances(_rider);
+    }
 
 }
