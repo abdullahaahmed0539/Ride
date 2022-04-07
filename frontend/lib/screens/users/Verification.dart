@@ -1,3 +1,4 @@
+// ignore_for_file: file_names
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -18,6 +19,7 @@ import '../../providers/User.dart';
 import '../../widgets/ui/PinCodeField.dart';
 import 'Login.dart';
 import '../../api calls/User.dart';
+// ignore: library_prefixes
 import '../../models/User.dart' as CustomUser;
 import '../Profile.dart';
 
@@ -107,7 +109,7 @@ class _VerificationState extends State<Verification> {
   void loginHandler(PhoneNumber phoneNumber) async {
     var response = await login(phoneNumber);
     if (response.statusCode == 200) {
-      Provider.of<UserProvider>(context, listen: false).onLogin(response);
+      Provider.of<UserProvider>(context, listen: false).user.onLogin(response, context);
       Navigator.of(context)
           .pushNamedAndRemoveUntil(Home.routeName, (route) => false);
     } else if (response.statusCode == 404) {
@@ -143,7 +145,7 @@ class _VerificationState extends State<Verification> {
       var responseData = json.decode(response.body)['data'];
       PhoneNumber extractedPhoneNumber = convertToPhoneNumber(
           responseData['updated_phoneNumber'], responseData['country']);
-      Provider.of<UserProvider>(context, listen: false)
+      Provider.of<UserProvider>(context, listen: false).user
           .updateUserPhoneNumberAndCountry(extractedPhoneNumber,
               responseData['country'], responseData['token']);
       Navigator.of(context).pushNamedAndRemoveUntil(

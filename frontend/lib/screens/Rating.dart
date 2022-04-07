@@ -1,3 +1,4 @@
+// ignore_for_file: file_names
 import 'package:flutter/material.dart';
 import 'package:frontend/screens/disputes/DisputeGuidelines.dart';
 import 'package:frontend/widgets/ui/LongButton.dart';

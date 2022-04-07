@@ -1,3 +1,4 @@
+// ignore_for_file: file_names
 import 'package:flutter/material.dart';
 
 class LongButton extends StatelessWidget {
@@ -6,7 +7,7 @@ class LongButton extends StatelessWidget {
   final bool isActive;
 
   // ignore: prefer_const_constructors_in_immutables
-  const LongButton({ required this.handler, required this.buttonText, required this.isActive});
+  const LongButton({Key? key,  required this.handler, required this.buttonText, required this.isActive}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

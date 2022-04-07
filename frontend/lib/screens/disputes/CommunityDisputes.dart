@@ -1,3 +1,4 @@
+// ignore_for_file: file_names
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -10,7 +11,7 @@ import '../../api calls/Dispute.dart';
 import '../../models/User.dart';
 import '../../providers/User.dart';
 import '../../widgets/ui/CardItem.dart';
-import 'DisputeDetail.dart';
+
 
 class CommunityDisputes extends StatefulWidget {
   const CommunityDisputes({Key? key}) : super(key: key);

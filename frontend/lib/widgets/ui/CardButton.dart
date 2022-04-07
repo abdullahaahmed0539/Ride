@@ -1,3 +1,4 @@
+// ignore_for_file: file_names
 import 'package:flutter/material.dart';
 import './Message.dart';
 
@@ -8,7 +9,7 @@ class CardButton extends StatelessWidget {
   final VoidCallback handler;
 
 //add handler
-  const CardButton(this.color, this.icon, this.text, this.handler);
+  const CardButton(this.color, this.icon, this.text, this.handler, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

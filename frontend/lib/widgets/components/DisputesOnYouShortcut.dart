@@ -1,3 +1,4 @@
+// ignore_for_file: file_names
 import 'package:flutter/material.dart';
 
 import '../../screens/disputes/DisputeDetail.dart';
@@ -5,6 +6,7 @@ import '../../screens/disputes/DisputeTabs.dart';
 import '../ui/CardItem.dart';
 import '../ui/LongButton.dart';
 
+// ignore: must_be_immutable
 class DisputesOnYouShortCut extends StatelessWidget {
   dynamic disputesOnMe = [];
   DisputesOnYouShortCut({Key? key, required this.disputesOnMe})

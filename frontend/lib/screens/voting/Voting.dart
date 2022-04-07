@@ -1,9 +1,9 @@
+// ignore_for_file: file_names
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:frontend/api%20calls/Dispute.dart';
 import 'package:frontend/screens/disputes/DisputeTabs.dart';
-import 'package:frontend/screens/voting/VotingGuidelines.dart';
 import 'package:frontend/widgets/ui/TextView.dart';
 import 'package:frontend/widgets/ui/spinner.dart';
 import 'package:http/http.dart';
@@ -66,7 +66,6 @@ class _VotingState extends State<Voting> {
     if (response.statusCode == 201) {
       final routeArgs =
           ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-      print(routeArgs['from']);
       if (routeArgs['from'] == 'communityDisputes') {
         Navigator.of(context)
             .popUntil(ModalRoute.withName(DisputeTabs.routeName));

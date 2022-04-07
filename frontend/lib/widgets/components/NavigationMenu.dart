@@ -1,10 +1,8 @@
-//Need to add functionality to buttons
-
+// ignore_for_file: file_names
 import 'package:flutter/material.dart';
 import 'package:frontend/screens/disputes/DisputeTabs.dart';
 import 'package:frontend/screens/Profile.dart';
 import '../../screens/booking/Booking.dart';
-import '../../screens/voting/VotingGuidelines.dart';
 import '../../widgets/ui/CardButton.dart';
 import '../../screens/users/Wallet.dart';
 

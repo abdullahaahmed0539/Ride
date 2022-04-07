@@ -1,9 +1,10 @@
+// ignore_for_file: file_names
 import 'package:flutter/material.dart';
 
 import './Message.dart';
 
 class TextView extends StatelessWidget {
-  final text;
+  final String text;
   const TextView({Key? key, required this.text}) : super(key: key);
 
   @override

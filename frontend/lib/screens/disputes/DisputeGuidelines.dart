@@ -1,7 +1,5 @@
-//packages
+// ignore_for_file: file_names
 import 'package:flutter/material.dart';
-
-//custom
 import 'PublishDispute.dart';
 import '../../widgets/ui/LongButton.dart';
 

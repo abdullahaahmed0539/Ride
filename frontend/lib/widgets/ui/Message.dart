@@ -1,3 +1,4 @@
+// ignore_for_file: file_names
 import 'package:flutter/material.dart';
 
 class Message extends StatelessWidget {
@@ -7,7 +8,7 @@ class Message extends StatelessWidget {
   final String fontFamily;
   final FontWeight fontWeight;
 
-  const Message(this.text, this.color, this.fontSize, this.fontFamily, this.fontWeight);
+  const Message(this.text, this.color, this.fontSize, this.fontFamily, this.fontWeight, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

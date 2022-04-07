@@ -1,13 +1,14 @@
+// ignore_for_file: file_names
 import 'package:flutter/material.dart';
 
 class TextualButton extends StatelessWidget {
   final VoidCallback handler;
   final String buttonText;
 
-  const TextualButton({
+  const TextualButton({Key? key, 
     required this.handler,
     required this.buttonText,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

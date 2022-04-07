@@ -1,11 +1,12 @@
+// ignore_for_file: file_names
 import 'package:flutter/material.dart';
-import 'package:frontend/screens/voting/Voting.dart';
+
 import 'package:frontend/screens/voting/VotingGuidelines.dart';
 
-import '../../screens/disputes/DisputeTabs.dart';
 import '../ui/CardItem.dart';
 import '../ui/LongButton.dart';
 
+// ignore: must_be_immutable
 class VotingShortcut extends StatelessWidget {
   dynamic disputes = [];
   VotingShortcut({Key? key, required this.disputes}) : super(key: key);
@@ -41,8 +42,11 @@ class VotingShortcut extends StatelessWidget {
                                 10,
                                 3,
                                 () => Navigator.of(context).pushNamed(
-                                    VotingGuidelines.routeName,
-                                    arguments: {'disputeId': dispute['_id'], 'from': 'home'}));
+                                        VotingGuidelines.routeName,
+                                        arguments: {
+                                          'disputeId': dispute['_id'],
+                                          'from': 'home'
+                                        }));
                           }).toList()
                         ],
                       ))

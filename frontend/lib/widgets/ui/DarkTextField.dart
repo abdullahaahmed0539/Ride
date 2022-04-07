@@ -1,3 +1,4 @@
+// ignore_for_file: file_names
 import 'package:flutter/material.dart';
 
 class DarkTextField extends StatelessWidget {
@@ -6,16 +7,17 @@ class DarkTextField extends StatelessWidget {
   final Function onChangeHandler;
 
   const DarkTextField(
-      {required this.label,
+      {Key? key,
+      required this.label,
       required this.placeholder,
-      required this.onChangeHandler});
+      required this.onChangeHandler})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
         TextField(
-          
           onChanged: (val) {
             onChangeHandler(val);
           },

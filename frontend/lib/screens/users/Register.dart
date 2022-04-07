@@ -1,3 +1,4 @@
+// ignore_for_file: file_names
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart';
@@ -30,7 +31,7 @@ class _RegisterState extends State<Register> {
 
   void loginHandling(Response response) {
     if (response.statusCode == 200) {
-      Provider.of<UserProvider>(context, listen: false).onLogin(response);
+      Provider.of<UserProvider>(context, listen: false).user.onLogin(response, context);
       Navigator.of(context)
           .pushNamedAndRemoveUntil(Home.routeName, (route) => false);
     } else {

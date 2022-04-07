@@ -1,3 +1,4 @@
+// ignore_for_file: file_names
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -69,7 +70,7 @@ class _UpdatePhoneNumberState extends State<UpdatePhoneNumber> {
                                   searchFieldCursorColor: Colors.black,
                                   searchFieldInputDecoration: InputDecoration(
                                     hintText: 'Search',
-                                    label: Text('Search country'),
+                                    label: const Text('Search country'),
                                     floatingLabelStyle: TextStyle(
                                         color: Theme.of(context).primaryColor),
                                   )),

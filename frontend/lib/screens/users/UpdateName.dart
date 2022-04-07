@@ -1,3 +1,4 @@
+// ignore_for_file: file_names
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -39,7 +40,7 @@ class _UpdateNameState extends State<UpdateName> {
     //Incase of successfull updation
     if (response.statusCode == 201) {
       var responseData = json.decode(response.body)['data'];
-      Provider.of<UserProvider>(context, listen: false).updateUserName(
+      Provider.of<UserProvider>(context, listen: false).user.updateUserName(
           responseData['updated_first_name'],
           responseData['updated_last_name']);
       snackBar(scaffoldKey, 'Successfully updated.');

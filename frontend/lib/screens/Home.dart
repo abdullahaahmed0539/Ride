@@ -1,5 +1,6 @@
-// ignore: file_names
+// ignore_for_file: file_names
 import 'package:flutter/material.dart';
+import 'package:frontend/providers/App.dart';
 import 'package:frontend/services/error.dart';
 import 'package:frontend/widgets/components/DisputesOnYouShortcut.dart';
 import 'package:frontend/widgets/components/MyDisputesShortcut.dart';
@@ -22,6 +23,7 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
+  String appMode = 'rider';
   List<dynamic> disputesOnMe = [];
   List<dynamic> disputesByMe = [];
   List<dynamic> otherDisputes = [];
@@ -36,9 +38,12 @@ class _HomeState extends State<Home> {
   }
 
   void onStart() {
-    fetchDisputeOnYouFromServer();
-    fetchDisputeByYouFromServer();
-    fetchOtherDisputesFromServer();
+    appMode = Provider.of<AppProvider>(context, listen: false).app.getAppMode();
+    if (appMode == 'rider') {
+      fetchDisputeOnYouFromServer();
+      fetchDisputeByYouFromServer();
+      fetchOtherDisputesFromServer();
+    }
   }
 
   Future fetchDisputeOnYouFromServer() async {
@@ -59,7 +64,6 @@ class _HomeState extends State<Home> {
 
   Future fetchOtherDisputesFromServer() async {
     User user = Provider.of<UserProvider>(context, listen: false).user;
-
     final response = await fetchDisputesForVotingBrief(
         user.id, user.phoneNumber, user.token);
     fetchDisputesResponseHandler(response, 3);
@@ -118,23 +122,31 @@ class _HomeState extends State<Home> {
         ),
         body: RefreshIndicator(
           onRefresh: () async {
-            fetchDisputeByYouFromServer();
-            fetchDisputeOnYouFromServer();
-            fetchOtherDisputesFromServer();
+            if (appMode == 'rider') {
+              fetchDisputeByYouFromServer();
+              fetchDisputeOnYouFromServer();
+              fetchOtherDisputesFromServer();
+            }
           },
           child: SingleChildScrollView(
             physics: const AlwaysScrollableScrollPhysics(),
             child: Column(children: [
               const NavigationMenu(),
-              DisputesOnYouShortCut(
-                disputesOnMe: disputesOnMe,
-              ),
-              VotingShortcut(
-                disputes: otherDisputes,
-              ),
-              MyDisputesShortcut(
-                myDisputes: disputesByMe,
-              )
+              appMode == 'rider'
+                  ? DisputesOnYouShortCut(
+                      disputesOnMe: disputesOnMe,
+                    )
+                  : Container(),
+              appMode == 'rider'
+                  ? VotingShortcut(
+                      disputes: otherDisputes,
+                    )
+                  : Container(),
+              appMode == 'rider'
+                  ? MyDisputesShortcut(
+                      myDisputes: disputesByMe,
+                    )
+                  : Container()
             ]),
           ),
         ));

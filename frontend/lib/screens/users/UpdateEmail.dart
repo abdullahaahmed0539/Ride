@@ -1,3 +1,4 @@
+// ignore_for_file: file_names
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -41,7 +42,7 @@ class _UpdateEmailState extends State<UpdateEmail> {
     if (response.statusCode == 201) {
       var responseData = json.decode(response.body)['data'];
       Provider.of<UserProvider>(context, listen: false)
-          .updateUserEmail(responseData['updated_email']);
+          .user.updateUserEmail(responseData['updated_email']);
       snackBar(
           scaffoldKey, 'Successfully updated. Redirecting to profile page.');
       Navigator.of(context).pushNamedAndRemoveUntil(

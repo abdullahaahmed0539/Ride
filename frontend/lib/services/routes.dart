@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/screens/disputes/DisputeDetail.dart';
+
 import '../screens/booking/Booking.dart';
+import '../screens/booking/bookingDetail.dart';
+import '../screens/disputes/DisputeDetail.dart';
 import '../screens/disputes/DisputeGuidelines.dart';
 import '../screens/disputes/DisputeTabs.dart';
 import '../screens/Home.dart';
@@ -14,8 +16,7 @@ import '../screens/users/PersonalInformation.dart';
 import '../screens/voting/Voting.dart';
 import '../screens/voting/VotingGuidelines.dart';
 import '../screens/users/Wallet.dart';
-import '../screens/booking/Activities.dart';
-import '../screens/disputes/DisputesByYou.dart';
+import '../screens/booking/ActivitiesTab.dart';
 import '../screens/users/UpdateEmail.dart';
 import '../screens/users/UpdateName.dart';
 import '../screens/users/UpdatePhoneNumber.dart';
@@ -41,5 +42,6 @@ Map<String, Widget Function(BuildContext)> routes() {
     UpdateName.routeName: (context) => const UpdateName(),
     UpdateEmail.routeName: (context) => const UpdateEmail(),
     UpdatePhoneNumber.routeName: (context) => const UpdatePhoneNumber(),
+    BookingDetail.routeName: (context) => const BookingDetail()
   };
 }

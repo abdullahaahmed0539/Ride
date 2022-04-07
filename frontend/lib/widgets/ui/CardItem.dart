@@ -1,3 +1,4 @@
+// ignore_for_file: file_names
 import 'package:flutter/material.dart';
 import 'package:frontend/widgets/ui/TextualButton.dart';
 
@@ -9,8 +10,8 @@ class CardItem extends StatelessWidget {
   final double height;
   final VoidCallback handler;
 
-  const CardItem(
-      this.heading, this.shortDescription, this.buttonText, this.width, this.height, this.handler);
+   const CardItem(
+      this.heading, this.shortDescription, this.buttonText, this.width, this.height, this.handler, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
