@@ -3,7 +3,7 @@ const app = require("./app");
 require("dotenv").config();
 
 let MONGODB;
-process.env.NODE_ENV === "development"
+process.env.NODE_ENV === "development" 
   ? (MONGODB = "mongodb://127.0.0.1:27017/ride")
   : (MONGODB = process.env.MONGODB);
 
@@ -24,7 +24,7 @@ mongoose
   });
 
 //Starting up server
-const PORT = 5000;
+const PORT = 8080;
 app.listen(PORT, () => {
   console.clear();
   console.log(`Running on port ${PORT}.`);

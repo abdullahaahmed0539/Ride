@@ -6,7 +6,7 @@ const { setArrived } = require("../controllers/trips/setArrived");
 const userAuth = require('../middlewares/userCheckAuth')
 const driverAuth = require('../middlewares/driverCheckAuth')
 
-router.route("/details").get(userAuth, tripDetails);
+router.route("/details").post(userAuth, tripDetails);
 router.route("/set_arrived").post(driverAuth, setArrived);
 router.route("/start_trip").patch(driverAuth, startTrip);
 router.route("/end_trip").patch(driverAuth, endTrip);

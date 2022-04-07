@@ -14,7 +14,7 @@ const errorCodes = {
 };
 
 exports.myBookingHistory = async (req, res) => {
-  const riderId = req.body.rider_id;
+  const riderId = req.body.riderId;
   if (!riderId) {
     onMissingValResponse(res, errorCodes.MISSING_VAL, "Rider id is missing.");
     return;

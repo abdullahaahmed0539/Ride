@@ -8,12 +8,12 @@ const {
 const { validateCNIC } = require("../../helper/validators");
 
 exports.createOnBoardingRequest = async (req, res) => {
-  const { userId, cnic, carModel, color, registrationNumber } = req.body;
-  if (!userId || !cnic || !carModel || !color || !registrationNumber) {
+  const { userId, cnic, carModel, color, registrationNumber, milage } = req.body;
+  if (!userId || !cnic || !carModel || !color || !registrationNumber || !milage) {
     onMissingValResponse(
       res,
       "MISSING_VALUE",
-      "User id, cnic, car model, color or registration number is missing."
+      "User id, cnic, car model, milage, color or registration number is missing."
     );
     return;
   }
@@ -36,6 +36,7 @@ exports.createOnBoardingRequest = async (req, res) => {
     carRegistrationURL: "dummy",
     carModel,
     color,
+    milage,
     registrationNumber,
     status: "pending",
   });

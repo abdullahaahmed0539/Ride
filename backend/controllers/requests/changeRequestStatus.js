@@ -35,6 +35,7 @@ exports.changeRequestStatus = async (req, res) => {
           licenseURL: driverDetails.licenseURL,
           carRegistrationURL: driverDetails.carRegistrationURL,
           cnic: driverDetails.cnic,
+          milage: driverDetails.milage,
           carModel: driverDetails.carModel,
           color: driverDetails.color,
           registrationNumber: driverDetails.registrationNumber,

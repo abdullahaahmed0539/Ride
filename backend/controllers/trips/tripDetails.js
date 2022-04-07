@@ -16,8 +16,9 @@ const errorCodes = {
 };
 
 exports.tripDetails = async (req, res) => {
-  const { bookingId, userId, driverMode } = req.body;
-  if (!bookingId || !userId || driverMode) {
+  const { bookingId, userId, mode } = req.body;
+
+  if (!bookingId || !userId || !mode) {
     onMissingValResponse(
       res,
       errorCodes.MISSING_VAL,
@@ -28,7 +29,7 @@ exports.tripDetails = async (req, res) => {
 
   try {
     let userDetail;
-    if (driverMode) {
+    if (mode === 'driver') {
       userDetail = {
         _id: bookingId,
         driverId: userId,
@@ -39,6 +40,7 @@ exports.tripDetails = async (req, res) => {
         riderId: userId,
       };
     }
+
     const booking = await Booking.findOne(userDetail);
     if (!booking) {
       unAuthorizedResponse(res, errorCodes.UNAUTHORIZED);

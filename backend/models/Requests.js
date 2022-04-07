@@ -13,6 +13,10 @@ const requestSchema = new mongoose.Schema({
     unique: true,
     trim: true,
   },
+  milage: {
+    type: Number,
+    require: [true, "milage is required."],
+  },
   licenseURL: {
     type: String,
     require: [true, "User id is required."],

@@ -28,6 +28,10 @@ const driverSchema = new mongoose.Schema({
     require: [true, "Car model is required."],
     trim: true,
   },
+  milage: {
+    type: Number,
+    require: [true, "milage is required."],
+  },
   color: {
     type: String,
     require: [true, "Car color is required."],

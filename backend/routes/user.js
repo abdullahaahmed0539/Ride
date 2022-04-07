@@ -6,11 +6,13 @@ const { updateName } = require("../controllers/users/updateName");
 const { updateEmail } = require("../controllers/users/updateEmail");
 const { updatePhoneNumber } = require("../controllers/users/updatePhoneNumber");
 const { addUserRating } = require("../controllers/users/addUserRating");
+const { userExists } = require("../controllers/users/userExists");
 const userCheckAuth = require('../middlewares/userCheckAuth')
 
 router.route("/register").post(register);
-router.route("/login").get(login)
-router.route("/details").get(userCheckAuth, userDetails); //add auth middleware
+router.route("/login").post(login)
+router.route("/exists").post(userExists);
+router.route("/details").post(userCheckAuth, userDetails); //add auth middleware
 router.route("/update_name").patch(userCheckAuth, updateName); //add auth middleware
 router.route("/update_phone_number").patch(userCheckAuth, updatePhoneNumber); //add auth middleware
 router.route("/update_email").patch(userCheckAuth, updateEmail); //add auth middleware

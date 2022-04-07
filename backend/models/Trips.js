@@ -28,6 +28,24 @@ const tripSchema = new mongoose.Schema({
   total: {
     type: Number,
   },
+  fuelCost: {
+    type: Number,
+    require: [true, "Fuel is required."],
+  },
+  waitTimeCostPerMin: {
+    type: Number,
+    require: [true, "waitTimeCostPerMin is required."],
+  },
+  disputeCost: {
+    type: Number,
+  },
+  waitTimeCost: {
+    type: Number,
+    require: [true, "waitTimeCostPerMin is required."],
+  },
+  milesCost: {
+    type: Number,
+  },
   riderRating: {
     type: Number,
   },

@@ -69,7 +69,8 @@ exports.register = async (req, res) => {
     const user = await newUser.save();
     const data = {
       _id: user._id,
-      phoneNumber: user.phoneNumber
+      phoneNumber: user.phoneNumber,
+      country: user.country
     }
     onCreationResponse(res, data);
   } catch (err) {

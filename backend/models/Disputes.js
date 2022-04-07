@@ -47,6 +47,7 @@ const disputeSchema = new mongoose.Schema({
     require: [true, "Status is required."],
     trim: true,
   },
+  votedBy: { type: [String], },
 });
 
 const Dispute = mongoose.model("Dispute", disputeSchema);

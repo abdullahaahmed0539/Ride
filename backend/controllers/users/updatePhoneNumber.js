@@ -1,3 +1,4 @@
+const jwt = require("jsonwebtoken");
 const User = require("../../models/Users");
 const { validatePhoneNumber } = require("../../helper/validators");
 const {
@@ -43,9 +44,23 @@ exports.updatePhoneNumber = async (req, res) => {
       { phoneNumber: newPhoneNumber }
     );
     if (updatedUser.modifiedCount > 0) {
+      const user = await User.findOne({ newPhoneNumber }).select(
+        "_id isDriver"
+      );
+      let token = jwt.sign(
+        {
+          _id: user._id,
+          phoneNumber: newPhoneNumber,
+          isDriver: user.isDriver,
+        },
+        process.env.TOKEN_KEY,
+        { expiresIn: "24h" }
+      );
       onCreationResponse(res, {
         phoneNumber,
         updated_phoneNumber: newPhoneNumber,
+        country,
+        token,
       });
     } else if (
       updatedUser.modifiedCount === 0 &&

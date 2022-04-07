@@ -14,13 +14,23 @@ const {
 const { bookingDetails } = require("../controllers/bookings/bookingDetails");
 const userAuth = require("../middlewares/userCheckAuth");
 const driverAuth = require("../middlewares/driverCheckAuth");
+const { driverBookingHistory } = require('../controllers/drivers/myBookingHistory')
+const { driverScheduledBookings} = require("../controllers/drivers/myScheduledBookings");
 
 router.route("/create_booking").post(userAuth, createBooking);
 router.route("/accept_booking").patch(driverAuth, acceptBooking);
 router.route("/cancel_booking/rider").patch(userAuth, riderCancellation);
 router.route("/cancel_booking/driver").patch(driverAuth, driverCancellation);
-router.route("/my_bookings_history").get(userAuth, myBookingHistory);
-router.route("/my_scheduled_bookings").get(userAuth, myScheduledBookings);
-router.route("/details").get(userAuth, bookingDetails);
+router.route("/rider/my_bookings_history").post(userAuth, myBookingHistory);
+router
+  .route("/rider/my_scheduled_bookings")
+  .post(userAuth, myScheduledBookings);
+router
+  .route("/driver/my_bookings_history")
+  .post(driverAuth, driverBookingHistory);
+router
+  .route("/driver/my_scheduled_bookings")
+  .post(driverAuth, driverScheduledBookings);
+router.route("/details").post(userAuth, bookingDetails);
 
 module.exports = router;

@@ -7,7 +7,7 @@ const {
   onCreationResponse,
   unAuthorizedResponse,
 } = require("../../helper/responses");
-const { calculateTotal } = require("../../helper/calculateTotal");
+const { calculateTotal, calculateTravellingCost, calculateWaitTime } = require("../../helper/pricing");
 
 const errorCodes = {
   MISSING_VAL: "MISSING_VALUE",
@@ -34,18 +34,31 @@ exports.endTrip = async (req, res) => {
       unAuthorizedResponse(res, errorCodes.UNAUTHORIZED);
       return;
     }
+    const milage = (await Driver.findOne({_id: booking.driverId}).select('milage')).milage
     const trip = await Trip.findOne({ bookingId });
     const endTime = Date.now();
+    let disputeCost;
+    booking.disputeEnabled? disputeCost = process.env.DISPUTE_COST: disputeCost = 0
     const tripDetails = {
       endTime,
       duration: endTime - trip.startTime,
       distance,
-      total: calculateTotal(distance),
+      fuelCost: process.env.FUEL_PRICE,
+      disputeCost,
+      milesCost: calculateTravellingCost(distance, milage),
+      waitTimeCost: calculateWaitTime(trip.waitTime.getTime() / (1000 * 60)),
+      waitTimeCostPerMin: process.env.WAIT_TIME_COST_PER_MIN,
+      total: calculateTotal(
+        distance,
+        milage,
+        trip.waitTime.getTime() / (1000 * 60),
+        booking.disputeEnabled
+      ),
     };
     await Trip.updateOne({ bookingId }, tripDetails);
     await Booking.updateOne({ _id: bookingId }, { status: "completed" });
     await Driver.updateOne({ _id: driverId }, { isBusy: false });
-    onCreationResponse(res, {});
+    onCreationResponse(res, {tripDetails});
   } catch (err) {
     serverErrorResponse(res, err, errorCodes.SERVER_ERROR);
   }

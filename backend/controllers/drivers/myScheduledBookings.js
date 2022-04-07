@@ -12,16 +12,20 @@ const errorCodes = {
   MISSING_VAL: "MISSING_VALUE",
 };
 
-exports.myScheduledBookings = async (req, res) => {
-  const riderId = req.body.riderId;
-  if (!riderId) {
-    onMissingValResponse(res, errorCodes.MISSING_VAL, "Rider id is missing.");
+exports.driverScheduledBookings = async (req, res) => {
+  const driverId = req.body.driverId;
+  if (!driverId) {
+    onMissingValResponse(
+      res,
+      errorCodes.MISSING_VAL,
+      "driver id is missing."
+    );
     return;
   }
 
   try {
     const myBookings = await Booking.find({
-      riderId,
+      driverId,
       $or: [
         { status: "insearch" },
         { status: "waiting" },

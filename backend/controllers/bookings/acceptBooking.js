@@ -27,16 +27,28 @@ exports.acceptBooking = async (req, res) => {
   }
 
   try {
-    const driverStatus = await Driver.findById({ _id: driverId }).select(
-      "isActive isBusy"
+    const driverDetails = await Driver.findById({ _id: driverId }).select(
+      "userId isActive isBusy"
     );
     if (
-      !driverStatus.isActive ||
-      (driverStatus.isActive && driverStatus.isBusy)
+      !driverDetails.isActive ||
+      (driverDetails.isActive && driverDetails.isBusy)
     ) {
       unAuthorizedResponse(res, "FORBIDDEN");
       return;
     }
+
+    const riderIsDriver = await Booking.findOne({
+      _id: bookingId,
+      riderId: driverDetails.userId,
+    });
+    if (riderIsDriver) {
+      unAuthorizedResponse(res, "FORBIDDEN");
+      return;
+    }
+
+
+
     const updatedBooking = await Booking.updateOne(
       { _id: bookingId, status: "insearch" },
       { driverId, status: "waiting" }

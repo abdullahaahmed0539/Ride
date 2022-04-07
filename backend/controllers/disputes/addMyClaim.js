@@ -15,9 +15,9 @@ const errorCodes = {
 };
 
 exports.addMyClaim = async (req, res) => {
-  const { dispute_id, defendentsClaim, user_id } = req.body;
+  const { disputeId, defendentsClaim, userId } = req.body;
 
-  if (!dispute_id || !defendentsClaim || user_id) {
+  if (!disputeId || !defendentsClaim || !userId) {
     onMissingValResponse(
       res,
       errorCodes.MISSING_VAL,
@@ -26,20 +26,20 @@ exports.addMyClaim = async (req, res) => {
   }
 
   try {
-    const dispute = await findById({ _id: dispute_id }).select("defenderId");
-    if (dispute.defenderId !== user_id) {
+    const dispute = await Dispute.findById({ _id: disputeId }).select("defenderId");
+    if (dispute.defenderId !== userId) {
       unAuthorizedResponse(res, errorCodes.UNAUTHORIZED);
       return;
     }
 
     const AddMyClaim = await Dispute.updateOne(
-      { _id: dispute_id },
+      { _id: disputeId },
       { defendentsClaim, status: "active" }
     );
 
     if (AddMyClaim.modifiedCount > 0) {
       onCreationResponse(res, {
-        dispute_id,
+        disputeId,
         updated_defendents_claim: defendentsClaim,
       });
     } else if (AddMyClaim.modifiedCount === 0 && AddMyClaim.matchedCount > 0) {
@@ -53,6 +53,7 @@ exports.addMyClaim = async (req, res) => {
       );
     }
   } catch (err) {
+    console.log(err)
     serverErrorResponse(res, err, errorCodes.SERVER_ERROR);
   }
 };

@@ -28,6 +28,7 @@ exports.setArrived = async (req, res) => {
   const newTrip = Trip({
     bookingId,
     driverArrivalTime: Date.now(),
+ 
   });
 
   try {

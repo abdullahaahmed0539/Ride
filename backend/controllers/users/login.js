@@ -10,11 +10,7 @@ const {
 exports.login = async (req, res) => {
   const { phoneNumber } = req.body;
   if (!phoneNumber) {
-    onMissingValResponse(
-      res,
-      errorCodes.MISSING_VAL,
-      "phoneNumber is missing."
-    );
+    onMissingValResponse(res, "MISSING_VAL", "phoneNumber is missing.");
     return;
   }
 
@@ -29,11 +25,15 @@ exports.login = async (req, res) => {
       );
       return;
     } else {
-      let token = jwt.sign({
-        _id: user._id,
-        phoneNumber: user.phoneNumber,
-        isDriver: user.isDriver
-      },process.env.TOKEN_KEY, {expiresIn:'24h'});
+      let token = jwt.sign(
+        {
+          _id: user._id,
+          phoneNumber: user.phoneNumber,
+          isDriver: user.isDriver,
+        },
+        process.env.TOKEN_KEY,
+        { expiresIn: "24h" }
+      );
       const data = {
         _id: user._id,
         firstName: user.firstName,

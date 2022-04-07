@@ -1,8 +1,11 @@
 const Booking = require("../../models/Bookings");
+const User = require("../../models/Users");
 const {
   serverErrorResponse,
   onMissingValResponse,
   onCreationResponse,
+  unAuthorizedResponse,
+  notFoundResponse,
 } = require("../../helper/responses");
 
 const errorCodes = {
@@ -13,17 +16,29 @@ const errorCodes = {
 };
 
 exports.createBooking = async (req, res) => {
-  const { riderId, pickup, dropoff } = req.body;
-  if (!riderId || !pickup || !dropoff) {
+  const { riderId, pickup, dropoff, phoneNumber, disputeEnabled } = req.body;
+  if (!riderId || !pickup || !dropoff || !phoneNumber, !disputeEnabled) {
     onMissingValResponse(
       res,
       errorCodes.MISSING_VAL,
-      "Either riderId, pickup or dropoff is missing."
+      "Either phone number, disputeEnabled, riderId, pickup or dropoff is missing."
     );
     return;
   }
 
   try {
+    const user = await User.findById({_id: riderId});
+    
+    if (!user) {
+      notFoundResponse(res, 'NOT_FOUND', 'USER_NOT_FOUND', 'No user against the following id')
+      return;
+    }
+    
+    if (user.phoneNumber !== phoneNumber) {
+      unAuthorizedResponse(res, "UNAUTHORIZED_ACCESS");
+      return;
+    }
+
     //making sure not more than 1 bookings are scheduled at one time
     const bookingAlreadyMade = await Booking.find({
       riderId,
@@ -60,6 +75,7 @@ exports.createBooking = async (req, res) => {
     pickup,
     dropoff,
     bookingTime: new Date(),
+    disputeEnabled,
     status: "insearch",
   });
 
