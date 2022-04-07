@@ -22,7 +22,7 @@ class History extends StatefulWidget {
 }
 
 class _HistoryState extends State<History> {
-  List<dynamic> scheduledRides = [];
+  List<dynamic> ridesHistory = [];
   late User user;
   late String appMode;
   bool isLoading = true;
@@ -64,13 +64,13 @@ class _HistoryState extends State<History> {
 
     if (response.statusCode == 200) {
       setState(() {
-        scheduledRides = json.decode(response.body)['data']['myBookings'];
+        ridesHistory = json.decode(response.body)['data']['myBookings'];
       });
     }
 
     if (response.statusCode == 404) {
       setState(() {
-        scheduledRides = [];
+        ridesHistory = [];
       });
     }
   }
@@ -83,12 +83,12 @@ class _HistoryState extends State<History> {
           physics: const AlwaysScrollableScrollPhysics(),
           child: Container(
             margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-            child: scheduledRides.isNotEmpty
+            child: ridesHistory.isNotEmpty
                 ? Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                        ...scheduledRides.map((booking) {
+                        ...ridesHistory.map((booking) {
                           return RidesItem(
                             buttonText: 'Details',
                             date: booking['bookingTime'],
@@ -98,7 +98,7 @@ class _HistoryState extends State<History> {
                             width: 0,
                             handler: () {
                               Navigator.of(context)
-                                  .pushNamed(BookingDetail.routeName, arguments: {'bookingId': booking['_id']});
+                                  .pushNamed(BookingDetail.routeName, arguments: {'booking': booking});
                             },
                           );
                         }).toList()
