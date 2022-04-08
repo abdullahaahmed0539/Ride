@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.9;
+pragma solidity ^0.8.0;
 
 import "./rideToken.sol";
 import "./investorToken.sol";
@@ -14,6 +14,15 @@ contract Controller {
     mapping (address => uint) collatAmount;
     mapping (address => uint) driverToCode;
     mapping (address => uint) userBalances;
+
+    struct disputeInfo{
+        address rider;
+        address driver;
+        uint disputeAmount;
+        uint winner; //1 means rider won, 2 means driver won
+    }
+
+    disputeInfo[] disputeInfoHolder;
 
     constructor() public {
         // coins = RideToken(<Address of ERC20 tokens>);
@@ -118,6 +127,28 @@ contract Controller {
 
     function riderBalances(address memory _rider) public view returns (uint){
         return riderBalances(_rider);
+    }
+
+    function collectDisputeAmount(address memory _rider, uint memory _riderAmount, address memory _driver, uint memory _driverAmount) public returns (uint) {
+        require(_riderAmount >= userBalances(_rider), "User has insufficient funds.");
+        require(_driverAmount >= collatAmount(_driver), "Driver has insufficient collateral amount.");
+        userBalances(_rider) = userBalances(_rider) - _riderAmount;
+        collatAmount(_driver) = collatAmount(_driver) - _driverAmount;
+        uint index = disputeInfoHolder.push(_rider, _driver, (_riderAmount + _driverAmount), 0);
+        return index;
+    }
+
+    function disputeResult(uint memory _riderVote, uint memory _driverVote, uint memory index) public {
+            disputeInfo resolvedDispute = disputeInfoHolder[index];
+        if (_riderVote > _driverVote) {
+            // disputeInfo resolvedDispute = disputeInfoHolder[index];
+            userBalances(resolvedDispute.rider) = userBalances(resolvedDispute.rider) + resolvedDispute.disputeAmount;
+            resolvedDispute.winner = 1;
+        } else {
+            // disputeInfo resolvedDispute = disputeInfoHolder[index];
+            collatAmount(resolvedDispute.driver) = collatAmount(resolvedDispute.driver) + resolvedDispute.disputeAmount;
+            resolvedDispute.winner = 2;
+        }
     }
 
 }
