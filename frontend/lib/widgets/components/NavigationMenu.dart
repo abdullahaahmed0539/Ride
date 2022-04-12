@@ -2,6 +2,8 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/screens/disputes/DisputeTabs.dart';
 import 'package:frontend/screens/Profile.dart';
+import 'package:provider/provider.dart';
+import '../../providers/App.dart';
 import '../../screens/booking/Booking.dart';
 import '../../widgets/ui/CardButton.dart';
 import '../../screens/users/Wallet.dart';
@@ -30,21 +32,38 @@ class NavigationMenu extends StatelessWidget {
               ),
             ),
             Row(children: [
-               CardButton(const Color(0xffEABD2A), Icons.commute,
-                  'Booking', () => Navigator.pushNamed(context, Booking.routeName)),
-              
+              // ignore: unrelated_type_equality_checks
+              Provider.of<AppProvider>(context).app.getAppMode() == 'rider'
+                  ? CardButton(
+                      const Color(0xffEABD2A),
+                      Icons.commute,
+                      'Booking',
+                      () => Navigator.pushNamed(context, Booking.routeName))
+                  : CardButton( Color.fromARGB(255, 240, 115, 76), Icons.commute,
+                      'Find rides', () {}),
+
               Expanded(
                 child: CardButton(
-                    const Color(0xff5CCB57), Icons.attach_money, 'Earn', () => Navigator.pushNamed(context, DisputeTabs.routeName, arguments: {'initialIndex': 2})),
+                    const Color(0xff5CCB57),
+                    Icons.attach_money,
+                    'Earn',
+                    () => Navigator.pushNamed(context, DisputeTabs.routeName,
+                        arguments: {'initialIndex': 2})),
               ),
               Expanded(
-                child: CardButton(const Color(0xff43ABBE),
-                    Icons.account_balance_wallet, 'Wallet', () => Navigator.pushNamed(context, Wallet.routeName)),
+                child: CardButton(
+                    const Color(0xff43ABBE),
+                    Icons.account_balance_wallet,
+                    'Wallet',
+                    () => Navigator.pushNamed(context, Wallet.routeName)),
               ),
             ]),
             Row(children: [
-             CardButton(const Color(0xff771AF0),
-                 Icons.account_circle_sharp, 'Profile', () => Navigator.pushNamed(context, Profile.routeName)),
+              CardButton(
+                  const Color(0xff771AF0),
+                  Icons.account_circle_sharp,
+                  'Profile',
+                  () => Navigator.pushNamed(context, Profile.routeName)),
             ]),
           ])),
     );

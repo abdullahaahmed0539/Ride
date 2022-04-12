@@ -87,6 +87,8 @@ class _VerificationState extends State<Verification> {
     );
   }
 
+
+
   @override
   void initState() {
     super.initState();
@@ -109,7 +111,9 @@ class _VerificationState extends State<Verification> {
   void loginHandler(PhoneNumber phoneNumber) async {
     var response = await login(phoneNumber);
     if (response.statusCode == 200) {
-      Provider.of<UserProvider>(context, listen: false).user.onLogin(response, context);
+      Provider.of<UserProvider>(context, listen: false)
+          .user
+          .onLogin(response, context);
       Navigator.of(context)
           .pushNamedAndRemoveUntil(Home.routeName, (route) => false);
     } else if (response.statusCode == 404) {
@@ -145,7 +149,8 @@ class _VerificationState extends State<Verification> {
       var responseData = json.decode(response.body)['data'];
       PhoneNumber extractedPhoneNumber = convertToPhoneNumber(
           responseData['updated_phoneNumber'], responseData['country']);
-      Provider.of<UserProvider>(context, listen: false).user
+      Provider.of<UserProvider>(context, listen: false)
+          .user
           .updateUserPhoneNumberAndCountry(extractedPhoneNumber,
               responseData['country'], responseData['token']);
       Navigator.of(context).pushNamedAndRemoveUntil(

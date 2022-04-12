@@ -132,21 +132,33 @@ class _HomeState extends State<Home> {
             physics: const AlwaysScrollableScrollPhysics(),
             child: Column(children: [
               const NavigationMenu(),
-              appMode == 'rider'
-                  ? DisputesOnYouShortCut(
-                      disputesOnMe: disputesOnMe,
-                    )
-                  : Container(),
-              appMode == 'rider'
-                  ? VotingShortcut(
-                      disputes: otherDisputes,
-                    )
-                  : Container(),
-              appMode == 'rider'
-                  ? MyDisputesShortcut(
-                      myDisputes: disputesByMe,
-                    )
-                  : Container()
+              // appMode == 'rider'
+              //     ? DisputesOnYouShortCut(
+              //         disputesOnMe: disputesOnMe,
+              //       )
+              //     : Container(),
+              // appMode == 'rider'
+              //     ? VotingShortcut(
+              //         disputes: otherDisputes,
+              //       )
+              //     : Container(),
+              // appMode == 'rider'
+              //     ? MyDisputesShortcut(
+              //         myDisputes: disputesByMe,
+              //       )
+              //     : Container()
+
+              DisputesOnYouShortCut(
+                disputesOnMe: disputesOnMe,
+              ),
+
+              VotingShortcut(
+                disputes: otherDisputes,
+              ),
+
+              MyDisputesShortcut(
+                myDisputes: disputesByMe,
+              )
             ]),
           ),
         ));
