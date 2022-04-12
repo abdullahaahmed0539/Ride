@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/screens/driver/DriverMapForRide.dart';
 
-import '../screens/booking/Booking.dart';
+import '../screens/booking/RiderBooking.dart';
 import '../screens/booking/bookingDetail.dart';
 import '../screens/disputes/DisputeDetail.dart';
 import '../screens/disputes/DisputeGuidelines.dart';
@@ -30,7 +31,7 @@ Map<String, Widget Function(BuildContext)> routes() {
     Rating.routeName: (context) => const Rating(),
     DisputeGuidelines.routeName: (context) => const DisputeGuidelines(),
     PublishDispute.routeName: (context) => const PublishDispute(),
-    Booking.routeName: (context) => const Booking(),
+    RiderBooking.routeName: (context) => const RiderBooking(),
     VotingGuidelines.routeName: (context) => const VotingGuidelines(),
     Voting.routeName: (context) => const Voting(),
     Wallet.routeName: (context) => const Wallet(),
@@ -42,6 +43,7 @@ Map<String, Widget Function(BuildContext)> routes() {
     UpdateName.routeName: (context) => const UpdateName(),
     UpdateEmail.routeName: (context) => const UpdateEmail(),
     UpdatePhoneNumber.routeName: (context) => const UpdatePhoneNumber(),
-    BookingDetail.routeName: (context) => const BookingDetail()
+    BookingDetail.routeName: (context) => const BookingDetail(),
+    DriverMapForRide.routeName: (context) => const DriverMapForRide()
   };
 }

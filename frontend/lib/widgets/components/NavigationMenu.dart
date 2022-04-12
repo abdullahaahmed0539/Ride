@@ -2,9 +2,10 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/screens/disputes/DisputeTabs.dart';
 import 'package:frontend/screens/Profile.dart';
+import 'package:frontend/screens/driver/DriverMapForRide.dart';
 import 'package:provider/provider.dart';
 import '../../providers/App.dart';
-import '../../screens/booking/Booking.dart';
+import '../../screens/booking/RiderBooking.dart';
 import '../../widgets/ui/CardButton.dart';
 import '../../screens/users/Wallet.dart';
 
@@ -38,9 +39,9 @@ class NavigationMenu extends StatelessWidget {
                       const Color(0xffEABD2A),
                       Icons.commute,
                       'Booking',
-                      () => Navigator.pushNamed(context, Booking.routeName))
-                  : CardButton( Color.fromARGB(255, 240, 115, 76), Icons.commute,
-                      'Find rides', () {}),
+                      () => Navigator.pushNamed(context, RiderBooking.routeName))
+                  : CardButton( const Color.fromARGB(255, 240, 115, 76), Icons.commute,
+                      'Find rides', () => Navigator.pushNamed(context, DriverMapForRide.routeName)),
 
               Expanded(
                 child: CardButton(

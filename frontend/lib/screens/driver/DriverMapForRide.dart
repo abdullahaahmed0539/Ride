@@ -1,18 +1,16 @@
-// ignore_for_file: file_names
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'dart:async';
 
-class Booking extends StatefulWidget {
-  static const routeName = '/booking';
-  const Booking({Key? key}) : super(key: key);
+class DriverMapForRide extends StatefulWidget {
+  static const routeName = '/driver_map_screen';
+  const DriverMapForRide({Key? key}) : super(key: key);
 
   @override
-  State<Booking> createState() => _BookingState();
+  State<DriverMapForRide> createState() => _DriverMapForRideState();
 }
 
-class _BookingState extends State<Booking> {
+class _DriverMapForRideState extends State<DriverMapForRide> {
   final Completer<GoogleMapController> _controllerGoogleMap = Completer();
   GoogleMapController? newGoogleMapController;
   static final CameraPosition _kGooglePlex = CameraPosition(
@@ -188,23 +186,22 @@ class _BookingState extends State<Booking> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-        onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
-        child: Scaffold(
-            resizeToAvoidBottomInset: false,
-            appBar: AppBar(title: const Text('Booking')),
-            backgroundColor: Theme.of(context).backgroundColor,
-            body: Stack(children: [
-              GoogleMap(
-                mapType: MapType.normal,
-                myLocationEnabled: true,
-                initialCameraPosition: _kGooglePlex,
-                onMapCreated: (GoogleMapController controller) {
-                  _controllerGoogleMap.complete(controller);
-                  newGoogleMapController = controller;
-                  blackThemeGoogleMap();
-                },
-              )
-            ])));
+    return Scaffold(
+        resizeToAvoidBottomInset: false,
+        backgroundColor: Theme.of(context).backgroundColor,
+        body: Stack(children: [
+          GoogleMap(
+            mapType: MapType.normal,
+            myLocationEnabled: true,
+            zoomControlsEnabled: false,
+
+            initialCameraPosition: _kGooglePlex,
+            onMapCreated: (GoogleMapController controller) {
+              _controllerGoogleMap.complete(controller);
+              newGoogleMapController = controller;
+              blackThemeGoogleMap();
+            },
+          )
+        ]));
   }
 }
