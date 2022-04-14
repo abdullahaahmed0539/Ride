@@ -120,7 +120,7 @@ class _LocationPickerState extends State<LocationPicker> {
                               userDropLocation!.lat!, userDropLocation!.long!);
                           var directionDetails = await obtainDirectionDetails(
                               originLatLng, destinationLatLng);
-                        
+                      
 
                           PolylinePoints polylinePoints = PolylinePoints();
                           List<PointLatLng> decodedPolylinePointsList =

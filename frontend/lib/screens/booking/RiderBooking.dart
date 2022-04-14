@@ -8,7 +8,10 @@ import 'package:frontend/widgets/ui/spinner.dart';
 
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:provider/provider.dart';
 
+import '../../models/Directions.dart';
+import '../../providers/Location.dart';
 import '../../widgets/ui/LocationPicker.dart';
 
 class RiderBooking extends StatefulWidget {
@@ -39,6 +42,7 @@ class _RiderBooking extends State<RiderBooking> {
 
   List<LatLng> polylineCoOrdinatesList = [];
   Set<Polyline> polyLineSet = {};
+  Set<Marker> markersSet = {};
 
   void setShowLocationPicker(val) {
     setState(() {
@@ -50,6 +54,7 @@ class _RiderBooking extends State<RiderBooking> {
     setState(() {
       polylineCoOrdinatesList.clear();
       polyLineSet.clear();
+      markersSet.clear();
     });
   }
 
@@ -64,12 +69,60 @@ class _RiderBooking extends State<RiderBooking> {
         color: Theme.of(context).primaryColor,
         jointType: JointType.round,
         points: polylineCoOrdinatesList,
+        width: 4,
         startCap: Cap.roundCap,
         endCap: Cap.roundCap,
         geodesic: true);
     setState(() {
       polyLineSet.add(polyline);
     });
+
+    var origin = Provider.of<LocationProvider>(context, listen: false)
+        .userPickupLocation;
+    var destination =
+        Provider.of<LocationProvider>(context, listen: false).userDropLocation;
+    var originLatLng = LatLng(origin!.lat!, origin.long!);
+    var destinationLatLng = LatLng(destination!.lat!, destination.long!);
+
+    adjustCameraForPolyline(originLatLng, destinationLatLng);
+    addMarker(destination, destinationLatLng);
+  }
+
+  void addMarker(Directions location, LatLng locationLatLng) {
+    Marker destinationMarker = Marker(
+        markerId: const MarkerId('destinationId'),
+        infoWindow:
+            InfoWindow(title: location.locationName, snippet: 'Destination'),
+        position: locationLatLng,
+        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed));
+
+    setState(() {
+      markersSet.add(destinationMarker);
+    });
+  }
+
+  void adjustCameraForPolyline(LatLng originLatLng, LatLng destinationLatLng) {
+    LatLngBounds latLngBounds;
+    if (originLatLng.latitude > destinationLatLng.latitude &&
+        originLatLng.longitude > destinationLatLng.longitude) {
+      latLngBounds =
+          LatLngBounds(southwest: destinationLatLng, northeast: originLatLng);
+    } else if (originLatLng.longitude > destinationLatLng.longitude) {
+      latLngBounds = LatLngBounds(
+          southwest: LatLng(originLatLng.latitude, destinationLatLng.longitude),
+          northeast:
+              LatLng(destinationLatLng.latitude, originLatLng.longitude));
+    } else if (originLatLng.latitude > destinationLatLng.latitude) {
+      latLngBounds = LatLngBounds(
+          southwest: LatLng(destinationLatLng.latitude, originLatLng.longitude),
+          northeast:
+              LatLng(originLatLng.latitude, destinationLatLng.longitude));
+    } else {
+      latLngBounds =
+          LatLngBounds(southwest: originLatLng, northeast: destinationLatLng);
+    }
+    newGoogleMapController!
+        .animateCamera(CameraUpdate.newLatLngBounds(latLngBounds, 65));
   }
 
   void locateUserPosition() async {
@@ -278,6 +331,7 @@ class _RiderBooking extends State<RiderBooking> {
             zoomGesturesEnabled: true,
             zoomControlsEnabled: true,
             polylines: polyLineSet,
+            markers: markersSet,
             padding: EdgeInsets.only(bottom: bottomPaddingOfMap, top: 20),
             onMapCreated: (GoogleMapController controller) {
               _controllerGoogleMap.complete(controller);
@@ -308,6 +362,8 @@ class _RiderBooking extends State<RiderBooking> {
                         setState(() {
                           showLocationPicker = true;
                         });
+                        newGoogleMapController!.animateCamera(
+                            CameraUpdate.newCameraPosition(camPosition!));
                       },
                       buttonText: 'back',
                       isActive: true),
