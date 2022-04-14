@@ -1,17 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:frontend/api%20calls/Map.dart';
 import 'package:frontend/global/mapKey.dart';
 import 'package:frontend/models/PredictedPlaces.dart';
 import 'package:frontend/providers/Location.dart';
 import 'package:frontend/providers/User.dart';
+import 'package:frontend/services/map.dart';
 import 'package:frontend/widgets/ui/LongButton.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 
 import '../../models/Directions.dart';
 import 'PlacePredictionDropdown.dart';
 
 class LocationPicker extends StatefulWidget {
+  final Function addTopolylineCoOrdinatesList;
+  final Function setShowLocationPicker;
   const LocationPicker({
+    required this.setShowLocationPicker,
+    required this.addTopolylineCoOrdinatesList,
     Key? key,
   }) : super(key: key);
 
@@ -100,11 +107,42 @@ class _LocationPickerState extends State<LocationPicker> {
                     margin: const EdgeInsets.only(bottom: 18),
                     child: customTextField(
                         context, 'dropoff', "Enter dropoff location", true)),
-                selected? LongButton(
-                  handler: () {},
-                  isActive: true,
-                  buttonText: 'Next',
-                ): LongButton(handler: (){}, buttonText: 'Next', isActive: false)
+                userDropLocation != null
+                    ? LongButton(
+                        handler: () async {
+                          Provider.of<LocationProvider>(context, listen: false)
+                              .updateDropoffLocationAddress(userDropLocation!);
+                          var origin = Provider.of<LocationProvider>(context,
+                                  listen: false)
+                              .userPickupLocation;
+                          var originLatLng = LatLng(origin!.lat!, origin.long!);
+                          var destinationLatLng = LatLng(
+                              userDropLocation!.lat!, userDropLocation!.long!);
+                          var directionDetails = await obtainDirectionDetails(
+                              originLatLng, destinationLatLng);
+                        
+
+                          PolylinePoints polylinePoints = PolylinePoints();
+                          List<PointLatLng> decodedPolylinePointsList =
+                              polylinePoints
+                                  .decodePolyline(directionDetails!.ePoints!);
+
+                          if (decodedPolylinePointsList.isNotEmpty) {
+                            decodedPolylinePointsList
+                                .forEach((PointLatLng pointLatLng) {
+                              widget.addTopolylineCoOrdinatesList(pointLatLng);
+                            });
+                          }
+
+                          widget.setShowLocationPicker(false);
+
+                          ;
+                        },
+                        isActive: true,
+                        buttonText: 'Next',
+                      )
+                    : LongButton(
+                        handler: () {}, buttonText: 'Next', isActive: false)
               ],
             )),
       ],
@@ -125,7 +163,6 @@ class _LocationPickerState extends State<LocationPicker> {
 
     return TextField(
       onChanged: (val) {
-
         if (label == 'dropoff') {
           findPlaceAutoComplete(val);
         }

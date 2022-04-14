@@ -3,6 +3,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:frontend/services/map.dart';
+import 'package:frontend/widgets/ui/LongButton.dart';
 import 'package:frontend/widgets/ui/spinner.dart';
 
 import 'package:geolocator/geolocator.dart';
@@ -25,7 +26,7 @@ class _RiderBooking extends State<RiderBooking> {
   CameraPosition? camPosition;
 
   //default coordinates if unable to find current location
-  static final CameraPosition _kGooglePlex = CameraPosition(
+  static const CameraPosition _kGooglePlex = CameraPosition(
     target: LatLng(37.42796133580664, -122.085749655962),
     zoom: 14.4746,
   );
@@ -34,6 +35,42 @@ class _RiderBooking extends State<RiderBooking> {
   // var geolocator = Geolocator();
   LocationPermission? _locationPermission;
   double bottomPaddingOfMap = 0;
+  bool showLocationPicker = true;
+
+  List<LatLng> polylineCoOrdinatesList = [];
+  Set<Polyline> polyLineSet = {};
+
+  void setShowLocationPicker(val) {
+    setState(() {
+      showLocationPicker = val;
+    });
+  }
+
+  void clearPoints() {
+    setState(() {
+      polylineCoOrdinatesList.clear();
+      polyLineSet.clear();
+    });
+  }
+
+  void addTopolylineCoOrdinatesList(val) {
+    polylineCoOrdinatesList.add(LatLng(val.latitude, val.longitude));
+    createPolyLine();
+  }
+
+  void createPolyLine() {
+    Polyline polyline = Polyline(
+        polylineId: const PolylineId('polylineId'),
+        color: Theme.of(context).primaryColor,
+        jointType: JointType.round,
+        points: polylineCoOrdinatesList,
+        startCap: Cap.roundCap,
+        endCap: Cap.roundCap,
+        geodesic: true);
+    setState(() {
+      polyLineSet.add(polyline);
+    });
+  }
 
   void locateUserPosition() async {
     userCurrentLocation = await Geolocator.getCurrentPosition(
@@ -240,6 +277,7 @@ class _RiderBooking extends State<RiderBooking> {
             initialCameraPosition: _kGooglePlex,
             zoomGesturesEnabled: true,
             zoomControlsEnabled: true,
+            polylines: polyLineSet,
             padding: EdgeInsets.only(bottom: bottomPaddingOfMap, top: 20),
             onMapCreated: (GoogleMapController controller) {
               _controllerGoogleMap.complete(controller);
@@ -251,8 +289,29 @@ class _RiderBooking extends State<RiderBooking> {
               locateUserPosition();
             },
           ),
-          const Positioned(
-              bottom: 10, left: 0, right: 0, child: LocationPicker()),
+          showLocationPicker
+              ? Positioned(
+                  bottom: 10,
+                  left: 0,
+                  right: 0,
+                  child: LocationPicker(
+                      addTopolylineCoOrdinatesList:
+                          addTopolylineCoOrdinatesList,
+                      setShowLocationPicker: setShowLocationPicker))
+              : Positioned(
+                  bottom: 10,
+                  left: 0,
+                  right: 0,
+                  child: LongButton(
+                      handler: () {
+                        clearPoints();
+                        setState(() {
+                          showLocationPicker = true;
+                        });
+                      },
+                      buttonText: 'back',
+                      isActive: true),
+                ),
           camPosition == null
               ? Spinner(text: 'Fetching current location ', height: 0)
               : Container()

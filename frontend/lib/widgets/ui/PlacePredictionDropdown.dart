@@ -61,8 +61,7 @@ class PlacePredictionDropdown extends StatelessWidget {
 
       setDropOffLoaction!(dropOffDirection);
 
-      // Provider.of<LocationProvider>(context, listen: false)
-      //     .updateDropoffLocationAddress(dropOffDirection);
+    
     }
   }
 
