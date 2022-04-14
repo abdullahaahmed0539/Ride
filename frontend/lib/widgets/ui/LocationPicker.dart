@@ -1,17 +1,146 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/api%20calls/Map.dart';
+import 'package:frontend/global/mapKey.dart';
+import 'package:frontend/models/PredictedPlaces.dart';
+import 'package:frontend/providers/Location.dart';
+import 'package:frontend/providers/User.dart';
 import 'package:frontend/widgets/ui/LongButton.dart';
+import 'package:provider/provider.dart';
 
-class LocationPicker extends StatelessWidget {
+import '../../models/Directions.dart';
+import 'PlacePredictionDropdown.dart';
+
+class LocationPicker extends StatefulWidget {
   const LocationPicker({
     Key? key,
   }) : super(key: key);
 
-  Widget customTextField(context, onChangeHandler, label, placeholder) {
+  @override
+  State<LocationPicker> createState() => _LocationPickerState();
+}
+
+class _LocationPickerState extends State<LocationPicker> {
+  List<PredictedPlaces> predictionsList = [];
+  bool selected = false;
+  Directions? userDropLocation;
+  TextEditingController pickupController = TextEditingController();
+  TextEditingController dropoffController = TextEditingController();
+
+  void setSelected(val) {
+    setState(() {
+      selected = val;
+    });
+  }
+
+  void setDropOffLocation(val) {
+    setState(() {
+      userDropLocation = val;
+    });
+
+    dropoffController.text = userDropLocation!.locationName.toString();
+    dropoffController.selection = TextSelection.fromPosition(
+        TextPosition(offset: dropoffController.text.length));
+  }
+
+  void findPlaceAutoComplete(String inputText) async {
+    if (inputText.length > 2) {
+      String countryISO = Provider.of<UserProvider>(context, listen: false)
+          .user
+          .phoneNumber
+          .countryISOCode;
+      String urlAutoCompleteSearch =
+          'https://maps.googleapis.com/maps/api/place/autocomplete/json?input=$inputText&key=$map_key&components=country:$countryISO';
+      var responseAutoCompleteSearch =
+          await recieveRequest(urlAutoCompleteSearch);
+      if (responseAutoCompleteSearch == 'Error') {
+        return;
+      }
+      if (responseAutoCompleteSearch['status'] == 'OK') {
+        setState(() {
+          predictionsList = (responseAutoCompleteSearch['predictions'] as List)
+              .map((jsonData) => PredictedPlaces.fromJson(jsonData))
+              .toList();
+        });
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        predictionsList.isNotEmpty && !selected
+            ? PlacePredictionDropdown(
+                predictedPlaces: predictionsList,
+                setSelected: setSelected,
+                setDropOffLoaction: setDropOffLocation)
+            : Container(),
+        Container(
+            margin: const EdgeInsets.symmetric(horizontal: 10),
+            padding: const EdgeInsets.all(12),
+            width: double.infinity,
+            decoration: ShapeDecoration(
+              color: const Color.fromARGB(255, 36, 37, 40),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8)),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'Enter trip details',
+                  style: Theme.of(context).textTheme.titleSmall,
+                ),
+                Container(
+                    margin: const EdgeInsets.only(top: 6, bottom: 8),
+                    child: customTextField(
+                        context, 'pickup', "Enter pickup location", false)),
+                Container(
+                    margin: const EdgeInsets.only(bottom: 18),
+                    child: customTextField(
+                        context, 'dropoff', "Enter dropoff location", true)),
+                selected? LongButton(
+                  handler: () {},
+                  isActive: true,
+                  buttonText: 'Next',
+                ): LongButton(handler: (){}, buttonText: 'Next', isActive: false)
+              ],
+            )),
+      ],
+    );
+  }
+
+  //Custom widget
+  Widget customTextField(context, label, placeholder, enabled) {
+    if (label == 'pickup') {
+      pickupController.text =
+          Provider.of<LocationProvider>(context).userPickupLocation != null
+              ? Provider.of<LocationProvider>(context)
+                  .userPickupLocation!
+                  .locationName
+                  .toString()
+              : '';
+    }
+
     return TextField(
       onChanged: (val) {
-        onChangeHandler(val);
+
+        if (label == 'dropoff') {
+          findPlaceAutoComplete(val);
+        }
+        if (userDropLocation != null) {
+          if (userDropLocation!.locationName != val) {
+            setState(() {
+              selected = false;
+              userDropLocation = null;
+            });
+          }
+        }
       },
+      controller: label == 'pickup' ? pickupController : dropoffController,
       cursorColor: Theme.of(context).primaryColor,
+      enabled: enabled,
       autofocus: false,
       autocorrect: false,
       style: const TextStyle(
@@ -34,40 +163,5 @@ class LocationPicker extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-        margin: const EdgeInsets.symmetric(horizontal: 10),
-        padding: const EdgeInsets.all(12),
-        width: double.infinity,
-        decoration: ShapeDecoration(
-          color: const Color.fromARGB(255, 36, 37, 40),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              'Enter trip details',
-              style: Theme.of(context).textTheme.titleSmall,
-            ),
-            Container(
-                margin: const EdgeInsets.only(top: 6, bottom: 8),
-                child: customTextField(
-                    context, () {}, 'Pickup', "Enter pickup location")),
-            Container(
-                margin: const EdgeInsets.only(bottom: 18),
-                child: customTextField(
-                    context, () {}, 'Dropoff', "Enter dropoff location")),
-            LongButton(
-              handler: () {},
-              isActive: true,
-              buttonText: 'Next',
-            )
-          ],
-        ));
   }
 }

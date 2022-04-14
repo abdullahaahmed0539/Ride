@@ -1,33 +1,41 @@
 {
   "project_info": {
-    "project_number": "973713598940",
-    "project_id": "ride-d6da9",
-    "storage_bucket": "ride-d6da9.appspot.com"
+    "project_number": "538809823991",
+    "project_id": "ride-347116",
+    "storage_bucket": "ride-347116.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:973713598940:android:0c865a2f4dd075b64b0719",
+        "mobilesdk_app_id": "1:538809823991:android:714040c9ca85eeda3d99f2",
         "android_client_info": {
           "package_name": "com.ride.frontend"
         }
       },
       "oauth_client": [
         {
-          "client_id": "973713598940-5f66m3qjslhr4bpcrpk96n99lrmlu1nv.apps.googleusercontent.com",
+          "client_id": "538809823991-rj47q3sjam00lv34g91f7usul78k7ps4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ride.frontend",
+            "certificate_hash": "2a5baa956bf322f565e4e207d06421658cf2bd1c"
+          }
+        },
+        {
+          "client_id": "538809823991-2qkhonn6psepn6glshq30937a7isvm1s.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyB1aWXapmfuOkG_Ki-CBf8LKAzGEkdqjD8"
+          "current_key": "AIzaSyCCr3hP--e47qy2f7g5luQ_MPlD5IF6m7c"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "973713598940-5f66m3qjslhr4bpcrpk96n99lrmlu1nv.apps.googleusercontent.com",
+              "client_id": "538809823991-2qkhonn6psepn6glshq30937a7isvm1s.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:frontend/providers/App.dart';
+import 'package:frontend/providers/Location.dart';
 import 'package:frontend/services/routes.dart';
 import 'package:provider/provider.dart';
 import './screens/Home.dart';
@@ -22,6 +23,7 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create:(_) => UserProvider()),
         ChangeNotifierProvider(create:(_) => AppProvider()),
+        ChangeNotifierProvider(create:(_) => LocationProvider()),
       ],
       child: MaterialApp(
         title: 'Ride',

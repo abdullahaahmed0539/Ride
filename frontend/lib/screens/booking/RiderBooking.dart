@@ -2,7 +2,9 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:frontend/widgets/ui/LongButton.dart';
+import 'package:frontend/services/map.dart';
+import 'package:frontend/widgets/ui/spinner.dart';
+
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
@@ -20,14 +22,16 @@ class _RiderBooking extends State<RiderBooking> {
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
   final Completer<GoogleMapController> _controllerGoogleMap = Completer();
   GoogleMapController? newGoogleMapController;
+  CameraPosition? camPosition;
+
+  //default coordinates if unable to find current location
   static final CameraPosition _kGooglePlex = CameraPosition(
     target: LatLng(37.42796133580664, -122.085749655962),
     zoom: 14.4746,
   );
 
   Position? userCurrentLocation;
-  var geolocator = Geolocator();
-
+  // var geolocator = Geolocator();
   LocationPermission? _locationPermission;
   double bottomPaddingOfMap = 0;
 
@@ -36,10 +40,13 @@ class _RiderBooking extends State<RiderBooking> {
         desiredAccuracy: LocationAccuracy.high);
     LatLng latLngPosition =
         LatLng(userCurrentLocation!.latitude, userCurrentLocation!.longitude);
-    CameraPosition camPosition =
-        CameraPosition(target: latLngPosition, zoom: 14);
+    setState(() {
+      camPosition = CameraPosition(target: latLngPosition, zoom: 14);
+    });
     newGoogleMapController!
-        .animateCamera(CameraUpdate.newCameraPosition(camPosition));
+        .animateCamera(CameraUpdate.newCameraPosition(camPosition!));
+    String humanReadableAddress = await searchLocationFromGeographicCoOrdinated(
+        userCurrentLocation!, context);
   }
 
   void checkIfLocationPermissionAllowed() async {
@@ -237,17 +244,18 @@ class _RiderBooking extends State<RiderBooking> {
             onMapCreated: (GoogleMapController controller) {
               _controllerGoogleMap.complete(controller);
               newGoogleMapController = controller;
-              // blackThemeGoogleMap();
+              blackThemeGoogleMap();
               setState(() {
                 bottomPaddingOfMap = 250;
               });
               locateUserPosition();
             },
           ),
-
-          //ui for searching location
           const Positioned(
               bottom: 10, left: 0, right: 0, child: LocationPicker()),
+          camPosition == null
+              ? Spinner(text: 'Fetching current location ', height: 0)
+              : Container()
         ],
       ),
     );
