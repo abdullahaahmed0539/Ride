@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'dart:async';
+
+import '../../services/map.dart';
+import '../../widgets/ui/spinner.dart';
 
 class DriverMapForRide extends StatefulWidget {
   static const routeName = '/driver_map_screen';
@@ -13,10 +17,37 @@ class DriverMapForRide extends StatefulWidget {
 class _DriverMapForRideState extends State<DriverMapForRide> {
   final Completer<GoogleMapController> _controllerGoogleMap = Completer();
   GoogleMapController? newGoogleMapController;
-  static final CameraPosition _kGooglePlex = CameraPosition(
+  static const CameraPosition _kGooglePlex = CameraPosition(
     target: LatLng(37.42796133580664, -122.085749655962),
     zoom: 14.4746,
   );
+
+  double bottomPaddingOfMap = 0;
+  CameraPosition? camPosition;
+  Position? userCurrentLocation;
+  LocationPermission? _locationPermission;
+  // var geolocator = Geolocator();
+
+  void locateUserPosition() async {
+    userCurrentLocation = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+    LatLng latLngPosition =
+        LatLng(userCurrentLocation!.latitude, userCurrentLocation!.longitude);
+    setState(() {
+      camPosition = CameraPosition(target: latLngPosition, zoom: 14);
+    });
+    newGoogleMapController!
+        .animateCamera(CameraUpdate.newCameraPosition(camPosition!));
+    String humanReadableAddress = await searchLocationFromGeographicCoOrdinated(
+        userCurrentLocation!, context);
+  }
+
+  void checkIfLocationPermissionAllowed() async {
+    _locationPermission = await Geolocator.requestPermission();
+    if (_locationPermission == LocationPermission.denied) {
+      _locationPermission = await Geolocator.requestPermission();
+    }
+  }
 
   blackThemeGoogleMap() {
     newGoogleMapController!.setMapStyle('''
@@ -185,6 +216,12 @@ class _DriverMapForRideState extends State<DriverMapForRide> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    checkIfLocationPermissionAllowed();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
         resizeToAvoidBottomInset: false,
@@ -193,15 +230,23 @@ class _DriverMapForRideState extends State<DriverMapForRide> {
           GoogleMap(
             mapType: MapType.normal,
             myLocationEnabled: true,
-            zoomControlsEnabled: false,
-
+            zoomGesturesEnabled: true,
+            zoomControlsEnabled: true,
+            padding: EdgeInsets.only(bottom: bottomPaddingOfMap, top: 20),
             initialCameraPosition: _kGooglePlex,
             onMapCreated: (GoogleMapController controller) {
               _controllerGoogleMap.complete(controller);
               newGoogleMapController = controller;
               blackThemeGoogleMap();
+              setState(() {
+                bottomPaddingOfMap = 0;
+              });
+              locateUserPosition();
             },
-          )
+          ),
+          camPosition == null
+              ? Spinner(text: 'Fetching current location ', height: 0)
+              : Container()
         ]));
   }
 }

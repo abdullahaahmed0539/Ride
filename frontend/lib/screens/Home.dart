@@ -1,6 +1,8 @@
 // ignore_for_file: file_names
 import 'package:flutter/material.dart';
+import 'package:frontend/models/Driver.dart';
 import 'package:frontend/providers/App.dart';
+import 'package:frontend/providers/Driver.dart';
 import 'package:frontend/services/error.dart';
 import 'package:frontend/widgets/components/DisputesOnYouShortcut.dart';
 import 'package:frontend/widgets/components/MyDisputesShortcut.dart';
@@ -132,33 +134,15 @@ class _HomeState extends State<Home> {
             physics: const AlwaysScrollableScrollPhysics(),
             child: Column(children: [
               const NavigationMenu(),
-              // appMode == 'rider'
-              //     ? DisputesOnYouShortCut(
-              //         disputesOnMe: disputesOnMe,
-              //       )
-              //     : Container(),
-              // appMode == 'rider'
-              //     ? VotingShortcut(
-              //         disputes: otherDisputes,
-              //       )
-              //     : Container(),
-              // appMode == 'rider'
-              //     ? MyDisputesShortcut(
-              //         myDisputes: disputesByMe,
-              //       )
-              //     : Container()
-
               DisputesOnYouShortCut(
                 disputesOnMe: disputesOnMe,
               ),
-
               VotingShortcut(
                 disputes: otherDisputes,
               ),
-
               MyDisputesShortcut(
                 myDisputes: disputesByMe,
-              )
+              ),
             ]),
           ),
         ));

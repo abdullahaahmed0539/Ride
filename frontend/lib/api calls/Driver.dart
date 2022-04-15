@@ -21,3 +21,17 @@ Future<Response> fetchDriverDetails(String riderId, String bookingId,
       }));
   return response;
 }
+
+Future<Response> switchModes(
+    String userId, PhoneNumber phoneNumber, String token) async {
+  final response = await patch(Uri.parse('$_uri/switch_mode'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer $token'
+      },
+      body: jsonEncode(<String, String>{
+        'phoneNumber': '${phoneNumber.countryCode}${phoneNumber.number}',
+        'userId': userId,
+      }));
+  return response;
+}
