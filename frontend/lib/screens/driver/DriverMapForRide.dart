@@ -246,14 +246,14 @@ class _DriverMapForRideState extends State<DriverMapForRide> {
   void updateDriversLocationAtRealTime() {
     streamSubscriptionPosition =
         Geolocator.getPositionStream().listen((Position position) {
-      driverCurrentLocation = position;
-      Driver driver =
-          Provider.of<DriverProvider>(context, listen: false).driver;
-      Geofire.setLocation(driver.driverId, driverCurrentLocation!.latitude,
-          driverCurrentLocation!.longitude);
-      LatLng latLng = LatLng(
-          driverCurrentLocation!.latitude, driverCurrentLocation!.longitude);
-      newGoogleMapController!.animateCamera(CameraUpdate.newLatLng(latLng));
+      if (mounted) {
+        driverCurrentLocation = position;
+        Geofire.setLocation(driver!.driverId, driverCurrentLocation!.latitude,
+            driverCurrentLocation!.longitude);
+        LatLng latLng = LatLng(
+            driverCurrentLocation!.latitude, driverCurrentLocation!.longitude);
+        newGoogleMapController!.animateCamera(CameraUpdate.newLatLng(latLng));
+      }
     });
   }
 
