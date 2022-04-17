@@ -1,8 +1,15 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_geofire/flutter_geofire.dart';
+import 'package:frontend/providers/Driver.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:provider/provider.dart';
 import 'dart:async';
 
+import '../../global/global.dart';
+import '../../models/Driver.dart';
 import '../../services/map.dart';
 import '../../widgets/ui/spinner.dart';
 
@@ -23,23 +30,30 @@ class _DriverMapForRideState extends State<DriverMapForRide> {
   );
 
   double bottomPaddingOfMap = 0;
+  Driver? driver;
   CameraPosition? camPosition;
-  Position? userCurrentLocation;
+  Position? driverCurrentLocation;
   LocationPermission? _locationPermission;
-  // var geolocator = Geolocator();
+  var geolocator = Geolocator();
+
+  void setDriver() {
+    setState(() {
+      driver = Provider.of<DriverProvider>(context, listen: false).driver;
+    });
+  }
 
   void locateUserPosition() async {
-    userCurrentLocation = await Geolocator.getCurrentPosition(
+    driverCurrentLocation = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
-    LatLng latLngPosition =
-        LatLng(userCurrentLocation!.latitude, userCurrentLocation!.longitude);
+    LatLng latLngPosition = LatLng(
+        driverCurrentLocation!.latitude, driverCurrentLocation!.longitude);
     setState(() {
       camPosition = CameraPosition(target: latLngPosition, zoom: 14);
     });
     newGoogleMapController!
         .animateCamera(CameraUpdate.newCameraPosition(camPosition!));
     String humanReadableAddress = await searchLocationFromGeographicCoOrdinated(
-        userCurrentLocation!, context);
+        driverCurrentLocation!, context);
   }
 
   void checkIfLocationPermissionAllowed() async {
@@ -215,10 +229,47 @@ class _DriverMapForRideState extends State<DriverMapForRide> {
                 ''');
   }
 
+  void driverIsOnlineNow() async {
+    Geofire.initialize('activeDrivers');
+
+    Position driverCurrentLocationTemp = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+
+    Geofire.setLocation(driver!.driverId, driverCurrentLocationTemp.latitude,
+        driverCurrentLocationTemp.longitude);
+  }
+
+  void driverIsOffline() {
+    Geofire.removeLocation(driver!.driverId);
+  }
+
+  void updateDriversLocationAtRealTime() {
+    streamSubscriptionPosition =
+        Geolocator.getPositionStream().listen((Position position) {
+      driverCurrentLocation = position;
+      Driver driver =
+          Provider.of<DriverProvider>(context, listen: false).driver;
+      Geofire.setLocation(driver.driverId, driverCurrentLocation!.latitude,
+          driverCurrentLocation!.longitude);
+      LatLng latLng = LatLng(
+          driverCurrentLocation!.latitude, driverCurrentLocation!.longitude);
+      newGoogleMapController!.animateCamera(CameraUpdate.newLatLng(latLng));
+    });
+  }
+
   @override
   void initState() {
     super.initState();
+    setDriver();
     checkIfLocationPermissionAllowed();
+    driverIsOnlineNow();
+    updateDriversLocationAtRealTime();
+  }
+
+  @override
+  void dispose() {
+    driverIsOffline();
+    super.dispose();
   }
 
   @override

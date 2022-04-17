@@ -51,5 +51,6 @@ class Driver {
     _isBusy = false;
   }
 
+  String get driverId => _driverId;
   String get carModel => _carModel;
 }

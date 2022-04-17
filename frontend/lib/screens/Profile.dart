@@ -1,7 +1,8 @@
 // ignore_for_file: file_names
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:frontend/api%20calls/Driver.dart';
-import 'package:frontend/models/Driver.dart';
 import 'package:frontend/models/User.dart';
 import 'package:frontend/providers/App.dart';
 import 'package:frontend/providers/Driver.dart';
@@ -11,6 +12,7 @@ import 'package:frontend/screens/users/PersonalInformation.dart';
 import 'package:frontend/screens/users/Wallet.dart';
 import 'package:frontend/services/error.dart';
 import 'package:frontend/widgets/components/listItemA.dart';
+
 import 'package:http/http.dart';
 import 'package:provider/provider.dart';
 
@@ -54,8 +56,11 @@ class _ProfileState extends State<Profile> {
     }
 
     if (response.statusCode == 201) {
+      var isActive =
+          json.decode(response.body)['data']['driverDetails']['isActive'];
       if (Provider.of<AppProvider>(context, listen: false).app.getAppMode() ==
-          'rider') {
+              'rider' &&
+          isActive) {
         Provider.of<DriverProvider>(context, listen: false)
             .driver
             .storeDriverDetails(response);
@@ -64,9 +69,11 @@ class _ProfileState extends State<Profile> {
             .setAppMode('driver');
         Navigator.of(context)
             .pushNamedAndRemoveUntil(Home.routeName, (route) => false);
-      }
-      else if (Provider.of<AppProvider>(context, listen: false).app.getAppMode() ==
-          'driver') {
+      } else if (Provider.of<AppProvider>(context, listen: false)
+                  .app
+                  .getAppMode() ==
+              'driver' &&
+          !isActive) {
         Provider.of<DriverProvider>(context, listen: false)
             .driver
             .removeDriverDetails();
