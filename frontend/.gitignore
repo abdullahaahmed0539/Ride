@@ -1,5 +1,3 @@
-lib/services/map.dart
-
 
 # Miscellaneous
 *.class
@@ -50,4 +48,4 @@ app.*.map.json
 
 # custom ignores
 /assets
-# /lib/screens
+lib/global/mapKey.dart

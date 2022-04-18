@@ -10,7 +10,7 @@ import 'package:frontend/providers/User.dart';
 import 'package:frontend/screens/disputes/DisputeTabs.dart';
 import 'package:frontend/screens/users/PersonalInformation.dart';
 import 'package:frontend/screens/users/Wallet.dart';
-import 'package:frontend/services/error.dart';
+import 'package:frontend/services/user_alert.dart';
 import 'package:frontend/widgets/components/listItemA.dart';
 
 import 'package:http/http.dart';

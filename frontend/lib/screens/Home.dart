@@ -1,7 +1,7 @@
 // ignore_for_file: file_names
 import 'package:flutter/material.dart';
 import 'package:frontend/providers/App.dart';
-import 'package:frontend/services/error.dart';
+import 'package:frontend/services/user_alert.dart';
 import 'package:frontend/widgets/components/DisputesOnYouShortcut.dart';
 import 'package:frontend/widgets/components/MyDisputesShortcut.dart';
 import '../widgets/components/NavigationMenu.dart';

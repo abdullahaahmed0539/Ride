@@ -9,7 +9,7 @@ import 'package:validators/validators.dart';
 
 import '../../models/User.dart';
 import '../../providers/User.dart';
-import '../../services/error.dart';
+import '../../services/user_alert.dart';
 import '../../widgets/ui/DarkTextField.dart';
 import '../../widgets/ui/LongButton.dart';
 import '../../widgets/ui/spinner.dart';

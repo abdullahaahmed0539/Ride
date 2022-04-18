@@ -4,7 +4,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:frontend/api%20calls/Trips.dart';
 import 'package:frontend/api%20calls/Driver.dart';
-import 'package:frontend/services/error.dart';
+import 'package:frontend/services/user_alert.dart';
 import 'package:frontend/widgets/components/BookingDetailBlock.dart';
 import 'package:frontend/widgets/components/CostBreakdown.dart';
 import 'package:frontend/widgets/components/DriverDetails.dart';
@@ -74,7 +74,7 @@ class _BookingDetailState extends State<BookingDetail> {
     final routeArgs =
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
     dynamic bookingDetails = routeArgs['booking'];
-    Response response = await fetchDriverDetails(
+    Response response = await fetchDriverDetailsForSummary(
         bookingDetails['riderId'].toString(),
         bookingDetails['_id'].toString(),
         bookingDetails['driverId'].toString(),

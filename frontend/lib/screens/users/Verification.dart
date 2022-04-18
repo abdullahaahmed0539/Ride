@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:circular_countdown_timer/circular_countdown_timer.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:frontend/screens/users/UpdatePhoneNumber.dart';
-import 'package:frontend/services/error.dart';
+import 'package:frontend/services/user_alert.dart';
 import 'package:frontend/widgets/ui/spinner.dart';
 import 'package:http/http.dart';
 import 'package:intl_phone_field/phone_number.dart';
@@ -40,9 +40,11 @@ class _VerificationState extends State<Verification> {
   final CountDownController controller = CountDownController();
 
   void setCurrentText(String val) {
-    setState(() {
-      currentText = val;
-    });
+    if (mounted) {
+      setState(() {
+        currentText = val;
+      });
+    }
   }
 
   void onTimerComplete() {
@@ -54,40 +56,50 @@ class _VerificationState extends State<Verification> {
   }
 
   void verifyPhone() async {
-    final routeArgs =
-        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-    final phoneNumber = routeArgs['phoneNumber'];
-    final previousScreen = routeArgs['previousScreen'];
-    await FirebaseAuth.instance.verifyPhoneNumber(
-      phoneNumber: '${phoneNumber.countryCode}${phoneNumber.number}',
-      verificationCompleted: (PhoneAuthCredential credential) async {
-        setState(() => verifying = true);
-        UserCredential value =
-            await FirebaseAuth.instance.signInWithCredential(credential);
+    if (mounted) {
+      final routeArgs =
+          ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+      final phoneNumber = routeArgs['phoneNumber'];
+      final previousScreen = routeArgs['previousScreen'];
+      await FirebaseAuth.instance.verifyPhoneNumber(
+        phoneNumber: '${phoneNumber.countryCode}${phoneNumber.number}',
+        verificationCompleted: (PhoneAuthCredential credential) async {
+          if (mounted) {
+            setState(() => verifying = true);
+          }
+          UserCredential value =
+              await FirebaseAuth.instance.signInWithCredential(credential);
 
-        if (value.user != null) {
-          previousScreen == 'login'
-              ? loginHandler(phoneNumber)
-              : updatePhoneNumberHandler(phoneNumber);
-        } else {
-          setState(() => verifying = false);
-        }
-      },
-      verificationFailed: (FirebaseAuthException e) {
-        setState(() => verifying = false);
-        snackBar(scaffoldKey, e.code);
-      },
-      codeSent: (verificationID, resendToken) {
-        setState(() => verificationCode = verificationID);
-      },
-      codeAutoRetrievalTimeout: (String verificationID) {
-        setState(() => verificationCode = verificationID);
-      },
-      timeout: const Duration(seconds: 90),
-    );
+          if (value.user != null) {
+            previousScreen == 'login'
+                ? loginHandler(phoneNumber)
+                : updatePhoneNumberHandler(phoneNumber);
+          } else {
+            if (mounted) {
+              setState(() => verifying = false);
+            }
+          }
+        },
+        verificationFailed: (FirebaseAuthException e) {
+          if (mounted) {
+            setState(() => verifying = false);
+          }
+          snackBar(scaffoldKey, e.code);
+        },
+        codeSent: (verificationID, resendToken) {
+          if (mounted) {
+            setState(() => verificationCode = verificationID);
+          }
+        },
+        codeAutoRetrievalTimeout: (String verificationID) {
+          if (mounted) {
+            setState(() => verificationCode = verificationID);
+          }
+        },
+        timeout: const Duration(seconds: 90),
+      );
+    }
   }
-
-
 
   @override
   void initState() {
@@ -109,23 +121,27 @@ class _VerificationState extends State<Verification> {
   }
 
   void loginHandler(PhoneNumber phoneNumber) async {
-    var response = await login(phoneNumber);
-    if (response.statusCode == 200) {
-      Provider.of<UserProvider>(context, listen: false)
-          .user
-          .onLogin(response, context);
-      Navigator.of(context)
-          .pushNamedAndRemoveUntil(Home.routeName, (route) => false);
-    } else if (response.statusCode == 404) {
-      Navigator.of(context).pushNamedAndRemoveUntil(
-          Register.routeName, ModalRoute.withName('/login'),
-          arguments: phoneNumber);
-    } else if (response.statusCode == 406) {
-      Navigator.of(context)
-          .pushNamedAndRemoveUntil(Login.routeName, (route) => false);
-    } else {
-      setState(() => verifying = false);
-      snackBar(scaffoldKey, 'Internal server error. Try again!');
+    if (mounted) {
+      var response = await login(phoneNumber);
+      if (response.statusCode == 200) {
+        Provider.of<UserProvider>(context, listen: false)
+            .user
+            .onLogin(response, context);
+        Navigator.of(context)
+            .pushNamedAndRemoveUntil(Home.routeName, (route) => false);
+      } else if (response.statusCode == 404) {
+        Navigator.of(context).pushNamedAndRemoveUntil(
+            Register.routeName, ModalRoute.withName('/login'),
+            arguments: phoneNumber);
+      } else if (response.statusCode == 406) {
+        Navigator.of(context)
+            .pushNamedAndRemoveUntil(Login.routeName, (route) => false);
+      } else {
+        if (mounted) {
+          setState(() => verifying = false);
+        }
+        snackBar(scaffoldKey, 'Internal server error. Try again!');
+      }
     }
   }
 
@@ -142,7 +158,9 @@ class _VerificationState extends State<Verification> {
         response.statusCode != 406 &&
         response.statusCode != 401) {
       snackBar(scaffoldKey, 'Internal server error.');
-      setState(() => verifying = false);
+      if (mounted) {
+        setState(() => verifying = false);
+      }
     }
 
     if (response.statusCode == 201) {
@@ -181,7 +199,9 @@ class _VerificationState extends State<Verification> {
     //Incase of access denied
     if (response.statusCode == 401) {
       snackBar(scaffoldKey, 'Unauthorized Access.');
-      setState(() => verifying = false);
+      if (mounted) {
+        setState(() => verifying = false);
+      }
     }
   }
 
@@ -195,7 +215,9 @@ class _VerificationState extends State<Verification> {
       child: LongButton(
         handler: () async {
           try {
-            setState(() => verifying = true);
+            if (mounted) {
+              setState(() => verifying = true);
+            }
             UserCredential value = await FirebaseAuth.instance
                 .signInWithCredential(PhoneAuthProvider.credential(
                     verificationId: verificationCode, smsCode: currentText));
@@ -204,10 +226,14 @@ class _VerificationState extends State<Verification> {
                   ? loginHandler(phoneNumber)
                   : updatePhoneNumberHandler(phoneNumber);
             } else {
-              setState(() => verifying = false);
+              if (mounted) {
+                setState(() => verifying = false);
+              }
             }
           } on FirebaseAuthException catch (e) {
-            setState(() => verifying = false);
+            if (mounted) {
+              setState(() => verifying = false);
+            }
             FocusScope.of(context).unfocus();
             snackBar(scaffoldKey, e.code);
           }

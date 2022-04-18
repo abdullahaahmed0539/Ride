@@ -34,15 +34,19 @@ class _LocationPickerState extends State<LocationPicker> {
   TextEditingController dropoffController = TextEditingController();
 
   void setSelected(val) {
-    setState(() {
-      selected = val;
-    });
+    if (mounted) {
+      setState(() {
+        selected = val;
+      });
+    }
   }
 
   void setDropOffLocation(val) {
-    setState(() {
-      userDropLocation = val;
-    });
+    if (mounted) {
+      setState(() {
+        userDropLocation = val;
+      });
+    }
 
     dropoffController.text = userDropLocation!.locationName.toString();
     dropoffController.selection = TextSelection.fromPosition(
@@ -63,11 +67,14 @@ class _LocationPickerState extends State<LocationPicker> {
         return;
       }
       if (responseAutoCompleteSearch['status'] == 'OK') {
-        setState(() {
-          predictionsList = (responseAutoCompleteSearch['predictions'] as List)
-              .map((jsonData) => PredictedPlaces.fromJson(jsonData))
-              .toList();
-        });
+        if (mounted) {
+          setState(() {
+            predictionsList =
+                (responseAutoCompleteSearch['predictions'] as List)
+                    .map((jsonData) => PredictedPlaces.fromJson(jsonData))
+                    .toList();
+          });
+        }
       }
     }
   }
@@ -102,11 +109,11 @@ class _LocationPickerState extends State<LocationPicker> {
                 Container(
                     margin: const EdgeInsets.only(top: 6, bottom: 8),
                     child: customTextField(
-                        context, 'pickup', "Enter pickup location", false)),
+                        context, 'Pickup', "Enter pickup location", false)),
                 Container(
                     margin: const EdgeInsets.only(bottom: 18),
                     child: customTextField(
-                        context, 'dropoff', "Enter dropoff location", true)),
+                        context, 'Dropoff', "Enter dropoff location", true)),
                 userDropLocation != null
                     ? LongButton(
                         handler: () async {
@@ -120,7 +127,6 @@ class _LocationPickerState extends State<LocationPicker> {
                               userDropLocation!.lat!, userDropLocation!.long!);
                           var directionDetails = await obtainDirectionDetails(
                               originLatLng, destinationLatLng);
-                      
 
                           PolylinePoints polylinePoints = PolylinePoints();
                           List<PointLatLng> decodedPolylinePointsList =
@@ -151,7 +157,7 @@ class _LocationPickerState extends State<LocationPicker> {
 
   //Custom widget
   Widget customTextField(context, label, placeholder, enabled) {
-    if (label == 'pickup') {
+    if (label == 'Pickup') {
       pickupController.text =
           Provider.of<LocationProvider>(context).userPickupLocation != null
               ? Provider.of<LocationProvider>(context)
@@ -163,19 +169,21 @@ class _LocationPickerState extends State<LocationPicker> {
 
     return TextField(
       onChanged: (val) {
-        if (label == 'dropoff') {
+        if (label == 'Dropoff') {
           findPlaceAutoComplete(val);
         }
         if (userDropLocation != null) {
           if (userDropLocation!.locationName != val) {
-            setState(() {
-              selected = false;
-              userDropLocation = null;
-            });
+            if (mounted) {
+              setState(() {
+                selected = false;
+                userDropLocation = null;
+              });
+            }
           }
         }
       },
-      controller: label == 'pickup' ? pickupController : dropoffController,
+      controller: label == 'Pickup' ? pickupController : dropoffController,
       cursorColor: Theme.of(context).primaryColor,
       enabled: enabled,
       autofocus: false,

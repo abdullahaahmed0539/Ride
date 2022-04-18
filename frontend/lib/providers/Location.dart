@@ -15,6 +15,17 @@ class LocationProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void clearLocations() {
+    if (_userPickupLocation != null) {
+      _userPickupLocation = null;
+    }
+    if (_userDropLocation != null) {
+      _userDropLocation = null;
+    }
+    
+   
+  }
+
   Directions? get userPickupLocation => _userPickupLocation;
   Directions? get userDropLocation => _userDropLocation;
 }

@@ -42,6 +42,7 @@ dependencies:
   flutter_bounceable: ^1.0.0
   flutter_polyline_points: ^1.0.0
   flutter_geofire: ^2.0.1
+  fluttertoast: ^8.0.9
 
 dev_dependencies:
   flutter_test:
@@ -60,3 +61,5 @@ flutter:
         - weight: 400
         - asset: assets/fonts/sf-pro-rounded/SF-Pro-Rounded-Bold.otf
         - weight: 700
+  assets:
+    - assets/images/

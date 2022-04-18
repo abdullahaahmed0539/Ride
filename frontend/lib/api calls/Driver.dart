@@ -6,7 +6,7 @@ import 'dart:convert';
 
 String _uri = 'http://10.0.2.2:8080/drivers';
 
-Future<Response> fetchDriverDetails(String riderId, String bookingId,
+Future<Response> fetchDriverDetailsForSummary(String riderId, String bookingId,
     String driverId, PhoneNumber phoneNumber, String token) async {
   final response = await post(Uri.parse('$_uri/driver_details_for_trip'),
       headers: <String, String>{
@@ -32,6 +32,20 @@ Future<Response> switchModes(
       body: jsonEncode(<String, String>{
         'phoneNumber': '${phoneNumber.countryCode}${phoneNumber.number}',
         'userId': userId,
+      }));
+  return response;
+}
+
+Future<Response> fetchDriverDetails(
+    String driverId, PhoneNumber phoneNumber, String token) async {
+  final response = await post(Uri.parse('$_uri/driver_details'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer $token'
+      },
+      body: jsonEncode(<String, String>{
+        'phoneNumber': '${phoneNumber.countryCode}${phoneNumber.number}',
+        'driverId': driverId,
       }));
   return response;
 }

@@ -12,7 +12,7 @@ import '../../widgets/ui/DarkTextField.dart';
 import '../../widgets/ui/LongButton.dart';
 import '../../api calls/User.dart';
 import '../../providers/User.dart';
-import '../../services/error.dart';
+import '../../services/user_alert.dart';
 import 'Login.dart';
 
 class Register extends StatefulWidget {

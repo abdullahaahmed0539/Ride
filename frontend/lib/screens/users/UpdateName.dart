@@ -4,7 +4,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:frontend/api%20calls/User.dart';
 import 'package:frontend/providers/User.dart';
-import 'package:frontend/services/error.dart';
+import 'package:frontend/services/user_alert.dart';
 import 'package:frontend/widgets/ui/spinner.dart';
 import 'package:frontend/widgets/ui/DarkTextField.dart';
 import 'package:frontend/widgets/ui/LongButton.dart';

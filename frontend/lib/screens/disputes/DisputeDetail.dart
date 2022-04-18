@@ -4,7 +4,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:frontend/api%20calls/Dispute.dart';
 import 'package:frontend/screens/disputes/DisputeTabs.dart';
-import 'package:frontend/services/error.dart';
+import 'package:frontend/services/user_alert.dart';
 import 'package:frontend/widgets/ui/GreyBlock.dart';
 import 'package:frontend/widgets/ui/LongButton.dart';
 import 'package:frontend/widgets/ui/TextArea.dart';
