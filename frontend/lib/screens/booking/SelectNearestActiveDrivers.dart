@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:frontend/global/global.dart';
-import 'package:frontend/services/string_extension.dart';
-
 import '../../widgets/ui/DriverCard.dart';
 
 class SelectNearestActiveDrivers extends StatefulWidget {
@@ -30,7 +28,14 @@ class _SelectNearestActiveDriversState
                   color: Colors.white,
                 ),
                 onPressed: () {
-                  //delete ride request from db
+                  final routeArgs = ModalRoute.of(context)!.settings.arguments
+                      as Map<String, dynamic>;
+                  final referenceRideRequest =
+                      routeArgs['referenceRideRequest'];
+                  referenceRideRequest!.remove();
+                  Fluttertoast.showToast(
+                      msg: 'Ride request cancelled',
+                      backgroundColor: Theme.of(context).primaryColor);
                   Navigator.of(context).pop();
                 },
               ),
@@ -38,17 +43,20 @@ class _SelectNearestActiveDriversState
             backgroundColor: Theme.of(context).backgroundColor,
             body: Container(
                 margin: const EdgeInsets.symmetric(horizontal: 8),
-                
                 child: Column(
                   children: [
-                    ...driversList.map((driver) => DriverCard(
-                      firstName: driver['firstName'],
-                       lastName: driver['lastName'],
-                        carModel: driver['carModel'],
-                         color: driver['color'],
-                          registrationNumber: driver['registrationNumber'],
-                           rating: driver['ratings'],
-                            bottom: 0, top: 12)).toList(),
+                    ...driversList
+                        .map((driver) => DriverCard(
+                            driverId: driver['_id'],
+                            firstName: driver['firstName'],
+                            lastName: driver['lastName'],
+                            carModel: driver['carModel'],
+                            color: driver['color'],
+                            registrationNumber: driver['registrationNumber'],
+                            rating: driver['ratings'],
+                            bottom: 0,
+                            top: 12))
+                        .toList(),
                   ],
                 ))));
   }

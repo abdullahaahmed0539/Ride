@@ -88,6 +88,7 @@ class _RegisterState extends State<Register> {
                 child: DarkTextField(
                   label: 'First name',
                   placeholder: 'Enter your first name',
+                  keyboardType: TextInputType.text,
                   onChangeHandler: (val) =>
                       setState(() => firstName = val.toLowerCase()),
                 ),
@@ -97,6 +98,7 @@ class _RegisterState extends State<Register> {
                 child: DarkTextField(
                   label: 'Last name',
                   placeholder: 'Enter your last name',
+                  keyboardType: TextInputType.text,
                   onChangeHandler: (val) =>
                       setState(() => lastName = val.toLowerCase()),
                 ),
@@ -106,6 +108,7 @@ class _RegisterState extends State<Register> {
                 child: DarkTextField(
                     label: 'E-mail',
                     placeholder: 'Enter your email',
+                    keyboardType: TextInputType.emailAddress,
                     onChangeHandler: (val) => setState(() => email = val)),
               ),
               !isEmail(email) && email != ''
@@ -120,6 +123,7 @@ class _RegisterState extends State<Register> {
                 margin: const EdgeInsets.only(top: 16),
                 child: DarkTextField(
                     label: 'Metamask wallet Address',
+                    keyboardType: TextInputType.text,
                     placeholder: 'Enter your metamask wallet address',
                     onChangeHandler: (val) =>
                         setState(() => walletAddress = val)),

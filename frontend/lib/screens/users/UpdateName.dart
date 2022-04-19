@@ -125,6 +125,7 @@ class _UpdateNameState extends State<UpdateName> {
                           child: DarkTextField(
                               label: 'First name',
                               placeholder: 'Enter your first name',
+                              keyboardType: TextInputType.text,
                               onChangeHandler: (val) => setState(
                                   () => firstName = val.toLowerCase())),
                         ),
@@ -133,6 +134,7 @@ class _UpdateNameState extends State<UpdateName> {
                           child: DarkTextField(
                               label: 'Last name',
                               placeholder: 'Enter your last name',
+                              keyboardType: TextInputType.text,
                               onChangeHandler: (val) =>
                                   setState(() => lastName = val.toLowerCase())),
                         ),

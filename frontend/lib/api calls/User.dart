@@ -3,10 +3,12 @@ import 'package:intl_phone_field/phone_number.dart';
 import 'package:http/http.dart';
 import 'dart:convert';
 
-String _uri = 'http://10.0.2.2:8080/users';
+import '../global/configuration.dart';
+
+String url = '$uri/users';
 
 Future<Response> userExists(PhoneNumber phoneNumber) async {
-  final response = await post(Uri.parse('$_uri/exists'),
+  final response = await post(Uri.parse('$url/exists'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -17,7 +19,7 @@ Future<Response> userExists(PhoneNumber phoneNumber) async {
 }
 
 Future<Response> login(PhoneNumber phoneNumber) async {
-  final response = await post(Uri.parse('$_uri/login'),
+  final response = await post(Uri.parse('$url/login'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -29,7 +31,7 @@ Future<Response> login(PhoneNumber phoneNumber) async {
 
 Future<Response> register(PhoneNumber phoneNumber, String firstName,
     String lastName, String email, String walletAddress) async {
-  final response = await post(Uri.parse('$_uri/register'),
+  final response = await post(Uri.parse('$url/register'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -46,7 +48,7 @@ Future<Response> register(PhoneNumber phoneNumber, String firstName,
 
 Future<Response> updateName(PhoneNumber phoneNumber, String firstName,
     String lastName, String token) async {
-  final response = await patch(Uri.parse('$_uri/update_name'),
+  final response = await patch(Uri.parse('$url/update_name'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': 'Bearer $token'
@@ -61,7 +63,7 @@ Future<Response> updateName(PhoneNumber phoneNumber, String firstName,
 
 Future<Response> updateEmail(
     PhoneNumber phoneNumber, String email, String token) async {
-  final response = await patch(Uri.parse('$_uri/update_email'),
+  final response = await patch(Uri.parse('$url/update_email'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': 'Bearer $token'
@@ -75,7 +77,7 @@ Future<Response> updateEmail(
 
 Future<Response> updatePhoneNumber(
     PhoneNumber phoneNumber, PhoneNumber newPhoneNumber, String token) async {
-  final response = await patch(Uri.parse('$_uri/update_phone_number'),
+  final response = await patch(Uri.parse('$url/update_phone_number'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': 'Bearer $token'
@@ -90,7 +92,7 @@ Future<Response> updatePhoneNumber(
 }
 
 Future<Response> fetchUserDetails(PhoneNumber phoneNumber, String token) async {
-  final response = await post(Uri.parse('$_uri/details'),
+  final response = await post(Uri.parse('$url/details'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': 'Bearer $token'

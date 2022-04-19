@@ -48,4 +48,4 @@ app.*.map.json
 
 # custom ignores
 /assets
-lib/global/mapKey.dart
+lib/global/configuration.dart

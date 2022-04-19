@@ -5,12 +5,14 @@ class DarkTextField extends StatelessWidget {
   final String label;
   final String placeholder;
   final Function onChangeHandler;
+  final TextInputType keyboardType;
 
   const DarkTextField(
       {Key? key,
       required this.label,
       required this.placeholder,
-      required this.onChangeHandler})
+      required this.onChangeHandler,
+      required this.keyboardType})
       : super(key: key);
 
   @override
@@ -21,6 +23,7 @@ class DarkTextField extends StatelessWidget {
           onChanged: (val) {
             onChangeHandler(val);
           },
+          keyboardType: keyboardType,
           cursorColor: Theme.of(context).primaryColor,
           autofocus: false,
           autocorrect: false,

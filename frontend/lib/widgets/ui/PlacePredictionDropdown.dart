@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:frontend/api%20calls/Map.dart';
-import 'package:frontend/global/mapKey.dart';
+import 'package:frontend/global/configuration.dart';
 import 'package:frontend/models/Directions.dart';
 import 'package:frontend/providers/Location.dart';
 import 'package:provider/provider.dart';

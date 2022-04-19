@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/screens/booking/SelectNearestActiveDrivers.dart';
 import 'package:frontend/screens/driver/DriverMapForRide.dart';
+import 'package:frontend/screens/driver/driver_signup.dart';
 
 import '../screens/booking/RiderBooking.dart';
 import '../screens/booking/bookingDetail.dart';
@@ -46,6 +47,7 @@ Map<String, Widget Function(BuildContext)> routes() {
     UpdatePhoneNumber.routeName: (context) => const UpdatePhoneNumber(),
     BookingDetail.routeName: (context) => const BookingDetail(),
     DriverMapForRide.routeName: (context) => const DriverMapForRide(),
-    SelectNearestActiveDrivers.routeName: (context) => const SelectNearestActiveDrivers()
+    SelectNearestActiveDrivers.routeName: (context) => const SelectNearestActiveDrivers(),
+    DriverSignup.routeName:(context)=> const DriverSignup()
   };
 }

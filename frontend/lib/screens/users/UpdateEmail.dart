@@ -133,6 +133,7 @@ class _UpdateEmailState extends State<UpdateEmail> {
                                   child: DarkTextField(
                                       label: 'Email',
                                       placeholder: 'Enter your email',
+                                      keyboardType: TextInputType.emailAddress,
                                       onChangeHandler: (val) => setState(
                                           () => email = val.toLowerCase())),
                                 ),

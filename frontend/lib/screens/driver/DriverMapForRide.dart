@@ -274,30 +274,58 @@ class _DriverMapForRideState extends State<DriverMapForRide> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        resizeToAvoidBottomInset: false,
-        backgroundColor: Theme.of(context).backgroundColor,
-        body: Stack(children: [
-          GoogleMap(
-            mapType: MapType.normal,
-            myLocationEnabled: true,
-            zoomGesturesEnabled: true,
-            zoomControlsEnabled: true,
-            padding: EdgeInsets.only(bottom: bottomPaddingOfMap, top: 20),
-            initialCameraPosition: _kGooglePlex,
-            onMapCreated: (GoogleMapController controller) {
-              _controllerGoogleMap.complete(controller);
-              newGoogleMapController = controller;
-              blackThemeGoogleMap();
-              setState(() {
-                bottomPaddingOfMap = 0;
-              });
-              locateUserPosition();
-            },
-          ),
-          camPosition == null
-              ? Spinner(text: 'Fetching current location ', height: 0)
-              : Container()
-        ]));
+    return WillPopScope(
+      onWillPop: () async {
+        return (await showDialog(
+              context: context,
+              builder: (context) => AlertDialog(
+                title: const Text('Are you sure?',
+                    style: TextStyle(color: Colors.black)),
+                content: Text(
+                  'Stay on this screen to find rides. Do you want to continue to go back?',
+                  style: Theme.of(context).textTheme.titleSmall,
+                ),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () => Navigator.of(context).pop(false),
+                    child: const Text('No'),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop(true);
+                    },
+                    child: const Text('Yes'),
+                  ),
+                ],
+              ),
+            )) ??
+            false;
+      },
+      child: Scaffold(
+          resizeToAvoidBottomInset: false,
+          backgroundColor: Theme.of(context).backgroundColor,
+          body: Stack(children: [
+            GoogleMap(
+              mapType: MapType.normal,
+              myLocationEnabled: true,
+              zoomGesturesEnabled: true,
+              zoomControlsEnabled: true,
+              padding: EdgeInsets.only(bottom: bottomPaddingOfMap, top: 20),
+              initialCameraPosition: _kGooglePlex,
+              onMapCreated: (GoogleMapController controller) {
+                _controllerGoogleMap.complete(controller);
+                newGoogleMapController = controller;
+                blackThemeGoogleMap();
+                setState(() {
+                  bottomPaddingOfMap = 0;
+                });
+                locateUserPosition();
+              },
+            ),
+            camPosition == null
+                ? Spinner(text: 'Fetching current location ', height: 0)
+                : Container()
+          ])),
+    );
   }
 }

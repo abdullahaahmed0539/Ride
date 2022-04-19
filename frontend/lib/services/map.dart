@@ -1,4 +1,4 @@
-import 'package:frontend/global/mapKey.dart';
+import 'package:frontend/global/configuration.dart';
 import 'package:frontend/models/DirectionDetailsInfo.dart';
 import 'package:frontend/models/Directions.dart';
 import 'package:frontend/providers/Location.dart';
@@ -44,4 +44,12 @@ Future<DirectionDetailsInfo?> obtainDirectionDetails(
     durationValue: response['routes'][0]['legs'][0]['duration']['value'],
   );
   return directionDetails;
+}
+
+double calculateEstimatedFareAmountBasedOnDistance(
+    DirectionDetailsInfo directionDetails) {
+  double distance = directionDetails.distanceValue! / 1000;
+  double litresRequired = distance / 12;
+  double total = litresRequired*180*1.25;
+  return double.parse(total.toStringAsFixed(2));
 }

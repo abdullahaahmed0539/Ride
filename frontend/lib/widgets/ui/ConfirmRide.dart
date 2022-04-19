@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/global/global.dart';
+import 'package:frontend/services/map.dart';
 import 'package:frontend/widgets/ui/LongButton.dart';
-import 'package:frontend/widgets/ui/TextualButton.dart';
 import 'package:provider/provider.dart';
 
 import '../../providers/Location.dart';
@@ -36,11 +37,14 @@ class ConfirmRide extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'Estimated fair',
+                      'Estimated fair (in RideCoins)',
                       style: Theme.of(context).textTheme.bodyMedium,
                     ),
                     Text(
-                      'R20',
+                      tripDirectionDetailsInfo != null? 
+                      calculateEstimatedFareAmountBasedOnDistance(
+                              tripDirectionDetailsInfo!)
+                          .toString():'',
                       style: Theme.of(context).textTheme.titleLarge,
                     ),
                   ],
@@ -129,7 +133,7 @@ class ConfirmRide extends StatelessWidget {
                             style: Theme.of(context).textTheme.titleSmall,
                           ),
                           Text(
-                            '10Km',
+                            tripDirectionDetailsInfo != null? '${(((tripDirectionDetailsInfo!.distanceValue)!/1000)).toStringAsFixed(2)} Km': '',
                             style: Theme.of(context).textTheme.titleSmall,
                           ),
                         ],
@@ -141,7 +145,7 @@ class ConfirmRide extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Container(
-                      margin: const EdgeInsets.only(top: 2, bottom: 7),
+                      margin: const EdgeInsets.only(top: 4, bottom: 7),
                       child: TextButton(
                         onPressed: () => editTripDetails(),
                         child: Text(

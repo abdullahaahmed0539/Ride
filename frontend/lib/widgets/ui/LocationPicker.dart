@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:frontend/api%20calls/Map.dart';
-import 'package:frontend/global/mapKey.dart';
+import 'package:frontend/global/configuration.dart';
 import 'package:frontend/models/PredictedPlaces.dart';
 import 'package:frontend/providers/Location.dart';
 import 'package:frontend/providers/User.dart';
@@ -10,6 +10,7 @@ import 'package:frontend/widgets/ui/LongButton.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 
+import '../../global/global.dart';
 import '../../models/Directions.dart';
 import 'PlacePredictionDropdown.dart';
 
@@ -128,11 +129,11 @@ class _LocationPickerState extends State<LocationPicker> {
                           var directionDetails = await obtainDirectionDetails(
                               originLatLng, destinationLatLng);
 
+                          tripDirectionDetailsInfo = directionDetails;
                           PolylinePoints polylinePoints = PolylinePoints();
                           List<PointLatLng> decodedPolylinePointsList =
                               polylinePoints
                                   .decodePolyline(directionDetails!.ePoints!);
-
                           if (decodedPolylinePointsList.isNotEmpty) {
                             decodedPolylinePointsList
                                 .forEach((PointLatLng pointLatLng) {

@@ -1,6 +1,7 @@
 // ignore_for_file: file_names
 import 'dart:async';
 import 'dart:convert';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_geofire/flutter_geofire.dart';
 import 'package:frontend/api%20calls/Driver.dart';
@@ -17,10 +18,10 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart';
 import 'package:provider/provider.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import '../../models/Directions.dart';
 import '../../models/User.dart';
 import '../../providers/Location.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import '../../services/user_alert.dart';
 import '../../widgets/ui/LocationPicker.dart';
 
@@ -33,6 +34,7 @@ class RiderBooking extends StatefulWidget {
 }
 
 class _RiderBooking extends State<RiderBooking> {
+  DatabaseReference? referenceRideRequest;
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
   final Completer<GoogleMapController> _controllerGoogleMap = Completer();
   GoogleMapController? newGoogleMapController;
@@ -460,13 +462,46 @@ class _RiderBooking extends State<RiderBooking> {
   }
 
   void saveRideRequestInformation() {
+    referenceRideRequest =
+        FirebaseDatabase.instance.ref().child('allRideRequests').push();
+
+    var pickupLocation = Provider.of<LocationProvider>(context, listen: false)
+        .userPickupLocation!;
+    var droppoffLocation =
+        Provider.of<LocationProvider>(context, listen: false).userDropLocation!;
+
+    Map pickupLocationMap = {
+      "latitude": pickupLocation.lat,
+      "longitude": pickupLocation.long,
+    };
+
+    Map droppoffLocationMap = {
+      "latitude": droppoffLocation.lat,
+      "longitude": droppoffLocation.long,
+    };
+
+    User user = Provider.of<UserProvider>(context, listen: false).user;
+    Map userInfoMap = {
+      'pickup': pickupLocationMap,
+      'dropoff': droppoffLocationMap,
+      'time': DateTime.now().toString(),
+      'riderId': user.id,
+      'riderName': user.getFullName(),
+      'riderPhoneNumber':
+          '${user.phoneNumber.countryCode}${user.phoneNumber.number}',
+      'pickupAddress': pickupLocation.locationName,
+      'dropoffAddress': droppoffLocation.locationName,
+      'driverId': 'waiting'
+    };
+
+    referenceRideRequest!.set(userInfoMap);
     onlineNearByDriversList = GeoFireAssistant.activeNearbyDriversList;
     searchNearestOnlineDrivers();
   }
 
   void searchNearestOnlineDrivers() async {
     if (onlineNearByDriversList.isEmpty) {
-      //cancel the ride request.
+      referenceRideRequest!.remove();
       Fluttertoast.showToast(
           backgroundColor: Theme.of(context).primaryColor,
           msg: 'No online drivers nearby');
@@ -487,6 +522,30 @@ class _RiderBooking extends State<RiderBooking> {
           user.token);
       onFetchDriverDetailsHandler(response);
     }
+    var response = await Navigator.of(context).pushNamed(
+        SelectNearestActiveDrivers.routeName,
+        arguments: {'referenceRideRequest': referenceRideRequest});
+    if (response.toString() == 'driverChosen') {
+      FirebaseDatabase.instance
+          .ref()
+          .child('drivers')
+          .child(chosenDriverId!)
+          .once()
+          .then((snap) {
+        if (snap.snapshot.value != null) {
+          //assign ride request id to driver in firebase db.
+          FirebaseDatabase.instance
+              .ref()
+              .child('drivers')
+              .child(chosenDriverId!)
+              .child('rideRequest')
+              .set(referenceRideRequest!.key);
+        } else {
+          Fluttertoast.showToast(
+              msg: 'This driver is not available. Try another.');
+        }
+      });
+    }
   }
 
   onFetchDriverDetailsHandler(Response response) {
@@ -505,10 +564,8 @@ class _RiderBooking extends State<RiderBooking> {
       if (index == -1) {
         driversList.add(driverdata);
       }
-      Navigator.of(context).pushNamed(SelectNearestActiveDrivers.routeName);
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -533,6 +590,7 @@ class _RiderBooking extends State<RiderBooking> {
                       Provider.of<LocationProvider>(context, listen: false)
                           .clearLocations();
                       driversList.clear();
+                      onlineNearByDriversList.clear();
                       Navigator.of(context).pop(true);
                     },
                     child: const Text('Yes'),
@@ -573,9 +631,10 @@ class _RiderBooking extends State<RiderBooking> {
                     left: 0,
                     right: 0,
                     child: LocationPicker(
-                        addTopolylineCoOrdinatesList:
-                            addTopolylineCoOrdinatesList,
-                        setShowLocationPicker: setShowLocationPicker))
+                      addTopolylineCoOrdinatesList:
+                          addTopolylineCoOrdinatesList,
+                      setShowLocationPicker: setShowLocationPicker,
+                    ))
                 : Positioned(
                     bottom: 10,
                     left: 0,

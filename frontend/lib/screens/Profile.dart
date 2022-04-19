@@ -8,6 +8,7 @@ import 'package:frontend/providers/App.dart';
 import 'package:frontend/providers/Driver.dart';
 import 'package:frontend/providers/User.dart';
 import 'package:frontend/screens/disputes/DisputeTabs.dart';
+import 'package:frontend/screens/driver/driver_signup.dart';
 import 'package:frontend/screens/users/PersonalInformation.dart';
 import 'package:frontend/screens/users/Wallet.dart';
 import 'package:frontend/services/user_alert.dart';
@@ -162,7 +163,10 @@ class _ProfileState extends State<Profile> {
                             : ListItem(
                                 text: 'Become a captain',
                                 icon: Icons.attach_money_sharp,
-                                handler: () {}),
+                                handler: () {
+                                  Navigator.of(context)
+                                      .pushNamed(DriverSignup.routeName);
+                                }),
                         ListItem(
                             text: 'Log out',
                             icon: Icons.logout,
