@@ -23,8 +23,9 @@ Future<Response> fetchDriverDetailsForSummary(String riderId, String bookingId,
   return response;
 }
 
-Future<Response> switchModes(
-    String userId, PhoneNumber phoneNumber, String token) async {
+Future<Response> switchModes(String userId, String appMode,
+    PhoneNumber phoneNumber, String token) async {
+  // print(appMode);
   final response = await patch(Uri.parse('$url/switch_mode'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
@@ -33,6 +34,7 @@ Future<Response> switchModes(
       body: jsonEncode(<String, String>{
         'phoneNumber': '${phoneNumber.countryCode}${phoneNumber.number}',
         'userId': userId,
+        'appMode': appMode
       }));
   return response;
 }
@@ -52,21 +54,30 @@ Future<Response> fetchDriverDetails(
 }
 
 Future<Response> createDriverOnBoardingRequest(
-    String userId, String carModel, String  licenseURL,String cnic, String color, String registrationNumber, double milage,  PhoneNumber phoneNumber, String token) async {
-  final response = await post(Uri.parse('$uri/requests/create_onboarding_request'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-        'Authorization': 'Bearer $token'
-      },
-      body: jsonEncode(<String, dynamic>{
-        'phoneNumber': '${phoneNumber.countryCode}${phoneNumber.number}',
-        'userId': userId,
-        'carModel':carModel,
-        'licenseURL': licenseURL,
-        'cnic': cnic,
-        'color': color,
-        'registrationNumber': registrationNumber,
-        'milage': milage,
-      }));
+    String userId,
+    String carModel,
+    String licenseURL,
+    String cnic,
+    String color,
+    String registrationNumber,
+    double milage,
+    PhoneNumber phoneNumber,
+    String token) async {
+  final response =
+      await post(Uri.parse('$uri/requests/create_onboarding_request'),
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+            'Authorization': 'Bearer $token'
+          },
+          body: jsonEncode(<String, dynamic>{
+            'phoneNumber': '${phoneNumber.countryCode}${phoneNumber.number}',
+            'userId': userId,
+            'carModel': carModel,
+            'licenseURL': licenseURL,
+            'cnic': cnic,
+            'color': color,
+            'registrationNumber': registrationNumber,
+            'milage': milage,
+          }));
   return response;
 }

@@ -3,6 +3,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_geofire/flutter_geofire.dart';
 import 'package:frontend/providers/Driver.dart';
+import 'package:frontend/services/push_notifications/push_notification_system.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
@@ -243,6 +244,12 @@ class _DriverMapForRideState extends State<DriverMapForRide> {
     Geofire.removeLocation(driver!.driverId);
   }
 
+  void readCurrentDriverInfo(context) {
+    PushNotificationSystem pushNotificationSystem = PushNotificationSystem();
+    pushNotificationSystem.initializeCloudMessaging();
+    pushNotificationSystem.generateAndGetToken(context);
+  }
+
   void updateDriversLocationAtRealTime() {
     streamSubscriptionPosition =
         Geolocator.getPositionStream().listen((Position position) {
@@ -264,6 +271,7 @@ class _DriverMapForRideState extends State<DriverMapForRide> {
     checkIfLocationPermissionAllowed();
     driverIsOnlineNow();
     updateDriversLocationAtRealTime();
+    readCurrentDriverInfo(context);
   }
 
   @override
@@ -282,7 +290,7 @@ class _DriverMapForRideState extends State<DriverMapForRide> {
                 title: const Text('Are you sure?',
                     style: TextStyle(color: Colors.black)),
                 content: Text(
-                  'Stay on this screen to find rides. Do you want to continue to go back?',
+                  'Stay on this screen to find rides. Do you want to continue to go back? \n(You can still recieve ride requests if you minimize the app from this screen)',
                   style: Theme.of(context).textTheme.titleSmall,
                 ),
                 actions: <Widget>[
@@ -292,6 +300,12 @@ class _DriverMapForRideState extends State<DriverMapForRide> {
                   ),
                   TextButton(
                     onPressed: () {
+                      FirebaseDatabase.instance
+                          .ref()
+                          .child('drivers')
+                          .child(driver!.driverId)
+                          .child('token')
+                          .remove();
                       Navigator.of(context).pop(true);
                     },
                     child: const Text('Yes'),

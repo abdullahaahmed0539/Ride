@@ -14,7 +14,10 @@ class GeoFireAssistant {
   static void updateActiveNearbyDriversLocation(ActiveNearbyDrivers driver) {
     int index = activeNearbyDriversList
         .indexWhere((element) => element.driverId == driver.driverId);
-    activeNearbyDriversList[index].locationLatitude = driver.locationLatitude;
-    activeNearbyDriversList[index].locationLongitude = driver.locationLongitude;
+    if (index != -1) {
+      activeNearbyDriversList[index].locationLatitude = driver.locationLatitude;
+      activeNearbyDriversList[index].locationLongitude =
+          driver.locationLongitude;
+    }
   }
 }

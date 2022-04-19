@@ -548,6 +548,8 @@ class _RiderBooking extends State<RiderBooking> {
     }
   }
 
+  
+
   onFetchDriverDetailsHandler(Response response) {
     if (response.statusCode != 200 && response.statusCode != 401) {
       snackBar(scaffoldKey, 'Internal server error.');

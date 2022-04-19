@@ -35,7 +35,7 @@ class _SelectNearestActiveDriversState
                   referenceRideRequest!.remove();
                   Fluttertoast.showToast(
                       msg: 'Ride request cancelled',
-                      backgroundColor: Theme.of(context).primaryColor);
+                      backgroundColor: Theme.of(context).backgroundColor);
                   Navigator.of(context).pop();
                 },
               ),

@@ -21,7 +21,7 @@ class PlacePredictionDropdown extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        height: 220,
+        height: 180,
         margin: const EdgeInsets.only(right: 10, left: 10, bottom: 10),
         padding: const EdgeInsets.all(12),
         width: double.infinity,

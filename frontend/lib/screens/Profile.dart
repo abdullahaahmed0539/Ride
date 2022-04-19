@@ -35,8 +35,10 @@ class _ProfileState extends State<Profile> {
 
   void onModeSwitch() async {
     User user = Provider.of<UserProvider>(context, listen: false).user;
+    String appMode =
+        Provider.of<AppProvider>(context, listen: false).app.getAppMode();
     Response response =
-        await switchModes(user.id, user.phoneNumber, user.token);
+        await switchModes(user.id, appMode, user.phoneNumber, user.token);
     onModeSwitchHandler(response);
   }
 
