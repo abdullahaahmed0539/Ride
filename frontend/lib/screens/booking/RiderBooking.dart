@@ -48,7 +48,7 @@ class _RiderBooking extends State<RiderBooking> {
   );
 
   Position? userCurrentLocation;
-  // var geolocator = Geolocator();
+  var geolocator = Geolocator();
   LocationPermission? _locationPermission;
   double bottomPaddingOfMap = 0;
   bool showLocationPicker = true;
@@ -337,7 +337,7 @@ class _RiderBooking extends State<RiderBooking> {
 
   void searchNearestOnlineDrivers() async {
     if (onlineNearByDriversList.isEmpty) {
-      referenceRideRequest!.remove(); //not working.
+      referenceRideRequest!.remove();
       Fluttertoast.showToast(
           backgroundColor: Theme.of(context).primaryColor,
           msg: 'No online drivers nearby');
@@ -475,7 +475,7 @@ class _RiderBooking extends State<RiderBooking> {
                     ))
                 : Positioned(
                     bottom: 10,
-                    left: 0,
+                    left: 0,  
                     right: 0,
                     child: ConfirmRide(
                       searchDrivers: saveRideRequestInformation,

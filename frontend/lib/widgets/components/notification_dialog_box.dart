@@ -1,13 +1,21 @@
+import 'dart:convert';
+
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:frontend/api%20calls/Bookings.dart';
 import 'package:frontend/global/global.dart';
 import 'package:frontend/models/Driver.dart';
+import 'package:frontend/models/User.dart';
 import 'package:frontend/models/rider_ride_request_info.dart';
 import 'package:frontend/providers/Driver.dart';
+import 'package:frontend/providers/User.dart';
 import 'package:frontend/screens/driver/trip_screen.dart';
+import 'package:http/http.dart';
 import 'package:provider/provider.dart';
+
+import '../../services/map.dart';
 
 class NotificationDialogBox extends StatefulWidget {
   RiderRideRequestInformation? riderRideRequestInformation;
@@ -19,16 +27,49 @@ class NotificationDialogBox extends StatefulWidget {
 }
 
 class _NotificationDialogBoxState extends State<NotificationDialogBox> {
+  void createBookingResponseHandler(Response response, Driver driver) {
+    var error = json.decode(response.body)['error'];
+    if (response.statusCode == 201) {
+      FirebaseDatabase.instance
+          .ref()
+          .child('drivers')
+          .child(driver.driverId)
+          .child('rideRequestStatus')
+          .set('accepted');
+      stopLiveLocationUpdates(context);
+      Navigator.of(context).popAndPushNamed(NewTripScreen.routeName,
+          arguments: {
+            'riderRideRequestInformation': widget.riderRideRequestInformation
+          });
+    } else if (response.statusCode == 401) {
+      Fluttertoast.showToast(
+          msg: 'Access denied, You are not allowed',
+          backgroundColor: Colors.black);
+      Navigator.of(context).pop();
+    } else if (response.statusCode == 406 &&
+        error['code'].toString() == 'BOOKING_ALREADY_MADE') {
+      Fluttertoast.showToast(
+          msg: error['message'].toString(), backgroundColor: Colors.black);
+      Navigator.of(context).pop();
+    } else {
+      Fluttertoast.showToast(
+          msg: 'Error while booking. Please try later.',
+          backgroundColor: Colors.black);
+      Navigator.of(context).pop();
+    }
+  }
+
   void acceptRideRequest(BuildContext context) {
     Driver driver = Provider.of<DriverProvider>(context, listen: false).driver;
+    User user = Provider.of<UserProvider>(context, listen: false).user;
     String rideRequestId = '';
     FirebaseDatabase.instance
         .ref()
         .child('drivers')
         .child(driver.driverId)
-        .child('rideRequest')
+        .child('rideRequestStatus')
         .once()
-        .then((snap) {
+        .then((snap) async {
       if (snap.snapshot.value != null) {
         rideRequestId = snap.snapshot.value.toString();
       } else {
@@ -37,18 +78,20 @@ class _NotificationDialogBoxState extends State<NotificationDialogBox> {
             backgroundColor: Theme.of(context).primaryColor);
       }
 
-      if (rideRequestId == widget.riderRideRequestInformation!.rideRequestId){
-FirebaseDatabase.instance
-        .ref()
-        .child('drivers')
-        .child(driver.driverId)
-        .child('rideRequest')
-        .set('accepted');
-
-        //http to backend
-        Navigator.of(context).pushNamed(NewTripScreen.routeName, arguments: {'riderRideRequestInformation': widget.riderRideRequestInformation});
-      }else{
-        Fluttertoast.showToast(msg: 'This ride request got cencelled by the rider', backgroundColor: Theme.of(context).primaryColor);
+      if (rideRequestId == widget.riderRideRequestInformation!.rideRequestId) {
+        Response response = await createBooking(
+            widget.riderRideRequestInformation!.riderId!,
+            driver.driverId,
+            widget.riderRideRequestInformation!.pickupAddress!,
+            widget.riderRideRequestInformation!.dropoffAddress!,
+            false,
+            user.phoneNumber,
+            user.token);
+        createBookingResponseHandler(response, driver);
+      } else {
+        Fluttertoast.showToast(
+            msg: 'This ride request got cencelled by the rider',
+            backgroundColor: Theme.of(context).primaryColor);
       }
     });
   }

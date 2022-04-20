@@ -12,7 +12,7 @@ import 'package:provider/provider.dart';
 
 import '../../global/global.dart';
 import '../../models/Directions.dart';
-import 'PlacePredictionDropdown.dart';
+import '../components/PlacePredictionDropdown.dart';
 
 class LocationPicker extends StatefulWidget {
   final Function addTopolylineCoOrdinatesList;
@@ -143,7 +143,7 @@ class _LocationPickerState extends State<LocationPicker> {
 
                           widget.setShowLocationPicker(false);
 
-                          ;
+                          
                         },
                         isActive: true,
                         buttonText: 'Next',

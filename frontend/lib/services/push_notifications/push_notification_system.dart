@@ -7,7 +7,7 @@ import 'package:frontend/global/global.dart';
 import 'package:frontend/models/Driver.dart';
 import 'package:frontend/models/rider_ride_request_info.dart';
 import 'package:frontend/providers/Driver.dart';
-import 'package:frontend/services/push_notifications/notification_dialog_box.dart';
+import 'package:frontend/widgets/components/notification_dialog_box.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 
@@ -52,6 +52,7 @@ class PushNotificationSystem {
                       double.parse(
                           rideRequestFromDb['pickup']['longitude'].toString())),
                   riderName: rideRequestFromDb['riderName'],
+                  riderId: rideRequestFromDb['riderId'],
                   riderPhoneNumber: rideRequestFromDb['riderPhoneNumber']);
           audioPlayer.open(Audio('assets/audio/music_notification.mp3'));
           audioPlayer.play();

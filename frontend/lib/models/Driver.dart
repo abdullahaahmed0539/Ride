@@ -53,4 +53,6 @@ class Driver {
 
   String get driverId => _driverId;
   String get carModel => _carModel;
+  String get color => _color;
+  String get registrationNumber => _registrationNumber;
 }

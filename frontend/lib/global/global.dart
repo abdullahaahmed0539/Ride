@@ -6,6 +6,7 @@ import '../models/DirectionDetailsInfo.dart';
 import 'package:assets_audio_player/assets_audio_player.dart';
 
 StreamSubscription<Position>? streamSubscriptionPosition;
+StreamSubscription<Position>? streamSubscriptionDriverLivePosition;
 
 //online nearest available driver list
 List driversList = [];
@@ -15,3 +16,5 @@ DirectionDetailsInfo? tripDirectionDetailsInfo;
 String? chosenDriverId = '';
 
 AssetsAudioPlayer audioPlayer = AssetsAudioPlayer();
+
+Position? driverCurrentLocation;

@@ -34,7 +34,6 @@ class _DriverMapForRideState extends State<DriverMapForRide> {
   double bottomPaddingOfMap = 0;
   Driver? driver;
   CameraPosition? camPosition;
-  Position? driverCurrentLocation;
   LocationPermission? _locationPermission;
   var geolocator = Geolocator();
 
@@ -100,6 +99,8 @@ class _DriverMapForRideState extends State<DriverMapForRide> {
       }
     });
   }
+
+  
 
   @override
   void initState() {

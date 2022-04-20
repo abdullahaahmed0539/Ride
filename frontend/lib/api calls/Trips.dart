@@ -5,7 +5,9 @@ import 'package:http/http.dart';
 import 'package:intl_phone_field/phone_number.dart';
 import 'dart:convert';
 
-String url = '$url/trips';
+import '../global/configuration.dart';
+
+String url = '$uri/trips';
 
 Future<Response> fetchTripDetails(String userId, String bookingId,
     String appMode, PhoneNumber phoneNumber, String token) async {

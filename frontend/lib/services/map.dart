@@ -1,12 +1,17 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_geofire/flutter_geofire.dart';
 import 'package:frontend/global/configuration.dart';
+import 'package:frontend/global/global.dart';
 import 'package:frontend/models/DirectionDetailsInfo.dart';
 import 'package:frontend/models/Directions.dart';
+import 'package:frontend/models/Driver.dart';
 import 'package:frontend/providers/Location.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 
 import '../api calls/Map.dart';
+import '../providers/Driver.dart';
 
 Future<String> searchLocationFromGeographicCoOrdinated(
     Position position, context) async {
@@ -50,6 +55,18 @@ double calculateEstimatedFareAmountBasedOnDistance(
     DirectionDetailsInfo directionDetails) {
   double distance = directionDetails.distanceValue! / 1000;
   double litresRequired = distance / 12;
-  double total = litresRequired*180*1.25;
+  double total = litresRequired * 180 * 1.25;
   return double.parse(total.toStringAsFixed(2));
+}
+
+void stopLiveLocationUpdates(BuildContext context) {
+  streamSubscriptionPosition!.pause();
+  Driver driver = Provider.of<DriverProvider>(context, listen: false).driver;
+  Geofire.removeLocation(driver.driverId);
+}
+
+void resumeLiveLocationUpdates(BuildContext context) {
+  streamSubscriptionPosition!.resume();
+  Driver driver = Provider.of<DriverProvider>(context, listen: false).driver;
+  Geofire.setLocation(driver.driverId, driverCurrentLocation!.latitude,driverCurrentLocation!.longitude);
 }

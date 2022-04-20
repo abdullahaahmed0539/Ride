@@ -4,7 +4,9 @@ import 'package:http/http.dart';
 import 'package:intl_phone_field/phone_number.dart';
 import 'dart:convert';
 
-String url = '$url/bookings';
+import '../global/configuration.dart';
+
+String url = '$uri/bookings';
 
 Future<Response> fetchScheduledBookings(
     String userId, PhoneNumber phoneNumber, String token) async {
@@ -62,6 +64,27 @@ Future<Response> fetchBookingsHistoryForDriver(
           body: jsonEncode(<String, String>{
             'phoneNumber': '${phoneNumber.countryCode}${phoneNumber.number}',
             'driverId': userId
+          }));
+  return response;
+}
+   
+    
+
+Future<Response> createBooking(
+    String riderId, String driverId, String pickup, String dropoff, bool disputeEnabled, PhoneNumber phoneNumber, String token) async {
+  final response =
+      await post(Uri.parse('$url/create_booking'),
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+            'Authorization': 'Bearer $token'
+          },
+          body: jsonEncode(<String, dynamic>{
+            'phoneNumber': '${phoneNumber.countryCode}${phoneNumber.number}',
+            'driverId': driverId,
+            'riderId': riderId,
+            'pickup':pickup,
+            'dropoff': dropoff,
+            'disputeEnabled': disputeEnabled
           }));
   return response;
 }
