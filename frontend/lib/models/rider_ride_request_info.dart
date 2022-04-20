@@ -7,6 +7,7 @@ class RiderRideRequestInformation {
   String? dropoffAddress;
   String? riderName;
   String? riderPhoneNumber;
+  String? rideRequestId;
 
   RiderRideRequestInformation(
       {this.dropoffAddress,
@@ -14,5 +15,6 @@ class RiderRideRequestInformation {
       this.pickupAddress,
       this.pickupLatLng,
       this.riderName,
-      this.riderPhoneNumber});
+      this.riderPhoneNumber,
+      this.rideRequestId});
 }

@@ -25,7 +25,6 @@ Future<Response> fetchDriverDetailsForSummary(String riderId, String bookingId,
 
 Future<Response> switchModes(String userId, String appMode,
     PhoneNumber phoneNumber, String token) async {
-  // print(appMode);
   final response = await patch(Uri.parse('$url/switch_mode'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',

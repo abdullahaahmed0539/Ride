@@ -9,6 +9,7 @@ import '../screens/disputes/DisputeDetail.dart';
 import '../screens/disputes/DisputeGuidelines.dart';
 import '../screens/disputes/DisputeTabs.dart';
 import '../screens/Home.dart';
+import '../screens/driver/trip_screen.dart';
 import '../screens/users/Login.dart';
 import '../screens/disputes/PublishDispute.dart';
 import '../screens/Rating.dart';
@@ -48,6 +49,7 @@ Map<String, Widget Function(BuildContext)> routes() {
     BookingDetail.routeName: (context) => const BookingDetail(),
     DriverMapForRide.routeName: (context) => const DriverMapForRide(),
     SelectNearestActiveDrivers.routeName: (context) => const SelectNearestActiveDrivers(),
-    DriverSignup.routeName:(context)=> const DriverSignup()
+    DriverSignup.routeName:(context)=> const DriverSignup(),
+    NewTripScreen.routeName:(context)=> const NewTripScreen()
   };
 }

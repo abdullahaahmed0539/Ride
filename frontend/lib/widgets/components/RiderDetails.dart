@@ -1,71 +1,105 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/services/string_extension.dart';
-import 'package:frontend/widgets/ui/TextualButton.dart';
 
-class RiderDetails extends StatelessWidget {
-  final String firstName, lastName, carModel, color, registrationNumber;
-  final bool disputeEnabled;
-  double top, bottom;
+import 'package:frontend/widgets/ui/LongButton.dart';
 
-  RiderDetails(
-      {Key? key,
-      required this.firstName,
-      required this.lastName,
-      required this.carModel,
-      required this.color,
-      required this.disputeEnabled,
-      required this.registrationNumber,
-      required this.bottom,
-      required this.top})
-      : super(key: key);
+class RiderDetails extends StatefulWidget {
+  final String? duration, riderName, dropoff, pickup;
+  const RiderDetails({
+    this.dropoff,
+    this.duration,
+    this.pickup,
+    this.riderName,
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  State<RiderDetails> createState() => _RiderDetailsState();
+}
+
+class _RiderDetailsState extends State<RiderDetails> {
+  String buttonText = 'Arrived';
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        margin: EdgeInsets.only(top: top, bottom: bottom),
-        padding: const EdgeInsets.all(12),
-        width: double.infinity,
-        decoration: ShapeDecoration(
-          color: const Color(0xff43444B),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Driver Information',
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
-                // TextualButton(handler: () {}, buttonText: 'Raise a dispute')
-              ],
-            ),
-            Container(
-              margin: const EdgeInsets.only(top: 6),
-              child: Text(
-                '${firstName.capitalize()} ${lastName.capitalize()}',
-                style: Theme.of(context).textTheme.titleSmall,
+    return Column(
+      children: [
+        Container(
+            margin: const EdgeInsets.symmetric(horizontal: 10),
+            padding: const EdgeInsets.all(12),
+            width: double.infinity,
+            decoration: ShapeDecoration(
+              color: const Color.fromARGB(255, 36, 37, 40),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
               ),
             ),
-            Text(
-              carModel.capitalize(),
-              style: Theme.of(context).textTheme.titleSmall,
-            ),
-            Text(
-              color.capitalize(),
-              style: Theme.of(context).textTheme.titleSmall,
-            ),
-            Text(
-              registrationNumber,
-              style: Theme.of(context).textTheme.titleSmall,
-            ),
-            disputeEnabled? Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-              TextualButton(handler: () {}, buttonText: 'Raise a dispute')
-            ]): Container()
-          ],
-        ));
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Row(
+                  children: [
+                    const Icon(Icons.person, color: Colors.white,),
+                    const SizedBox(
+                        width: 4,
+                      ),
+                    Text(
+                      widget.riderName!,
+                      style: Theme.of(context).textTheme.titleLarge,
+                    ),
+                  ],
+                ),
+                const Divider(color: Colors.white, thickness: 1),
+                Container(
+                  margin: const EdgeInsets.only(top: 4),
+                  child: Row(
+                    children: [
+                      const Icon(
+                        Icons.location_on,
+                        color: Colors.blue,
+                      ),
+                      const SizedBox(
+                        width: 4,
+                      ),
+                      Flexible(
+                        child: Text(
+                          widget.pickup!,
+                          style: Theme.of(context).textTheme.bodyMedium,
+                          overflow: TextOverflow.clip,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.only(top: 4),
+                  child: Row(
+                    children: [
+                      const Icon(
+                        Icons.location_on,
+                        color: Colors.red,
+                      ),
+                      const SizedBox(
+                        width: 4,
+                      ),
+                      Flexible(
+                        child: Text(
+                          widget.dropoff!,
+                          style: Theme.of(context).textTheme.bodyMedium,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                LongButton(
+                    handler: () {}, buttonText: buttonText, isActive: true)
+              ],
+            )),
+      ],
+    );
   }
 }

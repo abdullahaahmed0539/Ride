@@ -1,29 +1,32 @@
+import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:frontend/global/global.dart';
 import 'package:frontend/models/Driver.dart';
 import 'package:frontend/models/rider_ride_request_info.dart';
 import 'package:frontend/providers/Driver.dart';
+import 'package:frontend/services/push_notifications/notification_dialog_box.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 
 class PushNotificationSystem {
   FirebaseMessaging messaging = FirebaseMessaging.instance;
 
-  Future initializeCloudMessaging() async {
+  Future initializeCloudMessaging(BuildContext context) async {
     //foreground
     FirebaseMessaging.onMessage.listen((RemoteMessage? remoteMessage) {
-      readUserRideRequestInfo(remoteMessage!.data['rideRequestId']);
+      readUserRideRequestInfo(remoteMessage!.data['rideRequestId'], context);
     });
 
     //background
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage? remoteMessage) {
-      readUserRideRequestInfo(remoteMessage!.data['rideRequestId']);
+      readUserRideRequestInfo(remoteMessage!.data['rideRequestId'], context);
     });
   }
 
-  readUserRideRequestInfo(String userRideRequestId) {
+  readUserRideRequestInfo(String userRideRequestId, BuildContext context) {
     FirebaseDatabase.instance
         .ref()
         .child('allRideRequests')
@@ -35,6 +38,7 @@ class PushNotificationSystem {
           var rideRequestFromDb = snapData.snapshot.value as Map;
           RiderRideRequestInformation riderRideRequestInformation =
               RiderRideRequestInformation(
+                rideRequestId: snapData.snapshot.key,
                   dropoffAddress: rideRequestFromDb['dropoffAddress'],
                   dropoffLatLng: LatLng(
                       double.parse(
@@ -49,10 +53,12 @@ class PushNotificationSystem {
                           rideRequestFromDb['pickup']['longitude'].toString())),
                   riderName: rideRequestFromDb['riderName'],
                   riderPhoneNumber: rideRequestFromDb['riderPhoneNumber']);
-
-          print('User ride req:::::: ${riderRideRequestInformation.riderName}');
-          print('User ride req:::::: ${riderRideRequestInformation.pickupAddress}');
-          print('User ride req:::::: ${riderRideRequestInformation.dropoffAddress}');
+          audioPlayer.open(Audio('assets/audio/music_notification.mp3'));
+          audioPlayer.play();
+          showDialog(
+              context: context,
+              builder: (BuildContext context) => NotificationDialogBox(
+                  riderRideRequestInformation: riderRideRequestInformation));
         } else {
           Fluttertoast.showToast(
               msg: 'This ride request has been cancelled by the rider');
