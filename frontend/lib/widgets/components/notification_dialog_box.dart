@@ -9,6 +9,7 @@ import 'package:frontend/global/global.dart';
 import 'package:frontend/models/Driver.dart';
 import 'package:frontend/models/User.dart';
 import 'package:frontend/models/rider_ride_request_info.dart';
+import 'package:frontend/providers/Booking.dart';
 import 'package:frontend/providers/Driver.dart';
 import 'package:frontend/providers/User.dart';
 import 'package:frontend/screens/driver/trip_screen.dart';
@@ -30,6 +31,16 @@ class _NotificationDialogBoxState extends State<NotificationDialogBox> {
   void createBookingResponseHandler(Response response, Driver driver) {
     var error = json.decode(response.body)['error'];
     if (response.statusCode == 201) {
+      var booking = json.decode(response.body)['data']['booking'];
+      Provider.of<BookingProvider>(context, listen: false).booking.addBooking(
+          booking['_id'],
+          booking['riderId'],
+          booking['driverId'],
+          booking['pickup'],
+          booking['dropoff'],
+          booking['status'],
+          widget.riderRideRequestInformation!);
+          
       FirebaseDatabase.instance
           .ref()
           .child('drivers')

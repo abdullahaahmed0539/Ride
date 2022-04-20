@@ -8,38 +8,27 @@ import '../services/utilities.dart';
 import '../providers/App.dart';
 
 class User {
-  String _id;
-  String _firstName;
-  String _lastName;
-  String _email;
-  PhoneNumber _phoneNumber;
-  String _country;
-  String _walletAddress;
-  bool _isDriver = false;
-  String _token;
-  String _expiresIn;
+  String? _id,
+      _firstName,
+      _lastName,
+      _email,
+      _country,
+      _walletAddress,
+      _token,
+      _expiresIn;
+  PhoneNumber? _phoneNumber;
+  bool? _isDriver = false;
 
-  User(
-      this._id,
-      this._firstName,
-      this._lastName,
-      this._country,
-      this._email,
-      this._phoneNumber,
-      this._token,
-      this._walletAddress,
-      this._isDriver,
-      this._expiresIn);
+  User();
 
-  String get id => _id;
-  PhoneNumber get phoneNumber => _phoneNumber;
-  String get token => _token;
-  String get email => _email;
-  bool get isDriver => _isDriver;
+  String get id => _id!;
+  PhoneNumber get phoneNumber => _phoneNumber!;
+  String get token => _token!;
+  String get email => _email!;
+  bool get isDriver => _isDriver!;
 
   String getFullName() {
-    return '${_firstName.capitalize()} ${_lastName.capitalize()}';
-    
+    return '${_firstName!.capitalize()} ${_lastName!.capitalize()}';
   }
 
   void onLogin(var response, BuildContext ctx) {

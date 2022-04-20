@@ -1,10 +1,17 @@
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:frontend/models/rider_ride_request_info.dart';
+import 'package:sn_progress_dialog/sn_progress_dialog.dart';
 import 'package:frontend/widgets/ui/LongButton.dart';
 
 class RiderDetails extends StatefulWidget {
   final String? duration, riderName, dropoff, pickup;
+  final RiderRideRequestInformation? riderRideRequestInformation;
+  final Function? drawPolylineFromPickupToDropoff;
   const RiderDetails({
+    this.riderRideRequestInformation,
+    this.drawPolylineFromPickupToDropoff,
     this.dropoff,
     this.duration,
     this.pickup,
@@ -18,6 +25,7 @@ class RiderDetails extends StatefulWidget {
 
 class _RiderDetailsState extends State<RiderDetails> {
   String buttonText = 'Arrived';
+  String buttonStatus = 'accepted';
 
   @override
   Widget build(BuildContext context) {
@@ -39,12 +47,22 @@ class _RiderDetailsState extends State<RiderDetails> {
               children: [
                 Row(
                   children: [
-                    const Icon(Icons.person, color: Colors.white,),
+                    const Icon(
+                      Icons.person,
+                      color: Colors.white,
+                    ),
                     const SizedBox(
-                        width: 4,
-                      ),
+                      width: 4,
+                    ),
                     Text(
                       widget.riderName!,
+                      style: Theme.of(context).textTheme.titleLarge,
+                    ),
+                    const SizedBox(
+                      width: 70,
+                    ),
+                    Text(
+                      '${widget.duration!} ',
                       style: Theme.of(context).textTheme.titleLarge,
                     ),
                   ],
@@ -96,7 +114,46 @@ class _RiderDetailsState extends State<RiderDetails> {
                   height: 20,
                 ),
                 LongButton(
-                    handler: () {}, buttonText: buttonText, isActive: true)
+                    handler: () async {
+                      if (buttonStatus == 'accepted') {
+                        //http request
+                        buttonStatus = 'arrived';
+                        Fluttertoast.showToast(
+                            msg: 'Rider has been notified',
+                            backgroundColor: Colors.black,
+                            timeInSecForIosWeb: 3);
+
+                        FirebaseDatabase.instance
+                            .ref()
+                            .child('allRideRequest')
+                            .child(widget
+                                .riderRideRequestInformation!.rideRequestId!)
+                            .child('status')
+                            .set(buttonStatus);
+
+                        setState(() {
+                          buttonText = 'Start';
+                        });
+
+                        showDialog(
+                            context: context,
+                            barrierDismissible: false,
+                            builder: (BuildContext context) =>
+                                ProgressDialog(context: context).show(
+                                    max: 100,
+                                    msg:
+                                        'Adding pickup and drop-off location to map'));
+
+                        await widget.drawPolylineFromPickupToDropoff!(
+                          widget.riderRideRequestInformation!.pickupLatLng,
+                          widget.riderRideRequestInformation!.dropoffLatLng,
+                        );
+
+                        Navigator.pop(context);
+                      }
+                    },
+                    buttonText: buttonText,
+                    isActive: true)
               ],
             )),
       ],

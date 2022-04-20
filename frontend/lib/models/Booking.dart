@@ -1,14 +1,26 @@
 // ignore_for_file: file_names
+import 'package:frontend/models/rider_ride_request_info.dart';
+
 class Booking {
-  String _id, _riderId, _driverId, _pickup, _dropoff, _status;
-  DateTime _bookingTime;
+  String? _id, _riderId, _driverId, _pickup, _dropoff, _status;
+  RiderRideRequestInformation? _riderRideRequestInformation;
 
-  Booking(this._id, this._riderId, this._driverId, this._bookingTime,
-      this._pickup, this._dropoff, this._status);
+  Booking();
 
-  String get id => _id;
-  String get pickup => _pickup;
-  String get dropoff => _dropoff;
-  String get status => _status;
-  DateTime get bookingTime => _bookingTime;
+  addBooking(String id, String riderId, String driverId, String pickup,
+      String dropoff, String status, RiderRideRequestInformation riderRideRequestInformation) {
+    _id = id;
+    _riderId = riderId;
+    _driverId = driverId;
+    _pickup = pickup;
+    _dropoff = dropoff;
+    _status = status;
+    _riderRideRequestInformation = riderRideRequestInformation;
+  }
+
+  String get id => _id!;
+  String get pickup => _pickup!;
+  String get dropoff => _dropoff!;
+  String get status => _status!;
+  RiderRideRequestInformation get riderRideRequestInformation => _riderRideRequestInformation!;
 }

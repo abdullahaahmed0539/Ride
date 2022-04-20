@@ -87,6 +87,23 @@ class _NewTripScreenState extends State<NewTripScreen> {
         });
         oldLatLng = latLngLiveDriverPosition;
         updateDurationTimeInRealTime();
+
+        Map driverLatLngMap = {
+          'latitude': onlineDriverCurrentPosition!.latitude.toString(),
+          'longitude': onlineDriverCurrentPosition!.longitude.toString(),
+        };
+        final routeArgs =
+            ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+        final RiderRideRequestInformation riderRideRequestInformation =
+            routeArgs['riderRideRequestInformation'];
+
+        //updatinf driver location in real time in firebase
+        FirebaseDatabase.instance
+            .ref()
+            .child('allRideRequests')
+            .child(riderRideRequestInformation.rideRequestId!)
+            .child('driverLocation')
+            .set(driverLatLngMap);
       }
     });
   }
@@ -258,6 +275,7 @@ class _NewTripScreenState extends State<NewTripScreen> {
           durationFromPickupToDropoff = directionInfo.durationText!;
         });
       }
+      isRequestDirectionDetails = false;
     }
   }
 
@@ -301,10 +319,12 @@ class _NewTripScreenState extends State<NewTripScreen> {
               left: 0,
               right: 0,
               child: RiderDetails(
-                  duration: '18',
+                  duration: durationFromPickupToDropoff,
                   riderName: riderRideRequestInformation.riderName!,
                   pickup: riderRideRequestInformation.pickupAddress!,
-                  dropoff: riderRideRequestInformation.dropoffAddress!))
+                  dropoff: riderRideRequestInformation.dropoffAddress!,
+                  riderRideRequestInformation: riderRideRequestInformation,
+                  drawPolylineFromPickupToDropoff: drawPolylineFromPickupToDropoff))
         ],
       ),
     );
