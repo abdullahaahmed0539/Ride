@@ -76,7 +76,7 @@ class _FairCollectionDialogState extends State<FairCollectionDialog> {
           const Divider(color: Colors.white),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [Text('Total:', style: Theme.of(context).textTheme.titleMedium),
+            children: [Text('Total(RideCoins):', style: Theme.of(context).textTheme.titleMedium),
              Text(widget.total.toString(), style: Theme.of(context).textTheme.titleMedium)],
           ),
          

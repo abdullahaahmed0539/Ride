@@ -149,6 +149,7 @@ class _RiderDetailsState extends State<RiderDetails> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     const Icon(
                       Icons.person,

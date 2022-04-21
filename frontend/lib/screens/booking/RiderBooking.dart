@@ -24,6 +24,8 @@ import '../../models/Directions.dart';
 import '../../models/User.dart';
 import '../../providers/Location.dart';
 import '../../services/user_alert.dart';
+import '../../widgets/components/driver_detail_widget.dart';
+import '../../widgets/components/waiting_for_driver.dart';
 import '../../widgets/ui/LocationPicker.dart';
 
 class RiderBooking extends StatefulWidget {
@@ -51,14 +53,25 @@ class _RiderBooking extends State<RiderBooking> {
   var geolocator = Geolocator();
   LocationPermission? _locationPermission;
   double bottomPaddingOfMap = 0;
-  bool showLocationPicker = true;
-  bool activeNearbyDriversKeysLoaded = false;
+  bool showLocationPicker = true,
+      activeNearbyDriversKeysLoaded = false,
+      displayConfirmWidget = true,
+      displayDriverDetailsWidget = false,
+      requestPostionInfo = true;
   BitmapDescriptor? activeNearByIcon;
 
   List<LatLng> polylineCoOrdinatesList = [];
   List<ActiveNearbyDrivers> onlineNearByDriversList = [];
   Set<Polyline> polyLineSet = {};
   Set<Marker> markersSet = {};
+  StreamSubscription<DatabaseEvent>? tripRideRequestInfoStreamSubscription;
+  String carColor = '',
+      carModel = '',
+      registrationNumber = '',
+      driverName = '',
+      driverPhoneNumber = '',
+      riderRideRequestStatus = '',
+      driverRideStatus = 'Driver is on the way.';
 
   void setShowLocationPicker(val) {
     if (mounted) {
@@ -289,12 +302,50 @@ class _RiderBooking extends State<RiderBooking> {
         .animateCamera(CameraUpdate.newCameraPosition(camPosition!));
   }
 
-  
   @override
   void initState() {
     super.initState();
     checkIfLocationPermissionAllowed();
     createActiveNearbyDriverIcon();
+  }
+
+  updateArrivalTimeToRidePickupLocation(driverCurrentPositionLatlng) async {
+    if (requestPostionInfo) {
+      requestPostionInfo = false;
+      LatLng riderPickUpPosition =
+          LatLng(userCurrentLocation!.latitude, userCurrentLocation!.longitude);
+      var directionDetailsInfo = await obtainDirectionDetails(
+          driverCurrentPositionLatlng, riderPickUpPosition);
+      if (directionDetailsInfo == null) {
+        return;
+      }
+      setState(() {
+        driverRideStatus =
+            'Driver is coming in ${directionDetailsInfo.durationText!}';
+      });
+      requestPostionInfo = true;
+    }
+  }
+
+  updateReachingTimeToRidePickupLocation(driverCurrentPositionLatlng) async {
+    if (requestPostionInfo) {
+      requestPostionInfo = false;
+      var dropoffLocation =
+          Provider.of<LocationProvider>(context, listen: false)
+              .userDropLocation;
+      LatLng riderdropoffPosition =
+          LatLng(dropoffLocation!.lat!, dropoffLocation!.long!);
+      var directionDetailsInfo = await obtainDirectionDetails(
+          driverCurrentPositionLatlng, riderdropoffPosition);
+      if (directionDetailsInfo == null) {
+        return;
+      }
+      setState(() {
+        driverRideStatus =
+            'Reaching destination in ${directionDetailsInfo.durationText!}';
+      });
+      requestPostionInfo = true;
+    }
   }
 
   void saveRideRequestInformation() {
@@ -331,6 +382,69 @@ class _RiderBooking extends State<RiderBooking> {
     };
 
     referenceRideRequest!.set(userInfoMap);
+    tripRideRequestInfoStreamSubscription =
+        referenceRideRequest!.onValue.listen((eventSnap) {
+      if (eventSnap.snapshot.value == null) {
+        return;
+      }
+      if ((eventSnap.snapshot.value as Map)['carModel'] != null) {
+        setState(() {
+          carModel = (eventSnap.snapshot.value as Map)['carModel'].toString();
+        });
+      }
+      if ((eventSnap.snapshot.value as Map)['registrationNumber'] != null) {
+        setState(() {
+          registrationNumber =
+              (eventSnap.snapshot.value as Map)['registrationNumber']
+                  .toString();
+        });
+      }
+      if ((eventSnap.snapshot.value as Map)['carColor'] != null) {
+        setState(() {
+          carColor = (eventSnap.snapshot.value as Map)['carColor'].toString();
+        });
+      }
+      if ((eventSnap.snapshot.value as Map)['driverName'] != null) {
+        setState(() {
+          driverName =
+              (eventSnap.snapshot.value as Map)['driverName'].toString();
+        });
+      }
+      if ((eventSnap.snapshot.value as Map)['driverPhoneNumber'] != null) {
+        setState(() {
+          driverPhoneNumber =
+              (eventSnap.snapshot.value as Map)['driverPhoneNumber'].toString();
+        });
+      }
+
+      if ((eventSnap.snapshot.value as Map)['status'] != null) {
+        riderRideRequestStatus = (eventSnap.snapshot.value as Map)['status'];
+      }
+
+      if ((eventSnap.snapshot.value as Map)['driverLocation'] != null) {
+        double driverCurrentPositionLat = double.parse(
+            (eventSnap.snapshot.value as Map)['driverLocation']['latitude']
+                .toString());
+        double driverCurrentPositionLng = double.parse(
+            (eventSnap.snapshot.value as Map)['driverLocation']['longitude']
+                .toString());
+
+        LatLng driverCurrentPositionLatlng =
+            LatLng(driverCurrentPositionLat, driverCurrentPositionLng);
+
+        if (riderRideRequestStatus == 'accepted') {
+          updateArrivalTimeToRidePickupLocation(driverCurrentPositionLatlng);
+        }
+        if (riderRideRequestStatus == 'arrived') {
+          setState(() {
+            driverRideStatus = 'Driver has arrived';
+          });
+        }
+        if (riderRideRequestStatus == 'inprogress') {
+          updateReachingTimeToRidePickupLocation(driverCurrentPositionLatlng);
+        }
+      }
+    });
     onlineNearByDriversList = GeoFireAssistant.activeNearbyDriversList;
     searchNearestOnlineDrivers();
   }
@@ -346,6 +460,18 @@ class _RiderBooking extends State<RiderBooking> {
     }
 
     await retrieveOnlineDriversInfo(onlineNearByDriversList);
+  }
+
+  showWaitingResponseUI() {
+    setState(() {
+      displayConfirmWidget = false;
+    });
+  }
+
+  showUIForAssignDriver() {
+    setState(() {
+      displayDriverDetailsWidget = true;
+    });
   }
 
   retrieveOnlineDriversInfo(
@@ -374,8 +500,61 @@ class _RiderBooking extends State<RiderBooking> {
               .ref()
               .child('drivers')
               .child(chosenDriverId!)
-              .child('rideRequest')
+              .child('rideRequestStatus')
               .set(referenceRideRequest!.key);
+
+          FirebaseDatabase.instance
+              .ref()
+              .child('drivers')
+              .child(chosenDriverId!)
+              .child('token')
+              .once()
+              .then((token) {
+            if (token.snapshot.value != null) {
+              String deviceTokenbyFCM = token.snapshot.value.toString();
+
+              sendNotificationToDriverNow(
+                  deviceTokenbyFCM, referenceRideRequest!.key!.toString());
+              Fluttertoast.showToast(
+                  msg: 'Request sent to the driver',
+                  backgroundColor: Theme.of(context).primaryColor,
+                  timeInSecForIosWeb: 5,
+                  gravity: ToastGravity.TOP);
+            } else {
+              Fluttertoast.showToast(
+                  msg: 'Please choose another driver',
+                  backgroundColor: Theme.of(context).primaryColor,
+                  timeInSecForIosWeb: 5,
+                  gravity: ToastGravity.TOP);
+              return;
+            }
+          });
+
+          showWaitingResponseUI();
+
+          FirebaseDatabase.instance
+              .ref()
+              .child('drivers')
+              .child(chosenDriverId!)
+              .child('rideRequestStatus')
+              .onValue
+              .listen((eventSnapshot) {
+            if (eventSnapshot.snapshot.value == 'idle') {
+              Fluttertoast.showToast(
+                  msg:
+                      'Driver has cancelled your request. Choose another driver.',
+                  backgroundColor: Theme.of(context).primaryColor,
+                  timeInSecForIosWeb: 5,
+                  gravity: ToastGravity.TOP);
+
+              setState(() {
+                displayConfirmWidget = true;
+              });
+            }
+            if (eventSnapshot.snapshot.value == 'accepted') {
+              showUIForAssignDriver();
+            }
+          });
         } else {
           Fluttertoast.showToast(
               msg: 'This driver is not available. Try another.');
@@ -383,8 +562,6 @@ class _RiderBooking extends State<RiderBooking> {
       });
     }
   }
-
-  
 
   onFetchDriverDetailsHandler(Response response) {
     if (response.statusCode != 200 && response.statusCode != 401) {
@@ -455,7 +632,8 @@ class _RiderBooking extends State<RiderBooking> {
                 _controllerGoogleMap.complete(controller);
                 newGoogleMapController = controller;
                 blackThemeGoogleMap(newGoogleMapController);
-                if (mounted) {
+
+                if (mounted && displayConfirmWidget) {
                   setState(() {
                     bottomPaddingOfMap = 250;
                   });
@@ -463,25 +641,43 @@ class _RiderBooking extends State<RiderBooking> {
                 locateUserPosition();
               },
             ),
-            showLocationPicker
-                ? Positioned(
+            !displayDriverDetailsWidget
+                ? displayConfirmWidget
+                    ? showLocationPicker
+                        ? Positioned(
+                            bottom: 10,
+                            left: 0,
+                            right: 0,
+                            child: LocationPicker(
+                              addTopolylineCoOrdinatesList:
+                                  addTopolylineCoOrdinatesList,
+                              setShowLocationPicker: setShowLocationPicker,
+                            ))
+                        : Positioned(
+                            bottom: 10,
+                            left: 0,
+                            right: 0,
+                            child: ConfirmRide(
+                              searchDrivers: saveRideRequestInformation,
+                              editTripDetails: removeMarkers,
+                            ),
+                          )
+                    : const Positioned(
+                        bottom: 10,
+                        left: 0,
+                        right: 0,
+                        child: WaitingForDriverUI())
+                : Positioned(
                     bottom: 10,
                     left: 0,
                     right: 0,
-                    child: LocationPicker(
-                      addTopolylineCoOrdinatesList:
-                          addTopolylineCoOrdinatesList,
-                      setShowLocationPicker: setShowLocationPicker,
-                    ))
-                : Positioned(
-                    bottom: 10,
-                    left: 0,  
-                    right: 0,
-                    child: ConfirmRide(
-                      searchDrivers: saveRideRequestInformation,
-                      editTripDetails: removeMarkers,
-                    ),
-                  ),
+                    child: DriverDetailWidget(
+                        carColor: carColor,
+                        registrationNumber: registrationNumber,
+                        carModel: carModel,
+                        driverName: driverName,
+                        driverRideStatus: driverRideStatus,
+                        driverPhoneNumber: driverPhoneNumber)),
             camPosition == null
                 ? Spinner(text: 'Fetching current location ', height: 0)
                 : Container()

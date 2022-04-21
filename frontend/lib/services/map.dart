@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_geofire/flutter_geofire.dart';
+import 'package:frontend/api%20calls/push_notification.dart';
 import 'package:frontend/global/configuration.dart';
 import 'package:frontend/global/global.dart';
 import 'package:frontend/models/DirectionDetailsInfo.dart';
@@ -8,6 +11,7 @@ import 'package:frontend/models/Driver.dart';
 import 'package:frontend/providers/Location.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:http/http.dart';
 import 'package:provider/provider.dart';
 
 import '../api calls/Map.dart';
@@ -68,5 +72,35 @@ void stopLiveLocationUpdates(BuildContext context) {
 void resumeLiveLocationUpdates(BuildContext context) {
   streamSubscriptionPosition!.resume();
   Driver driver = Provider.of<DriverProvider>(context, listen: false).driver;
-  Geofire.setLocation(driver.driverId, driverCurrentLocation!.latitude,driverCurrentLocation!.longitude);
+  Geofire.setLocation(driver.driverId, driverCurrentLocation!.latitude,
+      driverCurrentLocation!.longitude);
+}
+
+sendNotificationToDriverNow(String FCMtoken, String riderRideRequestId) async {
+  Map<String, String> notificationHeader = {
+    'Content-Type': 'application/json; charset=UTF-8',
+    'Authorization': serverFCMToken
+  };
+
+  Map<String, String> notificationBody = {
+    "body": "You have a new ride request. Tap to open.",
+    "title": "Ride"
+  };
+
+  Map<String, String> dataMap = {
+    "click_action": "FLUTTER_NOTIFICATION_CLICK",
+    "id": "1",
+    "status": "done",
+    "rideRequestId": riderRideRequestId
+  };
+
+  Map officialNotificationFormat = {
+    'notification': notificationBody,
+    'data': dataMap,
+    'priority': 'high',
+    'to': FCMtoken
+  };
+
+  await sendPushNotification(
+      notificationHeader, jsonEncode(officialNotificationFormat));
 }

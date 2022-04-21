@@ -24,7 +24,7 @@ import '../../services/images.dart';
 import '../../services/map.dart';
 import '../../services/user_alert.dart';
 import '../../widgets/components/RiderDetails.dart';
-import '../../widgets/components/fair_amount_dialog.dart';
+import '../../widgets/components/fare_amount_dialog.dart';
 
 //riderRideRequestInformation
 class NewTripScreen extends StatefulWidget {
