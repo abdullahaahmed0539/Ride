@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:frontend/providers/App.dart';
+import 'package:frontend/providers/Booking.dart';
 import 'package:frontend/providers/Driver.dart';
 import 'package:frontend/providers/Location.dart';
 import 'package:frontend/services/routes.dart';
@@ -26,6 +27,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create:(_) => AppProvider()),
         ChangeNotifierProvider(create:(_) => LocationProvider()),
         ChangeNotifierProvider(create:(_) => DriverProvider()),
+        ChangeNotifierProvider(create:(_) => BookingProvider()),
       ],
       child: MaterialApp(
         title: 'Ride',

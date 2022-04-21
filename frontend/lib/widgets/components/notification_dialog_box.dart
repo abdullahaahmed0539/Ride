@@ -28,7 +28,8 @@ class NotificationDialogBox extends StatefulWidget {
 }
 
 class _NotificationDialogBoxState extends State<NotificationDialogBox> {
-  void createBookingResponseHandler(Response response, Driver driver) {
+  void createBookingResponseHandler(
+      Response response, Driver driver, BuildContext context) {
     var error = json.decode(response.body)['error'];
     if (response.statusCode == 201) {
       var booking = json.decode(response.body)['data']['booking'];
@@ -40,7 +41,7 @@ class _NotificationDialogBoxState extends State<NotificationDialogBox> {
           booking['dropoff'],
           booking['status'],
           widget.riderRideRequestInformation!);
-          
+
       FirebaseDatabase.instance
           .ref()
           .child('drivers')
@@ -98,7 +99,7 @@ class _NotificationDialogBoxState extends State<NotificationDialogBox> {
             false,
             user.phoneNumber,
             user.token);
-        createBookingResponseHandler(response, driver);
+        createBookingResponseHandler(response, driver, context);
       } else {
         Fluttertoast.showToast(
             msg: 'This ride request got cencelled by the rider',
@@ -174,7 +175,28 @@ class _NotificationDialogBoxState extends State<NotificationDialogBox> {
                 ElevatedButton(
                     style: ElevatedButton.styleFrom(primary: Colors.red),
                     onPressed: () {
-                      //cancel ride
+                      Driver driver =
+                          Provider.of<DriverProvider>(context, listen: false).driver;
+                      FirebaseDatabase.instance
+                          .ref()
+                          .child('allRideRequests')
+                          .child(widget
+                              .riderRideRequestInformation!.rideRequestId!)
+                          .remove()
+                          .then((value) {
+                        FirebaseDatabase.instance
+                            .ref()
+                            .child('drivers')
+                            .child(driver.driverId)
+                            .child('rideRequestStatus')
+                            .set('idle')
+                            .then((value) => Fluttertoast.showToast(
+                                msg: 'Request rejected',
+                                backgroundColor: Colors.black,
+                                timeInSecForIosWeb: 5,
+                                gravity: ToastGravity.TOP));
+                      });
+
                       audioPlayer.stop();
                       audioPlayer = AssetsAudioPlayer();
                       Navigator.pop(context);

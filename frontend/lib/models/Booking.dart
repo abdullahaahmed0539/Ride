@@ -7,8 +7,14 @@ class Booking {
 
   Booking();
 
-  addBooking(String id, String riderId, String driverId, String pickup,
-      String dropoff, String status, RiderRideRequestInformation riderRideRequestInformation) {
+  addBooking(
+      String id,
+      String riderId,
+      String driverId,
+      String pickup,
+      String dropoff,
+      String status,
+      RiderRideRequestInformation riderRideRequestInformation) {
     _id = id;
     _riderId = riderId;
     _driverId = driverId;
@@ -18,9 +24,12 @@ class Booking {
     _riderRideRequestInformation = riderRideRequestInformation;
   }
 
+  void setStatus(newStatus) => _status = newStatus;
+
   String get id => _id!;
   String get pickup => _pickup!;
   String get dropoff => _dropoff!;
   String get status => _status!;
-  RiderRideRequestInformation get riderRideRequestInformation => _riderRideRequestInformation!;
+  RiderRideRequestInformation get riderRideRequestInformation =>
+      _riderRideRequestInformation!;
 }
