@@ -59,7 +59,7 @@ class _RiderBooking extends State<RiderBooking> {
       displayDriverDetailsWidget = false,
       requestPostionInfo = true;
   BitmapDescriptor? activeNearByIcon;
-
+  LatLng? driverRealTimePosition;
   List<LatLng> polylineCoOrdinatesList = [];
   List<ActiveNearbyDrivers> onlineNearByDriversList = [];
   Set<Polyline> polyLineSet = {};
@@ -268,9 +268,11 @@ class _RiderBooking extends State<RiderBooking> {
   void displayActiveDriversOnMap() {
     if (mounted) {
       setState(() {
-        markersSet.clear();
+        markersSet.removeWhere((element) =>
+            (element.markerId.value != 'pickupId' &&
+                element.markerId.value != 'destinationId'));
 
-        Set<Marker> driversMarkerSet = Set<Marker>();
+        Set<Marker> driversMarkerSet = markersSet;
         for (ActiveNearbyDrivers eachDriver
             in GeoFireAssistant.activeNearbyDriversList) {
           LatLng eachDriverActiveLocation = LatLng(
@@ -309,6 +311,28 @@ class _RiderBooking extends State<RiderBooking> {
     createActiveNearbyDriverIcon();
   }
 
+  void getDriversLocationUpdatesAtRealTime() {
+    if (mounted) {
+      Marker driverAnimatedMarker = Marker(
+          markerId: const MarkerId('animatedMarker'),
+          position: driverRealTimePosition!,
+          icon: activeNearByIcon!,
+          infoWindow: const InfoWindow(title: 'Your current location'));
+
+      setState(() {
+        CameraPosition cameraPosition =
+            CameraPosition(target: driverRealTimePosition!, zoom: 16);
+
+        newGoogleMapController!
+            .animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
+
+        markersSet.removeWhere(
+            (element) => element.markerId.value == 'animatedMarker');
+        markersSet.add(driverAnimatedMarker);
+      });
+    }
+  }
+
   updateArrivalTimeToRidePickupLocation(driverCurrentPositionLatlng) async {
     if (requestPostionInfo) {
       requestPostionInfo = false;
@@ -323,6 +347,10 @@ class _RiderBooking extends State<RiderBooking> {
         driverRideStatus =
             'Driver is coming in ${directionDetailsInfo.durationText!}';
       });
+      setState(() {
+        driverRealTimePosition = driverCurrentPositionLatlng;
+      });
+      getDriversLocationUpdatesAtRealTime();
       requestPostionInfo = true;
     }
   }
@@ -344,6 +372,10 @@ class _RiderBooking extends State<RiderBooking> {
         driverRideStatus =
             'Reaching destination in ${directionDetailsInfo.durationText!}';
       });
+      setState(() {
+        driverRealTimePosition = driverCurrentPositionLatlng;
+      });
+      getDriversLocationUpdatesAtRealTime();
       requestPostionInfo = true;
     }
   }

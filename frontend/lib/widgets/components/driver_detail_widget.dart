@@ -1,22 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class DriverDetailWidget extends StatefulWidget {
-  String? carColor, registrationNumber, driverRideStatus, carModel, driverName, driverPhoneNumber;
-  DriverDetailWidget({
-    this.carColor,
-    this.carModel,
-    this.driverName,
-    this.driverRideStatus,
-    this.driverPhoneNumber,
-    this.registrationNumber,
-    Key? key}) : super(key: key);
+  String? carColor,
+      registrationNumber,
+      driverRideStatus,
+      carModel,
+      driverName,
+      driverPhoneNumber;
+  DriverDetailWidget(
+      {this.carColor,
+      this.carModel,
+      this.driverName,
+      this.driverRideStatus,
+      this.driverPhoneNumber,
+      this.registrationNumber,
+      Key? key})
+      : super(key: key);
 
   @override
   State<DriverDetailWidget> createState() => _DriverDetailWidgetState();
 }
 
 class _DriverDetailWidgetState extends State<DriverDetailWidget> {
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -35,11 +41,19 @@ class _DriverDetailWidgetState extends State<DriverDetailWidget> {
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                const Icon(Icons.timer, color: Colors.white,),
-                const SizedBox(width: 5,),
-                widget.driverRideStatus! == 'Driver has arrived'?
-                Text(widget.driverRideStatus!, style: const TextStyle(color: Colors.green),):
-                Text(widget.driverRideStatus!),
+                const Icon(
+                  Icons.timer,
+                  color: Colors.white,
+                ),
+                const SizedBox(
+                  width: 5,
+                ),
+                widget.driverRideStatus! == 'Driver has arrived'
+                    ? Text(
+                        widget.driverRideStatus!,
+                        style: const TextStyle(color: Colors.green),
+                      )
+                    : Text(widget.driverRideStatus!),
               ],
             ),
             const Divider(
@@ -57,7 +71,9 @@ class _DriverDetailWidgetState extends State<DriverDetailWidget> {
             Row(
               children: [
                 Text('${widget.carModel!} - '),
-                const SizedBox(height: 1,),
+                const SizedBox(
+                  height: 1,
+                ),
                 Text(widget.carColor!),
               ],
             ),

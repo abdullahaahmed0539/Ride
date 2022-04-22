@@ -359,6 +359,10 @@ class _NewTripScreenState extends State<NewTripScreen> {
         setState(() {
           nearby = true;
         });
+      }else{
+        setState(() {
+          nearby = false;
+        });
       }
       if (directionInfo != null) {
         setState(() {
