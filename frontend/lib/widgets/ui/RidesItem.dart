@@ -51,11 +51,14 @@ class RidesItem extends StatelessWidget {
                     Icons.location_searching_rounded,
                     color: Colors.white,
                   ),
-                  Container(
-                    margin: const EdgeInsets.only(left: 10),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  Expanded(
                     child: Text(
                       pickup,
                       style: Theme.of(context).textTheme.bodyMedium,
+                      overflow: TextOverflow.clip,
                     ),
                   ),
                 ],
@@ -66,11 +69,14 @@ class RidesItem extends StatelessWidget {
               child: Row(
                 children: [
                   const Icon(Icons.location_on, color: Colors.white),
-                  Container(
-                    margin: const EdgeInsets.only(left: 10),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  Expanded(
                     child: Text(
                       dropOff,
                       style: Theme.of(context).textTheme.bodyMedium,
+                      overflow: TextOverflow.clip,
                     ),
                   ),
                 ],

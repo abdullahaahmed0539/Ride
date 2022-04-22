@@ -24,6 +24,22 @@ class Booking {
     _riderRideRequestInformation = riderRideRequestInformation;
   }
 
+  addBookingAsperMongo(
+    String id,
+    String riderId,
+    String driverId,
+    String pickup,
+    String dropoff,
+    String status,
+  ) {
+    _id = id;
+    _riderId = riderId;
+    _driverId = driverId;
+    _pickup = pickup;
+    _dropoff = dropoff;
+    _status = status;
+  }
+
   void setStatus(newStatus) => _status = newStatus;
 
   String get id => _id!;

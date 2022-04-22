@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:url_launcher/url_launcher.dart' as UrlLauncher;
 
 class DriverDetailWidget extends StatefulWidget {
   String? carColor,
@@ -53,7 +53,11 @@ class _DriverDetailWidgetState extends State<DriverDetailWidget> {
                         widget.driverRideStatus!,
                         style: const TextStyle(color: Colors.green),
                       )
-                    : Text(widget.driverRideStatus!),
+                    : Expanded(
+                        child: Text(
+                        widget.driverRideStatus!,
+                        overflow: TextOverflow.clip,
+                      )),
               ],
             ),
             const Divider(
@@ -87,8 +91,22 @@ class _DriverDetailWidgetState extends State<DriverDetailWidget> {
               children: [
                 ElevatedButton.icon(
                     style: ElevatedButton.styleFrom(
+                        primary: Colors.red),
+                    onPressed: (){},
+                    icon: const Icon(
+                      Icons.cancel,
+                      color: Colors.white,
+                      size: 22,
+                    ),
+                    label: const Text('Cancel')),
+                    const SizedBox(width: 8,),
+                ElevatedButton.icon(
+                    style: ElevatedButton.styleFrom(
                         primary: Theme.of(context).primaryColor),
-                    onPressed: () {},
+                    onPressed: () async{
+                      await UrlLauncher.launchUrl(
+                          Uri.parse('tel://${widget.driverPhoneNumber!}'));
+                    },
                     icon: const Icon(
                       Icons.phone_android,
                       color: Colors.white,

@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:frontend/api%20calls/Bookings.dart';
 import 'package:frontend/global/map.dart';
-import 'package:frontend/models/DirectionDetailsInfo.dart';
 import 'package:frontend/models/Driver.dart';
 import 'package:frontend/models/User.dart';
 import 'package:frontend/models/rider_ride_request_info.dart';
@@ -82,6 +81,7 @@ class _NewTripScreenState extends State<NewTripScreen> {
           ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
       final RiderRideRequestInformation riderRideRequestInformation =
           routeArgs['riderRideRequestInformation'];
+
       var responseData = json.decode(response.body)['data']['tripDetails'];
       FirebaseDatabase.instance
           .ref()
@@ -89,6 +89,24 @@ class _NewTripScreenState extends State<NewTripScreen> {
           .child(riderRideRequestInformation.rideRequestId!)
           .child('total')
           .set(responseData['total']);
+      FirebaseDatabase.instance
+          .ref()
+          .child('allRideRequests')
+          .child(riderRideRequestInformation.rideRequestId!)
+          .child('milesCost')
+          .set(responseData['milesCost']);
+      FirebaseDatabase.instance
+          .ref()
+          .child('allRideRequests')
+          .child(riderRideRequestInformation.rideRequestId!)
+          .child('disputeCost')
+          .set(responseData['disputeCost']);
+      FirebaseDatabase.instance
+          .ref()
+          .child('allRideRequests')
+          .child(riderRideRequestInformation.rideRequestId!)
+          .child('waitTimeCost')
+          .set(responseData['waitTimeCost']);
 
       FirebaseDatabase.instance
           .ref()
@@ -104,7 +122,7 @@ class _NewTripScreenState extends State<NewTripScreen> {
       streamSubscriptionDriverLivePosition!.cancel();
 
       showDialog(
-        barrierDismissible: false,
+          barrierDismissible: false,
           context: context,
           builder: (BuildContext context) => FairCollectionDialog(
                 disputeCost: responseData['disputeCost'],
@@ -359,10 +377,6 @@ class _NewTripScreenState extends State<NewTripScreen> {
         setState(() {
           nearby = true;
         });
-      }else{
-        setState(() {
-          nearby = false;
-        });
       }
       if (directionInfo != null) {
         setState(() {
@@ -400,9 +414,11 @@ class _NewTripScreenState extends State<NewTripScreen> {
                 _controllerGoogleMap.complete(controller);
                 newTripGoogleMapController = controller;
                 blackThemeGoogleMap(newTripGoogleMapController);
-                var driverCurrentLatlng = LatLng(driverCurrentLocation!.latitude,
+                var driverCurrentLatlng = LatLng(
+                    driverCurrentLocation!.latitude,
                     driverCurrentLocation!.longitude);
-                var userCurrentLatlng = riderRideRequestInformation.pickupLatLng;
+                var userCurrentLatlng =
+                    riderRideRequestInformation.pickupLatLng;
                 drawPolylineFromPickupToDropoff(
                     driverCurrentLatlng, userCurrentLatlng!);
                 getDriversLocationUpdatesAtRealTime();

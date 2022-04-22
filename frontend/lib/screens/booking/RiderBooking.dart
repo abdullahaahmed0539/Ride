@@ -7,6 +7,7 @@ import 'package:flutter_geofire/flutter_geofire.dart';
 import 'package:frontend/api%20calls/Driver.dart';
 import 'package:frontend/global/global.dart';
 import 'package:frontend/models/ActiveNearbyDrivers.dart';
+import 'package:frontend/providers/Booking.dart';
 import 'package:frontend/providers/User.dart';
 import 'package:frontend/screens/booking/SelectNearestActiveDrivers.dart';
 import 'package:frontend/services/geofireAssistant.dart';
@@ -19,12 +20,14 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart';
 import 'package:provider/provider.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import '../../api calls/Bookings.dart';
 import '../../global/map.dart';
 import '../../models/Directions.dart';
 import '../../models/User.dart';
 import '../../providers/Location.dart';
 import '../../services/user_alert.dart';
 import '../../widgets/components/driver_detail_widget.dart';
+import '../../widgets/components/fare_amount_dialog.dart';
 import '../../widgets/components/waiting_for_driver.dart';
 import '../../widgets/ui/LocationPicker.dart';
 
@@ -320,6 +323,10 @@ class _RiderBooking extends State<RiderBooking> {
           infoWindow: const InfoWindow(title: 'Your current location'));
 
       setState(() {
+        markersSet.removeWhere((element) =>
+            (element.markerId.value != 'pickupId' &&
+                element.markerId.value != 'destinationId'));
+
         CameraPosition cameraPosition =
             CameraPosition(target: driverRealTimePosition!, zoom: 16);
 
@@ -343,13 +350,15 @@ class _RiderBooking extends State<RiderBooking> {
       if (directionDetailsInfo == null) {
         return;
       }
-      setState(() {
-        driverRideStatus =
-            'Driver is coming in ${directionDetailsInfo.durationText!}';
-      });
-      setState(() {
-        driverRealTimePosition = driverCurrentPositionLatlng;
-      });
+
+      if (mounted) {
+        setState(() {
+          driverRideStatus =
+              'Driver is coming in ${directionDetailsInfo.durationText!}';
+          driverRealTimePosition = driverCurrentPositionLatlng;
+        });
+      }
+
       getDriversLocationUpdatesAtRealTime();
       requestPostionInfo = true;
     }
@@ -368,19 +377,42 @@ class _RiderBooking extends State<RiderBooking> {
       if (directionDetailsInfo == null) {
         return;
       }
-      setState(() {
-        driverRideStatus =
-            'Reaching destination in ${directionDetailsInfo.durationText!}';
-      });
-      setState(() {
-        driverRealTimePosition = driverCurrentPositionLatlng;
-      });
+      if (mounted) {
+        setState(() {
+          driverRideStatus =
+              'Reaching destination in ${directionDetailsInfo.durationText!}';
+          driverRealTimePosition = driverCurrentPositionLatlng;
+        });
+      }
+
       getDriversLocationUpdatesAtRealTime();
       requestPostionInfo = true;
     }
   }
 
-  void saveRideRequestInformation() {
+  customDispose() {
+    setState(() {
+      tripRideRequestInfoStreamSubscription!.cancel();
+    });
+  }
+
+  bookingDetailResponseHandler(Response response) {
+    if (response.statusCode == 200) {
+      var responseData = json.decode(response.body)['data']['booking'];
+      Provider.of<BookingProvider>(context, listen: false)
+          .booking
+          .addBookingAsperMongo(
+            responseData['_id'],
+            responseData['riderId'],
+            responseData['driverId'],
+            responseData['pickup'],
+            responseData['dropoff'],
+            responseData['status'],
+          );
+    }
+  }
+
+  void saveRideRequestInformation() async {
     referenceRideRequest =
         FirebaseDatabase.instance.ref().child('allRideRequests').push();
 
@@ -415,38 +447,50 @@ class _RiderBooking extends State<RiderBooking> {
 
     referenceRideRequest!.set(userInfoMap);
     tripRideRequestInfoStreamSubscription =
-        referenceRideRequest!.onValue.listen((eventSnap) {
+        referenceRideRequest!.onValue.listen((eventSnap) async {
       if (eventSnap.snapshot.value == null) {
         return;
       }
       if ((eventSnap.snapshot.value as Map)['carModel'] != null) {
-        setState(() {
-          carModel = (eventSnap.snapshot.value as Map)['carModel'].toString();
-        });
+        if (mounted) {
+          setState(() {
+            carModel = (eventSnap.snapshot.value as Map)['carModel'].toString();
+          });
+        }
       }
       if ((eventSnap.snapshot.value as Map)['registrationNumber'] != null) {
-        setState(() {
-          registrationNumber =
-              (eventSnap.snapshot.value as Map)['registrationNumber']
-                  .toString();
-        });
+        if (mounted) {
+          setState(() {
+            registrationNumber =
+                (eventSnap.snapshot.value as Map)['registrationNumber']
+                    .toString();
+          });
+        }
       }
       if ((eventSnap.snapshot.value as Map)['carColor'] != null) {
-        setState(() {
-          carColor = (eventSnap.snapshot.value as Map)['carColor'].toString();
-        });
+        if (mounted) {
+          setState(() {
+            carColor = (eventSnap.snapshot.value as Map)['carColor'].toString();
+          });
+        }
       }
       if ((eventSnap.snapshot.value as Map)['driverName'] != null) {
-        setState(() {
-          driverName =
-              (eventSnap.snapshot.value as Map)['driverName'].toString();
-        });
+        if (mounted) {
+          setState(() {
+            driverName =
+                (eventSnap.snapshot.value as Map)['driverName'].toString();
+          });
+        }
       }
-      if ((eventSnap.snapshot.value as Map)['driverPhoneNumber'] != null) {
-        setState(() {
-          driverPhoneNumber =
-              (eventSnap.snapshot.value as Map)['driverPhoneNumber'].toString();
-        });
+      if ((eventSnap.snapshot.value as Map)['driverPhone'] != null) {
+        
+        if (mounted) {
+          setState(() {
+            driverPhoneNumber =
+                (eventSnap.snapshot.value as Map)['driverPhone']
+                    .toString();
+          });
+        }
       }
 
       if ((eventSnap.snapshot.value as Map)['status'] != null) {
@@ -465,15 +509,62 @@ class _RiderBooking extends State<RiderBooking> {
             LatLng(driverCurrentPositionLat, driverCurrentPositionLng);
 
         if (riderRideRequestStatus == 'accepted') {
+          String? driverId;
+          if ((eventSnap.snapshot.value as Map)['driverId'] != null) {
+            driverId = (eventSnap.snapshot.value as Map)['driverId'];
+          }
           updateArrivalTimeToRidePickupLocation(driverCurrentPositionLatlng);
+          Response bookingDetailResponse = await fetchBookingDetails(
+              user.id, driverId!, user.phoneNumber, user.token);
+
+          bookingDetailResponseHandler(bookingDetailResponse);
         }
         if (riderRideRequestStatus == 'arrived') {
-          setState(() {
-            driverRideStatus = 'Driver has arrived';
-          });
+          if (mounted) {
+            setState(() {
+              driverRideStatus = 'Driver has arrived';
+            });
+          }
+          bool shown = false;
+          if (!shown) {
+            Fluttertoast.showToast(
+                msg: 'Driver has arrived at your location.',
+                backgroundColor: const Color.fromARGB(255, 65, 177, 69),
+                timeInSecForIosWeb: 2,
+                gravity: ToastGravity.TOP);
+            shown = true;
+          }
         }
         if (riderRideRequestStatus == 'inprogress') {
           updateReachingTimeToRidePickupLocation(driverCurrentPositionLatlng);
+        }
+        if (riderRideRequestStatus == 'completed') {
+          double? total, milesCost, waitTimeCost, disputeCost;
+          if ((eventSnap.snapshot.value as Map)['total'] != null) {
+            total = double.parse(
+                (eventSnap.snapshot.value as Map)['total'].toString());
+          }
+          if ((eventSnap.snapshot.value as Map)['waitTimeCost'] != null) {
+            waitTimeCost = double.parse(
+                (eventSnap.snapshot.value as Map)['waitTimeCost'].toString());
+          }
+          if ((eventSnap.snapshot.value as Map)['milesCost'] != null) {
+            milesCost = double.parse(
+                (eventSnap.snapshot.value as Map)['milesCost'].toString());
+          }
+          if ((eventSnap.snapshot.value as Map)['disputeCost'] != null) {
+            disputeCost = double.parse(
+                (eventSnap.snapshot.value as Map)['disputeCost'].toString());
+          }
+          showDialog(
+              barrierDismissible: false,
+              context: context,
+              builder: (BuildContext context) => FairCollectionDialog(
+                  disputeCost: disputeCost,
+                  total: total,
+                  waitTimeCost: waitTimeCost,
+                  milesCost: milesCost,
+                  customDispose: customDispose));
         }
       }
     });
@@ -485,8 +576,12 @@ class _RiderBooking extends State<RiderBooking> {
     if (onlineNearByDriversList.isEmpty) {
       referenceRideRequest!.remove();
       Fluttertoast.showToast(
-          backgroundColor: Theme.of(context).primaryColor,
-          msg: 'No online drivers nearby');
+        timeInSecForIosWeb: 4,
+        backgroundColor: Colors.red,
+        msg: 'No online drivers nearby',
+        gravity: ToastGravity.TOP,
+      );
+
       removeMarkers();
       return;
     }
@@ -495,15 +590,20 @@ class _RiderBooking extends State<RiderBooking> {
   }
 
   showWaitingResponseUI() {
-    setState(() {
-      displayConfirmWidget = false;
-    });
+    if (mounted) {
+      setState(() {
+        displayConfirmWidget = false;
+        bottomPaddingOfMap = 65;
+      });
+    }
   }
 
   showUIForAssignDriver() {
-    setState(() {
-      displayDriverDetailsWidget = true;
-    });
+    if (mounted) {
+      setState(() {
+        displayDriverDetailsWidget = true;
+      });
+    }
   }
 
   retrieveOnlineDriversInfo(
@@ -550,13 +650,20 @@ class _RiderBooking extends State<RiderBooking> {
               Fluttertoast.showToast(
                   msg: 'Request sent to the driver',
                   backgroundColor: Theme.of(context).primaryColor,
-                  timeInSecForIosWeb: 5,
+                  timeInSecForIosWeb: 4,
                   gravity: ToastGravity.TOP);
             } else {
+              if (mounted) {
+                setState(() {
+                  displayConfirmWidget = true;
+                  bottomPaddingOfMap = 250;
+                });
+              }
+
               Fluttertoast.showToast(
-                  msg: 'Please choose another driver',
-                  backgroundColor: Theme.of(context).primaryColor,
-                  timeInSecForIosWeb: 5,
+                  msg: 'Please choose another driver. The driver went offline.',
+                  backgroundColor: Colors.red,
+                  timeInSecForIosWeb: 3,
                   gravity: ToastGravity.TOP);
               return;
             }
@@ -575,20 +682,40 @@ class _RiderBooking extends State<RiderBooking> {
               Fluttertoast.showToast(
                   msg:
                       'Driver has cancelled your request. Choose another driver.',
-                  backgroundColor: Theme.of(context).primaryColor,
-                  timeInSecForIosWeb: 5,
+                  backgroundColor: Colors.red,
+                  timeInSecForIosWeb: 4,
                   gravity: ToastGravity.TOP);
 
-              setState(() {
-                displayConfirmWidget = true;
-              });
+              if (mounted) {
+                setState(() {
+                  displayConfirmWidget = true;
+                  bottomPaddingOfMap = 250;
+                });
+              }
             }
             if (eventSnapshot.snapshot.value == 'accepted') {
+              bool shown = false;
+              if (!shown) {
+                Fluttertoast.showToast(
+                    msg: 'Driver has accepted your request.',
+                    backgroundColor: const Color.fromARGB(255, 65, 177, 69),
+                    timeInSecForIosWeb: 4,
+                    gravity: ToastGravity.TOP);
+                shown = true;
+              }
+              if (mounted) {
+                setState(() {
+                  bottomPaddingOfMap = 195;
+                });
+              }
               showUIForAssignDriver();
             }
           });
         } else {
           Fluttertoast.showToast(
+              gravity: ToastGravity.TOP,
+              backgroundColor: Colors.red,
+              timeInSecForIosWeb: 4,
               msg: 'This driver is not available. Try another.');
         }
       });
@@ -656,7 +783,7 @@ class _RiderBooking extends State<RiderBooking> {
               myLocationEnabled: true,
               initialCameraPosition: _kGooglePlex,
               zoomGesturesEnabled: true,
-              zoomControlsEnabled: true,
+              zoomControlsEnabled: false,
               polylines: polyLineSet,
               markers: markersSet,
               padding: EdgeInsets.only(bottom: bottomPaddingOfMap, top: 20),
@@ -665,7 +792,7 @@ class _RiderBooking extends State<RiderBooking> {
                 newGoogleMapController = controller;
                 blackThemeGoogleMap(newGoogleMapController);
 
-                if (mounted && displayConfirmWidget) {
+                if (mounted) {
                   setState(() {
                     bottomPaddingOfMap = 250;
                   });

@@ -1,9 +1,12 @@
 // ignore_for_file: file_names
 import 'package:flutter/material.dart';
+import 'package:frontend/providers/App.dart';
 import 'package:frontend/screens/disputes/DisputeGuidelines.dart';
+import 'package:frontend/screens/driver/DriverMapForRide.dart';
 import 'package:frontend/widgets/ui/LongButton.dart';
 import 'package:frontend/widgets/ui/TextualButton.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:provider/provider.dart';
 
 import 'Home.dart';
 
@@ -33,7 +36,14 @@ class _RatingState extends State<Rating> {
 
   void onSubmit() {
     //http request for submitting rating
-    Navigator.of(context).pushNamedAndRemoveUntil(Home.routeName, (r) => false);
+
+    if (Provider.of<AppProvider>(context, listen: false).app.getAppMode() ==
+        'driver') {
+      Navigator.of(context).pushReplacementNamed(Home.routeName);
+      Navigator.of(context).pushNamed(DriverMapForRide.routeName);
+    } else {
+      Navigator.of(context).pushReplacementNamed(Home.routeName);
+    }
   }
 
   void onRaiseDispute() {
@@ -93,17 +103,31 @@ class _RatingState extends State<Rating> {
                     style: Theme.of(context).textTheme.titleSmall,
                   ),
                 ),
-                TextualButton(
-                    handler: onRaiseDispute, buttonText: 'Raise a dispute for voting'),
+                const SizedBox(height: 20,),
+                TextButton(
+                  onPressed: () {},
+                  child: Text(
+                    'Raise a dispute for voting',
+                    style: TextStyle(
+                        color: Theme.of(context).primaryColor,
+                        fontSize: 16,
+                        fontFamily: "SF-Pro-Display"),
+                  ),
+                  style: TextButton.styleFrom(
+                    minimumSize: Size.zero,
+                    padding: EdgeInsets.zero,
+                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  ),
+                ),
                 ratingChanged
                     ? Container(
-                        margin: const EdgeInsets.only(top: 270),
+                        margin: const EdgeInsets.only(top: 320),
                         child: LongButton(
                             handler: onSubmit,
                             buttonText: 'Done',
                             isActive: true))
                     : Container(
-                        margin: const EdgeInsets.only(top: 270),
+                        margin: const EdgeInsets.only(top: 320),
                         child: LongButton(
                             handler: () {},
                             buttonText: 'Done',

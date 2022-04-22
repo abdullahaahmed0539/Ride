@@ -189,7 +189,8 @@ class _LocationPickerState extends State<LocationPicker> {
       enabled: enabled,
       autofocus: false,
       autocorrect: false,
-      style: const TextStyle(
+      style: label == 'Pickup'? const TextStyle(
+          fontFamily: 'SF-Pro-Rounded', fontSize: 18, color: Color.fromARGB(255, 157, 157, 157)):const TextStyle(
           fontFamily: 'SF-Pro-Rounded', fontSize: 18, color: Colors.white),
       decoration: InputDecoration(
         border: OutlineInputBorder(

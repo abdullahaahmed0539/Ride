@@ -1,17 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/providers/App.dart';
 import 'package:frontend/widgets/ui/LongButton.dart';
+import 'package:provider/provider.dart';
+
+import '../../screens/Rating.dart';
 
 class FairCollectionDialog extends StatefulWidget {
   dynamic disputeCost;
   dynamic waitTimeCost;
   dynamic milesCost;
   dynamic total;
+  final Function? customDispose;
 
   FairCollectionDialog(
       {this.disputeCost,
       this.milesCost,
       this.total,
       this.waitTimeCost,
+      this.customDispose,
       Key? key})
       : super(key: key);
 
@@ -32,10 +38,11 @@ class _FairCollectionDialogState extends State<FairCollectionDialog> {
         decoration: BoxDecoration(
             color: const Color.fromARGB(255, 52, 53, 56),
             borderRadius: BorderRadius.circular(6)),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-          Text('Fare Amount Details', style: Theme.of(context).textTheme.titleLarge,),
+        child: Column(mainAxisSize: MainAxisSize.min, children: [
+          Text(
+            'Fare Amount Details',
+            style: Theme.of(context).textTheme.titleLarge,
+          ),
           const Divider(
             color: Colors.white,
             thickness: 2,
@@ -76,18 +83,27 @@ class _FairCollectionDialogState extends State<FairCollectionDialog> {
           const Divider(color: Colors.white),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [Text('Total(RideCoins):', style: Theme.of(context).textTheme.titleMedium),
-             Text(widget.total.toString(), style: Theme.of(context).textTheme.titleMedium)],
+            children: [
+              Text('Total(RideCoins):',
+                  style: Theme.of(context).textTheme.titleMedium),
+              Text(widget.total.toString(),
+                  style: Theme.of(context).textTheme.titleMedium)
+            ],
           ),
-         
           const Divider(color: Colors.white),
           const SizedBox(
             height: 5,
           ),
           LongButton(
               handler: () {
-                //pop till driver map
-                //load rating page
+                if (Provider.of<AppProvider>(context, listen: false)
+                        .app
+                        .getAppMode() ==
+                    'rider') {
+                  widget.customDispose!();
+                }
+                Navigator.of(context).pushNamedAndRemoveUntil(
+                    Rating.routeName, (route) => false);
               },
               buttonText: 'Finish',
               isActive: true),

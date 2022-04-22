@@ -168,7 +168,6 @@ class _BookingDetailState extends State<BookingDetail> {
                                     color: driverDetails['color'],
                                     registrationNumber:
                                         driverDetails['registrationNumber'],
-                                        disputeEnabled: bookingDetails['disputeEnabled'],
                                     bottom: 10,
                                     top: 7)
                                 : Container(),

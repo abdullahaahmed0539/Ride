@@ -69,7 +69,6 @@ Future<Response> createBooking(
     String driverId,
     String pickup,
     String dropoff,
-    bool disputeEnabled,
     PhoneNumber phoneNumber,
     String token) async {
   final response = await post(Uri.parse('$url/create_booking'),
@@ -83,7 +82,6 @@ Future<Response> createBooking(
         'riderId': riderId,
         'pickup': pickup,
         'dropoff': dropoff,
-        'disputeEnabled': disputeEnabled
       }));
   return response;
 }
@@ -130,6 +128,21 @@ Future<Response> setComplete(String driverId, String bookingId, int distance,
         'driverId': driverId,
         'bookingId': bookingId,
         'distance': distance
+      }));
+  return response;
+}
+
+Future<Response> fetchBookingDetails(String riderId, String driverId,
+    PhoneNumber phoneNumber, String token) async {
+  final response = await post(Uri.parse('$url/details'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer $token'
+      },
+      body: jsonEncode(<String, dynamic>{
+        'phoneNumber': '${phoneNumber.countryCode}${phoneNumber.number}',
+        'riderId': riderId,
+        'driverId': driverId,
       }));
   return response;
 }

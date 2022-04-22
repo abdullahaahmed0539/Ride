@@ -4,7 +4,6 @@ import 'package:frontend/widgets/ui/TextualButton.dart';
 
 class DriverDetails extends StatelessWidget {
   final String firstName, lastName, carModel, color, registrationNumber;
-  final bool disputeEnabled;
   double top, bottom;
 
   DriverDetails(
@@ -13,7 +12,6 @@ class DriverDetails extends StatelessWidget {
       required this.lastName,
       required this.carModel,
       required this.color,
-      required this.disputeEnabled,
       required this.registrationNumber,
       required this.bottom,
       required this.top})
@@ -62,9 +60,7 @@ class DriverDetails extends StatelessWidget {
               registrationNumber,
               style: Theme.of(context).textTheme.titleSmall,
             ),
-            disputeEnabled? Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-              TextualButton(handler: () {}, buttonText: 'Raise a dispute')
-            ]): Container()
+           
           ],
         ));
   }

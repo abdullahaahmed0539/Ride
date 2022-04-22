@@ -8,7 +8,9 @@ class GeoFireAssistant {
   static void removeOfflineDriverFromList(String driverId) {
     int index = activeNearbyDriversList
         .indexWhere((element) => element.driverId == driverId);
-    activeNearbyDriversList.removeAt(index);
+    if (index != -1) {
+      activeNearbyDriversList.removeAt(index);
+    }
   }
 
   static void updateActiveNearbyDriversLocation(ActiveNearbyDrivers driver) {

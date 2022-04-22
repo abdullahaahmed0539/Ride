@@ -10,7 +10,7 @@ import 'package:frontend/models/rider_ride_request_info.dart';
 import 'package:frontend/providers/Driver.dart';
 import 'package:frontend/providers/User.dart';
 import 'package:frontend/services/user_alert.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:url_launcher/url_launcher.dart' as UrlLauncher;
 import 'package:http/http.dart';
 import 'package:provider/provider.dart';
 import 'package:frontend/widgets/ui/LongButton.dart';
@@ -161,13 +161,17 @@ class _RiderDetailsState extends State<RiderDetails> {
                     Text(
                       widget.riderName!,
                       style: Theme.of(context).textTheme.titleLarge,
+                      overflow: TextOverflow.clip,
                     ),
                     const SizedBox(
                       width: 70,
                     ),
-                    Text(
-                      '${widget.duration!} ',
-                      style: Theme.of(context).textTheme.titleLarge,
+                    Expanded(
+                      child: Text(
+                        '${widget.duration!} ',
+                        style: Theme.of(context).textTheme.titleLarge,
+                        overflow: TextOverflow.clip,
+                      ),
                     )
                   ],
                 ),
@@ -216,6 +220,43 @@ class _RiderDetailsState extends State<RiderDetails> {
                 ),
                 const SizedBox(
                   height: 20,
+                ),
+
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    ElevatedButton.icon(
+                        style: ElevatedButton.styleFrom(primary: Colors.red),
+                        onPressed: () {},
+                        icon: const Icon(
+                          Icons.cancel,
+                          color: Colors.white,
+                          size: 22,
+                        ),
+                        label: const Text('Cancel')),
+                    const SizedBox(
+                      width: 8,
+                    ),
+                    ElevatedButton.icon(
+                        style: ElevatedButton.styleFrom(
+                            primary: Theme.of(context).primaryColor),
+                        onPressed: () async {
+                          // await UrlLauncher.launchUrl(
+                          //     Uri.parse('tel://${widget.driverPhoneNumber!}'));
+                        },
+                        icon: const Icon(
+                          Icons.phone_android,
+                          color: Colors.white,
+                          size: 22,
+                        ),
+                        label: const Text('Call driver')),
+                  ],
+                ),
+                const Divider(
+                  color: Colors.white,
+                ),
+                const SizedBox(
+                  height: 15,
                 ),
                 widget.nearby!
                     ? LongButton(

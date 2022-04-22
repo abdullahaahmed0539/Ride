@@ -13,6 +13,7 @@ import '../../global/global.dart';
 import '../../global/map.dart';
 import '../../models/Driver.dart';
 import '../../services/map.dart';
+import '../../widgets/components/waiting_for_riders.dart';
 import '../../widgets/ui/spinner.dart';
 
 class DriverMapForRide extends StatefulWidget {
@@ -64,8 +65,6 @@ class _DriverMapForRideState extends State<DriverMapForRide> {
     }
   }
 
-  
-
   void driverIsOnlineNow() async {
     Geofire.initialize('activeDrivers');
 
@@ -99,8 +98,6 @@ class _DriverMapForRideState extends State<DriverMapForRide> {
       }
     });
   }
-
-  
 
   @override
   void initState() {
@@ -161,7 +158,7 @@ class _DriverMapForRideState extends State<DriverMapForRide> {
               mapType: MapType.normal,
               myLocationEnabled: true,
               zoomGesturesEnabled: true,
-              zoomControlsEnabled: true,
+              zoomControlsEnabled: false,
               padding: EdgeInsets.only(bottom: bottomPaddingOfMap, top: 20),
               initialCameraPosition: _kGooglePlex,
               onMapCreated: (GoogleMapController controller) {
@@ -169,11 +166,13 @@ class _DriverMapForRideState extends State<DriverMapForRide> {
                 newGoogleMapController = controller;
                 blackThemeGoogleMap(newGoogleMapController);
                 setState(() {
-                  bottomPaddingOfMap = 0;
+                  bottomPaddingOfMap = 60;
                 });
                 locateUserPosition();
               },
             ),
+            const Positioned(
+                bottom: 10, right: 0, left: 0, child: WaitingForRidersUI()),
             camPosition == null
                 ? Spinner(text: 'Fetching current location ', height: 0)
                 : Container()

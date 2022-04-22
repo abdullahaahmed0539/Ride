@@ -96,7 +96,6 @@ class _NotificationDialogBoxState extends State<NotificationDialogBox> {
             driver.driverId,
             widget.riderRideRequestInformation!.pickupAddress!,
             widget.riderRideRequestInformation!.dropoffAddress!,
-            false,
             user.phoneNumber,
             user.token);
         createBookingResponseHandler(response, driver, context);
