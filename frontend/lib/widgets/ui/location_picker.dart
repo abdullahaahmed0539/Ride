@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
-import 'package:frontend/api%20calls/Map.dart';
+import 'package:frontend/api%20calls/map.dart';
 import 'package:frontend/global/configuration.dart';
-import 'package:frontend/models/PredictedPlaces.dart';
-import 'package:frontend/providers/Location.dart';
-import 'package:frontend/providers/User.dart';
+import 'package:frontend/models/predicted_places.dart';
+import 'package:frontend/providers/location.dart';
+import 'package:frontend/providers/user.dart';
 import 'package:frontend/services/map.dart';
-import 'package:frontend/widgets/ui/LongButton.dart';
+import 'package:frontend/widgets/ui/long_button.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 
 import '../../global/global.dart';
-import '../../models/Directions.dart';
-import '../components/PlacePredictionDropdown.dart';
+import '../../models/directions.dart';
+import '../components/place_prediction_dropdown.dart';
 
 class LocationPicker extends StatefulWidget {
   final Function addTopolylineCoOrdinatesList;

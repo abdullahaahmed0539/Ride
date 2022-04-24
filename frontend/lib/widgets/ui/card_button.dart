@@ -1,6 +1,6 @@
 // ignore_for_file: file_names
 import 'package:flutter/material.dart';
-import './Message.dart';
+import 'message.dart';
 
 class CardButton extends StatelessWidget {
   final Color color;

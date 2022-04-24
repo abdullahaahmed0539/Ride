@@ -1,6 +1,4 @@
-import 'dart:ffi';
-
-import '../models/ActiveNearbyDrivers.dart';
+import '../models/active_nearby_drivers.dart';
 
 class GeoFireAssistant {
   static List<ActiveNearbyDrivers> activeNearbyDriversList = [];

@@ -1,7 +1,7 @@
 // ignore_for_file: file_names
 import 'package:flutter/material.dart';
-import 'PublishDispute.dart';
-import '../../widgets/ui/LongButton.dart';
+import 'create_dispute.dart';
+import '../../widgets/ui/long_button.dart';
 
 class DisputeGuidelines extends StatefulWidget {
   static const routeName = '/dispute_guidelines';

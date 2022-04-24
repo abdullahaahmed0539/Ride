@@ -4,25 +4,25 @@ import 'dart:convert';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
-import 'package:frontend/api%20calls/Bookings.dart';
+import 'package:frontend/api%20calls/bookings.dart';
 import 'package:frontend/global/map.dart';
-import 'package:frontend/models/Driver.dart';
-import 'package:frontend/models/User.dart';
+import 'package:frontend/models/driver.dart';
+import 'package:frontend/models/user.dart';
 import 'package:frontend/models/rider_ride_request_info.dart';
-import 'package:frontend/providers/Driver.dart';
-import 'package:frontend/providers/User.dart';
+import 'package:frontend/providers/driver.dart';
+import 'package:frontend/providers/user.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart';
 import 'package:provider/provider.dart';
 
 import '../../global/global.dart';
-import '../../models/Booking.dart';
-import '../../providers/Booking.dart';
+import '../../models/booking.dart';
+import '../../providers/booking.dart';
 import '../../services/images.dart';
 import '../../services/map.dart';
 import '../../services/user_alert.dart';
-import '../../widgets/components/RiderDetails.dart';
+import '../../widgets/components/rider_details.dart';
 import '../../widgets/components/fare_amount_dialog.dart';
 
 //riderRideRequestInformation

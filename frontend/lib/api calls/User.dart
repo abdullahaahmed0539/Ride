@@ -19,7 +19,6 @@ Future<Response> userExists(PhoneNumber phoneNumber) async {
 }
 
 Future<Response> login(PhoneNumber phoneNumber) async {
-  print('$url/login');
   final response = await post(Uri.parse('$url/login'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',

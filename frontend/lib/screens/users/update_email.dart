@@ -2,19 +2,19 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:frontend/api%20calls/User.dart';
+import 'package:frontend/api%20calls/user.dart';
 import 'package:http/http.dart';
 import 'package:provider/provider.dart';
 import 'package:validators/validators.dart';
 
-import '../../models/User.dart';
-import '../../providers/User.dart';
+import '../../models/user.dart';
+import '../../providers/user.dart';
 import '../../services/user_alert.dart';
-import '../../widgets/ui/DarkTextField.dart';
-import '../../widgets/ui/LongButton.dart';
+import '../../widgets/ui/dark_text_field.dart';
+import '../../widgets/ui/long_button.dart';
 import '../../widgets/ui/spinner.dart';
-import 'Login.dart';
-import '../Profile.dart';
+import 'login.dart';
+import '../profile.dart';
 
 class UpdateEmail extends StatefulWidget {
   static const routeName = '/update_email';

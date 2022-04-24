@@ -2,21 +2,21 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:frontend/api%20calls/Trips.dart';
-import 'package:frontend/api%20calls/Driver.dart';
+import 'package:frontend/api%20calls/trips.dart';
+import 'package:frontend/api%20calls/driver.dart';
 import 'package:frontend/services/user_alert.dart';
-import 'package:frontend/widgets/components/BookingDetailBlock.dart';
-import 'package:frontend/widgets/components/CostBreakdown.dart';
-import 'package:frontend/widgets/components/DriverDetails.dart';
-import 'package:frontend/widgets/components/TripDetails.dart';
+import 'package:frontend/widgets/components/booking_detail_block.dart';
+import 'package:frontend/widgets/components/cost_breakdown.dart';
+import 'package:frontend/widgets/components/driver_details.dart';
+import 'package:frontend/widgets/components/trip_details.dart';
 import 'package:frontend/widgets/ui/spinner.dart';
 import 'package:http/http.dart';
 import 'package:intl/intl.dart';
 import 'package:intl_phone_field/phone_number.dart';
 import 'package:provider/provider.dart';
 
-import '../../providers/App.dart';
-import '../../providers/User.dart';
+import '../../providers/app.dart';
+import '../../providers/user.dart';
 
 class BookingDetail extends StatefulWidget {
   static const routeName = '/booking_detail';

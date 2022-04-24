@@ -1,8 +1,8 @@
 // ignore_for_file: file_names
 import 'package:flutter/material.dart';
-import 'package:frontend/screens/voting/Voting.dart';
+import 'package:frontend/screens/voting/voting.dart';
 
-import '../../widgets/ui/LongButton.dart';
+import '../../widgets/ui/long_button.dart';
 
 class VotingGuidelines extends StatefulWidget {
   static const routeName = '/voting_guidelines';

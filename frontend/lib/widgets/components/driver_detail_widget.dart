@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart' as UrlLauncher;
+import 'package:url_launcher/url_launcher.dart' as url_launcher;
 
 class DriverDetailWidget extends StatefulWidget {
   String? carColor,
@@ -104,7 +104,7 @@ class _DriverDetailWidgetState extends State<DriverDetailWidget> {
                     style: ElevatedButton.styleFrom(
                         primary: Theme.of(context).primaryColor),
                     onPressed: () async{
-                      await UrlLauncher.launchUrl(
+                      await url_launcher.launchUrl(
                           Uri.parse('tel://${widget.driverPhoneNumber!}'));
                     },
                     icon: const Icon(

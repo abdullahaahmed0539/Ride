@@ -1,22 +1,20 @@
-import 'dart:convert';
-
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:frontend/api%20calls/Bookings.dart';
-import 'package:frontend/models/Booking.dart';
-import 'package:frontend/models/Driver.dart';
+import 'package:frontend/api%20calls/bookings.dart';
+import 'package:frontend/models/booking.dart';
+import 'package:frontend/models/driver.dart';
 import 'package:frontend/models/rider_ride_request_info.dart';
-import 'package:frontend/providers/Driver.dart';
-import 'package:frontend/providers/User.dart';
+import 'package:frontend/providers/driver.dart';
+import 'package:frontend/providers/user.dart';
 import 'package:frontend/services/user_alert.dart';
-import 'package:url_launcher/url_launcher.dart' as UrlLauncher;
+import 'package:url_launcher/url_launcher.dart' as url_launcher;
 import 'package:http/http.dart';
 import 'package:provider/provider.dart';
-import 'package:frontend/widgets/ui/LongButton.dart';
+import 'package:frontend/widgets/ui/long_button.dart';
 
-import '../../models/User.dart';
-import '../../providers/Booking.dart';
+import '../../models/user.dart';
+import '../../providers/booking.dart';
 
 // ignore: must_be_immutable
 class RiderDetails extends StatefulWidget {
@@ -241,7 +239,7 @@ class _RiderDetailsState extends State<RiderDetails> {
                         style: ElevatedButton.styleFrom(
                             primary: Theme.of(context).primaryColor),
                         onPressed: () async {
-                          // await UrlLauncher.launchUrl(
+                          // await url_launcher.launchUrl(
                           //     Uri.parse('tel://${widget.driverPhoneNumber!}'));
                         },
                         icon: const Icon(

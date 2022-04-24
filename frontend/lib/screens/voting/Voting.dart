@@ -2,18 +2,18 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:frontend/api%20calls/Dispute.dart';
-import 'package:frontend/screens/disputes/DisputeTabs.dart';
-import 'package:frontend/widgets/ui/TextView.dart';
+import 'package:frontend/api%20calls/dispute.dart';
+import 'package:frontend/screens/disputes/dispute_tabs.dart';
+import 'package:frontend/widgets/ui/text_view.dart';
 import 'package:frontend/widgets/ui/spinner.dart';
 import 'package:http/http.dart';
 import 'package:provider/provider.dart';
 
-import '../../models/User.dart';
-import '../../providers/User.dart';
+import '../../models/user.dart';
+import '../../providers/user.dart';
 import '../../services/user_alert.dart';
-import '../../widgets/ui/LongButton.dart';
-import '../Home.dart';
+import '../../widgets/ui/long_button.dart';
+import '../home.dart';
 
 class Voting extends StatefulWidget {
   static const routeName = '/voting';

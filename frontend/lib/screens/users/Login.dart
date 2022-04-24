@@ -1,9 +1,9 @@
 // ignore_for_file: file_names
 import 'package:flutter/material.dart';
-import 'package:frontend/screens/users/Verification.dart';
+import 'package:frontend/screens/users/verification.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 
-import 'package:frontend/widgets/ui/LongButton.dart';
+import 'package:frontend/widgets/ui/long_button.dart';
 import 'package:intl_phone_field/phone_number.dart';
 
 class Login extends StatefulWidget {

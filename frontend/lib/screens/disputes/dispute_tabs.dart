@@ -1,8 +1,8 @@
 // ignore_for_file: file_names
 import 'package:flutter/material.dart';
-import 'package:frontend/screens/disputes/CommunityDisputes.dart';
-import 'package:frontend/screens/disputes/DisputesByYou.dart';
-import 'package:frontend/screens/disputes/DisputesOnYou.dart';
+import 'package:frontend/screens/disputes/community_disputes.dart';
+import 'package:frontend/screens/disputes/disputes_by_you.dart';
+import 'package:frontend/screens/disputes/disputes_on_you.dart';
 
 class DisputeTabs extends StatefulWidget {
   static const routeName = '/dispute_tabs';

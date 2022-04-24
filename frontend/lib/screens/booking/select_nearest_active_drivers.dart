@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:frontend/global/global.dart';
-import '../../widgets/ui/DriverCard.dart';
+import '../../widgets/ui/driver_card.dart';
 
 class SelectNearestActiveDrivers extends StatefulWidget {
   static const routeName = '/select_nearest_active_drivers';

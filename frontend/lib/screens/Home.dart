@@ -1,17 +1,17 @@
 // ignore_for_file: file_names
 import 'package:flutter/material.dart';
-import 'package:frontend/providers/App.dart';
+import 'package:frontend/providers/app.dart';
 import 'package:frontend/services/user_alert.dart';
-import 'package:frontend/widgets/components/DisputesOnYouShortcut.dart';
-import 'package:frontend/widgets/components/MyDisputesShortcut.dart';
-import '../widgets/components/NavigationMenu.dart';
-import '../widgets/components/VotingShortcut.dart';
+import 'package:frontend/widgets/components/disputes_on_you_shortcut.dart';
+import 'package:frontend/widgets/components/my_disputes_shortcut.dart';
+import '../widgets/components/navigation_menu.dart';
+import '../widgets/components/voting_shortcut.dart';
 import 'package:http/http.dart';
 import 'package:provider/provider.dart';
 import 'dart:convert';
-import '../../api calls/Dispute.dart';
-import '../../models/User.dart';
-import '../../providers/User.dart';
+import '../api calls/dispute.dart';
+import '../models/user.dart';
+import '../providers/user.dart';
 
 class Home extends StatefulWidget {
   static const routeName = '/home';

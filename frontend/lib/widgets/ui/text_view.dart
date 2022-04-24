@@ -1,7 +1,7 @@
 // ignore_for_file: file_names
 import 'package:flutter/material.dart';
 
-import './Message.dart';
+import 'message.dart';
 
 class TextView extends StatelessWidget {
   final String text;

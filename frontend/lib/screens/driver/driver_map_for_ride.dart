@@ -1,8 +1,7 @@
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_geofire/flutter_geofire.dart';
-import 'package:frontend/providers/Driver.dart';
+import 'package:frontend/providers/driver.dart';
 import 'package:frontend/services/push_notifications/push_notification_system.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -11,7 +10,7 @@ import 'dart:async';
 
 import '../../global/global.dart';
 import '../../global/map.dart';
-import '../../models/Driver.dart';
+import '../../models/driver.dart';
 import '../../services/map.dart';
 import '../../widgets/components/waiting_for_riders.dart';
 import '../../widgets/ui/spinner.dart';

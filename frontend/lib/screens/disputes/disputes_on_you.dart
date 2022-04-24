@@ -2,85 +2,85 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:frontend/screens/disputes/DisputeDetail.dart';
-import 'package:frontend/widgets/ui/CardItem.dart';
-import 'package:frontend/widgets/ui/spinner.dart';
+import 'package:frontend/api%20calls/dispute.dart';
 import 'package:http/http.dart';
 import 'package:provider/provider.dart';
-import '../../api calls/Dispute.dart';
-import '../../models/User.dart';
-import '../../providers/User.dart';
 
-class DisputesByYou extends StatefulWidget {
-  const DisputesByYou({
-    Key? key,
-  }) : super(key: key);
+import '../../models/user.dart';
+import '../../providers/user.dart';
+import '../../widgets/ui/card_item.dart';
+import '../../widgets/ui/spinner.dart';
+import 'dispute_detail.dart';
+
+class DisputeOnYou extends StatefulWidget {
+  const DisputeOnYou({Key? key}) : super(key: key);
 
   @override
-  State<DisputesByYou> createState() => _DisputesByYou();
+  State<DisputeOnYou> createState() => _DisputeOnYouState();
 }
 
-class _DisputesByYou extends State<DisputesByYou> {
-  List<dynamic> myDisputes = [];
+class _DisputeOnYouState extends State<DisputeOnYou> {
+  List<dynamic> disputeOnMe = [];
   bool isLoading = true;
 
   @override
   void initState() {
-    Future.delayed(Duration.zero, fetchDisputesByMeFromServer);
+    Future.delayed(Duration.zero, fetchDisputeOnMeFromServer);
     super.initState();
   }
 
-  Future fetchDisputesByMeFromServer() async {
+  Future fetchDisputeOnMeFromServer() async {
     User user = Provider.of<UserProvider>(context, listen: false).user;
+
     final response =
-        await fetchMyDisputes(user.id, user.phoneNumber, user.token);
-    fetchDisputesResponseHandler(response);
+        await fetchDisputesOnMe(user.id, user.phoneNumber, user.token);
+    fetchDisputesOnMeHandler(response);
     setState(() {
       isLoading = false;
     });
   }
 
-  void fetchDisputesResponseHandler(Response response) {
+  void fetchDisputesOnMeHandler(Response response) {
     if (response.statusCode != 404 && response.statusCode != 200) {}
 
     if (response.statusCode == 200) {
       setState(() {
-        myDisputes = json.decode(response.body)['data']['disputes'];
+        disputeOnMe = json.decode(response.body)['data']['disputes'];
       });
     }
 
     if (response.statusCode == 404) {
       setState(() {
-        myDisputes = [];
+        disputeOnMe = [];
       });
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final pendingDisputes =
-        myDisputes.where((dispute) => dispute['status'] == 'pending').toList();
-    final activeDisputes =
-        myDisputes.where((dispute) => dispute['status'] == 'active').toList();
-    final completeDisputes = myDisputes
+    final pendingDispute =
+        disputeOnMe.where((dispute) => dispute['status'] == 'pending').toList();
+    final activeDispute =
+        disputeOnMe.where((dispute) => dispute['status'] == 'active').toList();
+    final completeDispute = disputeOnMe
         .where((dispute) => dispute['status'] == 'completed')
         .toList();
     return !isLoading
         ? RefreshIndicator(
-            onRefresh: () => fetchDisputesByMeFromServer(),
+            onRefresh: () => fetchDisputeOnMeFromServer(),
             child: SingleChildScrollView(
-                physics: const AlwaysScrollableScrollPhysics(),
+              physics: const AlwaysScrollableScrollPhysics(),
                 child: Container(
                     margin: const EdgeInsets.symmetric(
                         horizontal: 20, vertical: 20),
-                    child: (activeDisputes.isNotEmpty ||
-                            completeDisputes.isNotEmpty ||
-                            pendingDisputes.isNotEmpty)
+                    child: (pendingDispute.isNotEmpty ||
+                            completeDispute.isNotEmpty ||
+                            pendingDispute.isNotEmpty)
                         ? Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                                pendingDisputes.isNotEmpty
+                                pendingDispute.isNotEmpty
                                     ? Container(
                                         margin: const EdgeInsets.only(top: 10),
                                         child: Text(
@@ -91,12 +91,12 @@ class _DisputesByYou extends State<DisputesByYou> {
                                         ),
                                       )
                                     : Container(),
-                                pendingDisputes.isNotEmpty
+                                pendingDispute.isNotEmpty
                                     ? Container(
                                         margin: const EdgeInsets.only(top: 10),
                                         child: Column(
                                           children: [
-                                            ...pendingDisputes.map((dispute) {
+                                            ...pendingDispute.map((dispute) {
                                               return CardItem(
                                                   dispute['subject'],
                                                   dispute['shortDescription'],
@@ -115,9 +115,9 @@ class _DisputesByYou extends State<DisputesByYou> {
                                           ],
                                         ))
                                     : Container(),
-                                activeDisputes.isNotEmpty
+                                activeDispute.isNotEmpty
                                     ? Container(
-                                        margin: const EdgeInsets.only(top: 10),
+                                        margin: const EdgeInsets.only(top: 30),
                                         child: Text(
                                           'Active',
                                           style: Theme.of(context)
@@ -126,12 +126,12 @@ class _DisputesByYou extends State<DisputesByYou> {
                                         ),
                                       )
                                     : Container(),
-                                activeDisputes.isNotEmpty
+                                activeDispute.isNotEmpty
                                     ? Container(
                                         margin: const EdgeInsets.only(top: 10),
                                         child: Column(
                                           children: [
-                                            ...activeDisputes.map((dispute) {
+                                            ...activeDispute.map((dispute) {
                                               return CardItem(
                                                   dispute['subject'],
                                                   dispute['shortDescription'],
@@ -150,7 +150,7 @@ class _DisputesByYou extends State<DisputesByYou> {
                                           ],
                                         ))
                                     : Container(),
-                                completeDisputes.isNotEmpty
+                                completeDispute.isNotEmpty
                                     ? Container(
                                         margin: const EdgeInsets.only(top: 30),
                                         child: Text(
@@ -161,12 +161,12 @@ class _DisputesByYou extends State<DisputesByYou> {
                                         ),
                                       )
                                     : Container(),
-                                completeDisputes.isNotEmpty
+                                completeDispute.isNotEmpty
                                     ? Container(
                                         margin: const EdgeInsets.only(top: 10),
                                         child: Column(
                                           children: [
-                                            ...completeDisputes.map((dispute) {
+                                            ...completeDispute.map((dispute) {
                                               return CardItem(
                                                   dispute['subject'],
                                                   dispute['shortDescription'],
@@ -188,7 +188,7 @@ class _DisputesByYou extends State<DisputesByYou> {
                               ])
                         : Center(
                             child: Text(
-                              'There are no disputes created by you',
+                              'There are no disputes on you',
                               style: Theme.of(context).textTheme.titleSmall,
                             ),
                           ))),

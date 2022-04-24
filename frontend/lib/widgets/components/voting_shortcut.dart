@@ -1,19 +1,19 @@
 // ignore_for_file: file_names
 import 'package:flutter/material.dart';
 
-import '../../screens/disputes/DisputeDetail.dart';
-import '../../screens/disputes/DisputeTabs.dart';
-import '../ui/CardItem.dart';
-import '../ui/LongButton.dart';
+import 'package:frontend/screens/voting/voting_guidelines.dart';
+
+import '../ui/card_item.dart';
+import '../ui/long_button.dart';
 
 // ignore: must_be_immutable
-class MyDisputesShortcut extends StatelessWidget {
-  dynamic myDisputes = [];
-  MyDisputesShortcut({Key? key, required this.myDisputes}) : super(key: key);
+class VotingShortcut extends StatelessWidget {
+  dynamic disputes = [];
+  VotingShortcut({Key? key, required this.disputes}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return myDisputes.isNotEmpty
+    return disputes.isNotEmpty
         ? Card(
             margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
             color: const Color(0xff333439),
@@ -25,25 +25,28 @@ class MyDisputesShortcut extends StatelessWidget {
                 alignment: Alignment.topLeft,
                 margin: const EdgeInsets.only(top: 12, left: 12, bottom: 15),
                 child: Text(
-                  'HERE ARE RESULTS OF YOUR DISPUTES',
+                  'THERE MIGHT BE SOME DISPUTES ON YOU',
                   style: Theme.of(context).textTheme.titleSmall,
                 ),
               ),
-              myDisputes.isNotEmpty
+              disputes.isNotEmpty
                   ? Container(
                       margin: const EdgeInsets.only(top: 10),
                       child: Column(
                         children: [
-                          ...myDisputes.map((dispute) {
+                          ...disputes.map((dispute) {
                             return CardItem(
                                 dispute['subject'],
                                 dispute['shortDescription'],
-                                'View results',
+                                'View and vote',
                                 10,
                                 3,
                                 () => Navigator.of(context).pushNamed(
-                                    DisputeDetail.routeName,
-                                    arguments: {'disputeId': dispute['_id']}));
+                                        VotingGuidelines.routeName,
+                                        arguments: {
+                                          'disputeId': dispute['_id'],
+                                          'from': 'home'
+                                        }));
                           }).toList()
                         ],
                       ))
@@ -53,8 +56,8 @@ class MyDisputesShortcut extends StatelessWidget {
                       const EdgeInsets.symmetric(vertical: 15, horizontal: 12),
                   child: LongButton(
                       handler: () => Navigator.of(context).pushNamed(
-                          DisputeTabs.routeName,
-                          arguments: {'initialIndex': 0}),
+                          VotingGuidelines.routeName,
+                          arguments: {'initialIndex': 2}),
                       buttonText: 'More',
                       isActive: true))
             ]))

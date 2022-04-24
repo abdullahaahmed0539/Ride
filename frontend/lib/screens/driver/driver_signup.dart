@@ -2,15 +2,15 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:frontend/api%20calls/Driver.dart';
-import 'package:frontend/providers/User.dart';
-import 'package:frontend/widgets/ui/LongButton.dart';
+import 'package:frontend/api%20calls/driver.dart';
+import 'package:frontend/providers/user.dart';
+import 'package:frontend/widgets/ui/long_button.dart';
 import 'package:frontend/widgets/ui/spinner.dart';
 import 'package:http/http.dart';
 import 'package:provider/provider.dart';
-import '../../models/User.dart';
+import '../../models/user.dart';
 import '../../services/user_alert.dart';
-import '../../widgets/ui/DarkTextField.dart';
+import '../../widgets/ui/dark_text_field.dart';
 import '../../widgets/ui/cnic_field.dart';
 
 class DriverSignup extends StatefulWidget {

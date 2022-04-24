@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/services/string_extension.dart';
-import 'package:frontend/widgets/ui/TextualButton.dart';
 
 class DriverDetails extends StatelessWidget {
   final String firstName, lastName, carModel, color, registrationNumber;

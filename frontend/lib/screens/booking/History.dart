@@ -2,16 +2,16 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:frontend/screens/booking/bookingDetail.dart';
+import 'package:frontend/screens/booking/booking_detail.dart';
 import 'package:frontend/services/user_alert.dart';
 import 'package:http/http.dart';
 import 'package:provider/provider.dart';
 
-import '../../api calls/Bookings.dart';
-import '../../models/User.dart';
-import '../../providers/App.dart';
-import '../../providers/User.dart';
-import '../../widgets/ui/RidesItem.dart';
+import '../../api calls/bookings.dart';
+import '../../models/user.dart';
+import '../../providers/app.dart';
+import '../../providers/user.dart';
+import '../../widgets/ui/rides_item.dart';
 
 class History extends StatefulWidget {
   final GlobalKey<ScaffoldState> scaffoldKey;

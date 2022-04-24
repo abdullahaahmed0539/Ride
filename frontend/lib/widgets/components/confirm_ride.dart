@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/global/global.dart';
 import 'package:frontend/services/map.dart';
-import 'package:frontend/widgets/ui/LongButton.dart';
+import 'package:frontend/widgets/ui/long_button.dart';
 import 'package:provider/provider.dart';
 
-import '../../providers/Location.dart';
+import '../../providers/location.dart';
 
 class ConfirmRide extends StatelessWidget {
   final Function searchDrivers;

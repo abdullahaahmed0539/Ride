@@ -1,13 +1,13 @@
 // ignore_for_file: file_names
 import 'package:flutter/material.dart';
-import 'package:frontend/screens/disputes/DisputeTabs.dart';
-import 'package:frontend/screens/Profile.dart';
-import 'package:frontend/screens/driver/DriverMapForRide.dart';
+import 'package:frontend/screens/disputes/dispute_tabs.dart';
+import 'package:frontend/screens/profile.dart';
+import 'package:frontend/screens/driver/driver_map_for_ride.dart';
 import 'package:provider/provider.dart';
-import '../../providers/App.dart';
-import '../../screens/booking/RiderBooking.dart';
-import '../../widgets/ui/CardButton.dart';
-import '../../screens/users/Wallet.dart';
+import '../../providers/app.dart';
+import '../../screens/booking/rider_booking.dart';
+import '../ui/card_button.dart';
+import '../../screens/users/wallet.dart';
 
 class NavigationMenu extends StatelessWidget {
   const NavigationMenu({Key? key}) : super(key: key);

@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:frontend/providers/App.dart';
-import 'package:frontend/providers/Booking.dart';
-import 'package:frontend/providers/Driver.dart';
-import 'package:frontend/providers/Location.dart';
+import 'package:frontend/providers/app.dart';
+import 'package:frontend/providers/booking.dart';
+import 'package:frontend/providers/driver.dart';
+import 'package:frontend/providers/location.dart';
 import 'package:frontend/services/routes.dart';
 import 'package:provider/provider.dart';
-import './screens/Home.dart';
-import 'screens/users/Login.dart';
-import './providers/User.dart';
+import 'screens/home.dart';
+import 'screens/users/login.dart';
+import 'providers/user.dart';
 
 
 void main() async {

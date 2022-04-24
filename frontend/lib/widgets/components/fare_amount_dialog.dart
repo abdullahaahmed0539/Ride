@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/providers/App.dart';
-import 'package:frontend/widgets/ui/LongButton.dart';
+import 'package:frontend/providers/app.dart';
+import 'package:frontend/widgets/ui/long_button.dart';
 import 'package:provider/provider.dart';
 
-import '../../screens/Rating.dart';
+import '../../screens/rating.dart';
 
 class FairCollectionDialog extends StatefulWidget {
   dynamic disputeCost;

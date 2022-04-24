@@ -4,24 +4,23 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:circular_countdown_timer/circular_countdown_timer.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:frontend/screens/users/UpdatePhoneNumber.dart';
+import 'package:frontend/screens/users/update_phone_number.dart';
 import 'package:frontend/services/user_alert.dart';
 import 'package:frontend/widgets/ui/spinner.dart';
 import 'package:http/http.dart';
 import 'package:intl_phone_field/phone_number.dart';
 import '../../services/utilities.dart';
-import '../Home.dart';
-import 'Register.dart';
-import 'package:frontend/widgets/ui/CountDown.dart';
-import 'package:frontend/widgets/ui/LongButton.dart';
+import '../home.dart';
+import 'register.dart';
+import 'package:frontend/widgets/ui/count_down.dart';
+import 'package:frontend/widgets/ui/long_button.dart';
 import 'package:provider/provider.dart';
-import '../../providers/User.dart';
-import '../../widgets/ui/PinCodeField.dart';
-import 'Login.dart';
-import '../../api calls/User.dart';
-// ignore: library_prefixes
-import '../../models/User.dart' as CustomUser;
-import '../Profile.dart';
+import '../../providers/user.dart';
+import '../../widgets/ui/pin_code_field.dart';
+import 'login.dart';
+import '../../api calls/user.dart';
+import '../../models/user.dart' as custom_user;
+import '../profile.dart';
 
 class Verification extends StatefulWidget {
   static const routeName = '/verification';
@@ -146,7 +145,7 @@ class _VerificationState extends State<Verification> {
   }
 
   void updatePhoneNumberHandler(PhoneNumber phoneNumber) async {
-    CustomUser.User user =
+    custom_user.User user =
         Provider.of<UserProvider>(context, listen: false).user;
     //http to update
     Response response =

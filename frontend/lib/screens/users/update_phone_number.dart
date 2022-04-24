@@ -2,15 +2,15 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:frontend/api%20calls/User.dart';
+import 'package:frontend/api%20calls/user.dart';
 import 'package:frontend/services/user_alert.dart';
 import 'package:http/http.dart';
 import 'package:intl_phone_field/country_picker_dialog.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:intl_phone_field/phone_number.dart';
 
-import '../../widgets/ui/LongButton.dart';
-import 'Verification.dart';
+import '../../widgets/ui/long_button.dart';
+import 'verification.dart';
 
 class UpdatePhoneNumber extends StatefulWidget {
   static const routeName = '/update_phone_number';

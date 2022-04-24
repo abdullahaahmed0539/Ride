@@ -5,7 +5,7 @@ import 'package:intl_phone_field/phone_number.dart';
 import 'package:provider/provider.dart';
 import '../services/string_extension.dart';
 import '../services/utilities.dart';
-import '../providers/App.dart';
+import '../providers/app.dart';
 
 class User {
   String? _id,

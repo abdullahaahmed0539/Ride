@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/models/Directions.dart';
+import 'package:frontend/models/directions.dart';
 
 class LocationProvider extends ChangeNotifier {
   Directions? _userPickupLocation;

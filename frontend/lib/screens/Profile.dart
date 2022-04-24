@@ -2,24 +2,24 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:frontend/api%20calls/Driver.dart';
-import 'package:frontend/models/User.dart';
-import 'package:frontend/providers/App.dart';
-import 'package:frontend/providers/Driver.dart';
-import 'package:frontend/providers/User.dart';
-import 'package:frontend/screens/disputes/DisputeTabs.dart';
+import 'package:frontend/api%20calls/driver.dart';
+import 'package:frontend/models/user.dart';
+import 'package:frontend/providers/app.dart';
+import 'package:frontend/providers/driver.dart';
+import 'package:frontend/providers/user.dart';
+import 'package:frontend/screens/disputes/dispute_tabs.dart';
 import 'package:frontend/screens/driver/driver_signup.dart';
-import 'package:frontend/screens/users/PersonalInformation.dart';
-import 'package:frontend/screens/users/Wallet.dart';
+import 'package:frontend/screens/users/personal_information.dart';
+import 'package:frontend/screens/users/wallet.dart';
 import 'package:frontend/services/user_alert.dart';
-import 'package:frontend/widgets/components/listItemA.dart';
+import 'package:frontend/widgets/components/list_item_A.dart';
 
 import 'package:http/http.dart';
 import 'package:provider/provider.dart';
 
-import 'Home.dart';
-import 'booking/ActivitiesTab.dart';
-import 'users/Login.dart';
+import 'home.dart';
+import 'booking/activities_tab.dart';
+import 'users/login.dart';
 
 class Profile extends StatefulWidget {
   static const routeName = '/profile';

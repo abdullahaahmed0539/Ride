@@ -1,14 +1,13 @@
 // ignore_for_file: file_names
 import 'package:flutter/material.dart';
-import 'package:frontend/providers/App.dart';
-import 'package:frontend/screens/disputes/DisputeGuidelines.dart';
-import 'package:frontend/screens/driver/DriverMapForRide.dart';
-import 'package:frontend/widgets/ui/LongButton.dart';
-import 'package:frontend/widgets/ui/TextualButton.dart';
+import 'package:frontend/providers/app.dart';
+import 'package:frontend/screens/disputes/dispute_guidelines.dart';
+import 'package:frontend/screens/driver/driver_map_for_ride.dart';
+import 'package:frontend/widgets/ui/long_button.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:provider/provider.dart';
 
-import 'Home.dart';
+import 'home.dart';
 
 class Rating extends StatefulWidget {
   static const routeName = '/rating';

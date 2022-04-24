@@ -1,6 +1,6 @@
 // ignore_for_file: file_names
 import 'package:flutter/material.dart';
-import 'package:frontend/widgets/ui/TextualButton.dart';
+import 'package:frontend/widgets/ui/textual_button.dart';
 
 class CardItem extends StatelessWidget {
   final String heading;

@@ -5,17 +5,16 @@ import 'package:flutter_geofire/flutter_geofire.dart';
 import 'package:frontend/api%20calls/push_notification.dart';
 import 'package:frontend/global/configuration.dart';
 import 'package:frontend/global/global.dart';
-import 'package:frontend/models/DirectionDetailsInfo.dart';
-import 'package:frontend/models/Directions.dart';
-import 'package:frontend/models/Driver.dart';
-import 'package:frontend/providers/Location.dart';
+import 'package:frontend/models/direction_detais_info.dart';
+import 'package:frontend/models/directions.dart';
+import 'package:frontend/models/driver.dart';
+import 'package:frontend/providers/location.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:http/http.dart';
 import 'package:provider/provider.dart';
 
-import '../api calls/Map.dart';
-import '../providers/Driver.dart';
+import '../api calls/map.dart';
+import '../providers/driver.dart';
 
 Future<String> searchLocationFromGeographicCoOrdinated(
     Position position, context) async {

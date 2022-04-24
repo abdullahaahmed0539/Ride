@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import 'TextualButton.dart';
+import 'textual_button.dart';
 
 class RidesItem extends StatelessWidget {
   final String pickup;

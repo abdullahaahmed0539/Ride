@@ -1,7 +1,7 @@
 // ignore_for_file: file_names
 import 'package:flutter/material.dart';
-import 'package:frontend/screens/booking/Scheduled.dart';
-import 'package:frontend/screens/booking/History.dart';
+import 'package:frontend/screens/booking/scheduled.dart';
+import 'package:frontend/screens/booking/history.dart';
 
 class Activities extends StatefulWidget {
   static const routeName = '/activities';

@@ -1,9 +1,9 @@
 // ignore_for_file: file_names
 import 'package:flutter/material.dart';
-import 'package:frontend/widgets/ui/DarkTextField.dart';
-import '../../widgets/ui/LongButton.dart';
-import '../../widgets/ui/TextArea.dart';
-import '../Home.dart';
+import 'package:frontend/widgets/ui/dark_text_field.dart';
+import '../../widgets/ui/long_button.dart';
+import '../../widgets/ui/text_area.dart';
+import '../home.dart';
 
 class PublishDispute extends StatefulWidget {
   static const routeName = '/publish_dispute';

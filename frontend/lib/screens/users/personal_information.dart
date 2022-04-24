@@ -1,13 +1,13 @@
 // ignore_for_file: file_names
 import 'package:flutter/material.dart';
-import 'package:frontend/screens/users/UpdateEmail.dart';
-import 'package:frontend/screens/users/UpdateName.dart';
-import 'package:frontend/screens/users/UpdatePhoneNumber.dart';
+import 'package:frontend/screens/users/update_email.dart';
+import 'package:frontend/screens/users/update_name.dart';
+import 'package:frontend/screens/users/update_phone_number.dart';
 import 'package:frontend/widgets/components/listItemB.dart';
 import 'package:provider/provider.dart';
 
-import '../../models/User.dart';
-import '../../providers/User.dart';
+import '../../models/user.dart';
+import '../../providers/user.dart';
 
 class PersonalInformation extends StatelessWidget {
   static const routeName = '/personal_information';

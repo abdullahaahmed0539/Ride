@@ -2,18 +2,18 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:frontend/api%20calls/User.dart';
-import 'package:frontend/providers/User.dart';
+import 'package:frontend/api%20calls/user.dart';
+import 'package:frontend/providers/user.dart';
 import 'package:frontend/services/user_alert.dart';
 import 'package:frontend/widgets/ui/spinner.dart';
-import 'package:frontend/widgets/ui/DarkTextField.dart';
-import 'package:frontend/widgets/ui/LongButton.dart';
+import 'package:frontend/widgets/ui/dark_text_field.dart';
+import 'package:frontend/widgets/ui/long_button.dart';
 import 'package:http/http.dart';
 import 'package:provider/provider.dart';
 
-import '../../models/User.dart';
-import 'Login.dart';
-import '../Profile.dart';
+import '../../models/user.dart';
+import 'login.dart';
+import '../profile.dart';
 
 class UpdateName extends StatefulWidget {
   static const routeName = '/update_name';

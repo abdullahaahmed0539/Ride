@@ -7,13 +7,13 @@ import 'package:provider/provider.dart';
 import 'package:validators/validators.dart';
 
 import '../../services/utilities.dart';
-import '../Home.dart';
-import '../../widgets/ui/DarkTextField.dart';
-import '../../widgets/ui/LongButton.dart';
-import '../../api calls/User.dart';
-import '../../providers/User.dart';
+import '../home.dart';
+import '../../widgets/ui/dark_text_field.dart';
+import '../../widgets/ui/long_button.dart';
+import '../../api calls/user.dart';
+import '../../providers/user.dart';
 import '../../services/user_alert.dart';
-import 'Login.dart';
+import 'login.dart';
 
 class Register extends StatefulWidget {
   static const routeName = '/register';
