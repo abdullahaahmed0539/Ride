@@ -1,4 +1,3 @@
-// ignore_for_file: file_names
 import 'package:frontend/models/rider_ride_request_info.dart';
 
 class Booking {

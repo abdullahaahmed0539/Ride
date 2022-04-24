@@ -1,4 +1,3 @@
-// ignore_for_file: file_names
 import 'package:intl_phone_field/phone_number.dart';
 import 'package:http/http.dart';
 import 'dart:convert';

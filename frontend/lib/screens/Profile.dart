@@ -1,4 +1,3 @@
-// ignore_for_file: file_names
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -12,7 +11,7 @@ import 'package:frontend/screens/driver/driver_signup.dart';
 import 'package:frontend/screens/users/personal_information.dart';
 import 'package:frontend/screens/users/wallet.dart';
 import 'package:frontend/services/user_alert.dart';
-import 'package:frontend/widgets/components/list_item_A.dart';
+import 'package:frontend/widgets/components/list_item_a.dart';
 
 import 'package:http/http.dart';
 import 'package:provider/provider.dart';

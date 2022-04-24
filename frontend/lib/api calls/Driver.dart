@@ -1,5 +1,3 @@
-// ignore_for_file: file_names
-
 import 'package:frontend/global/configuration.dart';
 import 'package:http/http.dart';
 import 'package:intl_phone_field/phone_number.dart';

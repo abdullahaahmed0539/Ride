@@ -1,9 +1,8 @@
-// ignore_for_file: file_names
 import 'package:flutter/material.dart';
 import 'package:frontend/screens/users/update_email.dart';
 import 'package:frontend/screens/users/update_name.dart';
 import 'package:frontend/screens/users/update_phone_number.dart';
-import 'package:frontend/widgets/components/listItemB.dart';
+import 'package:frontend/widgets/components/list_item_B.dart';
 import 'package:provider/provider.dart';
 
 import '../../models/user.dart';

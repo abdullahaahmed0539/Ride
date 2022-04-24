@@ -1,4 +1,3 @@
-// ignore_for_file: file_names
 import 'package:flutter/material.dart';
 import 'package:frontend/screens/users/verification.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';

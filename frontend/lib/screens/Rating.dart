@@ -1,4 +1,3 @@
-// ignore_for_file: file_names
 import 'package:flutter/material.dart';
 import 'package:frontend/providers/app.dart';
 import 'package:frontend/screens/disputes/dispute_guidelines.dart';
