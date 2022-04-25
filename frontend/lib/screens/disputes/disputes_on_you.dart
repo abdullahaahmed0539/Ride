@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:frontend/api%20calls/dispute.dart';
+import 'package:frontend/api%20calls/disputes.dart';
 import 'package:http/http.dart';
 import 'package:provider/provider.dart';
 

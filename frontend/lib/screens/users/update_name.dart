@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:frontend/api%20calls/user.dart';
+import 'package:frontend/api%20calls/users.dart';
 import 'package:frontend/providers/user.dart';
 import 'package:frontend/services/user_alert.dart';
 import 'package:frontend/widgets/ui/spinner.dart';

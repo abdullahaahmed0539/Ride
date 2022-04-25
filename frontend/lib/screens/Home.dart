@@ -8,7 +8,7 @@ import '../widgets/components/voting_shortcut.dart';
 import 'package:http/http.dart';
 import 'package:provider/provider.dart';
 import 'dart:convert';
-import '../api calls/dispute.dart';
+import '../api calls/disputes.dart';
 import '../models/user.dart';
 import '../providers/user.dart';
 
@@ -22,7 +22,6 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
-  String appMode = 'rider';
   List<dynamic> disputesOnMe = [];
   List<dynamic> disputesByMe = [];
   List<dynamic> otherDisputes = [];
@@ -37,12 +36,9 @@ class _HomeState extends State<Home> {
   }
 
   void onStart() {
-    appMode = Provider.of<AppProvider>(context, listen: false).app.getAppMode();
-    if (appMode == 'rider') {
-      fetchDisputeOnYouFromServer();
-      fetchDisputeByYouFromServer();
-      fetchOtherDisputesFromServer();
-    }
+    fetchDisputeOnYouFromServer();
+    fetchDisputeByYouFromServer();
+    fetchOtherDisputesFromServer();
   }
 
   Future fetchDisputeOnYouFromServer() async {
@@ -121,11 +117,9 @@ class _HomeState extends State<Home> {
         ),
         body: RefreshIndicator(
           onRefresh: () async {
-            if (appMode == 'rider') {
-              fetchDisputeByYouFromServer();
-              fetchDisputeOnYouFromServer();
-              fetchOtherDisputesFromServer();
-            }
+            fetchDisputeByYouFromServer();
+            fetchDisputeOnYouFromServer();
+            fetchOtherDisputesFromServer();
           },
           child: SingleChildScrollView(
             physics: const AlwaysScrollableScrollPhysics(),

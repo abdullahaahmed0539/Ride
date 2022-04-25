@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:frontend/api%20calls/trips.dart';
-import 'package:frontend/api%20calls/driver.dart';
+import 'package:frontend/api%20calls/drivers.dart';
 import 'package:frontend/services/user_alert.dart';
 import 'package:frontend/widgets/components/booking_detail_block.dart';
 import 'package:frontend/widgets/components/cost_breakdown.dart';

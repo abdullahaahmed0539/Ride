@@ -78,3 +78,19 @@ Future<Response> createDriverOnBoardingRequest(
           }));
   return response;
 }
+
+Future<Response> addDriverRating(String riderId, String driverId, double newRatingVal, String bookingId, PhoneNumber phoneNumber, String token) async {
+  final response = await patch(Uri.parse('$url/add_rating'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer $token'
+      },
+      body: jsonEncode(<String, dynamic>{
+        'phoneNumber': '${phoneNumber.countryCode}${phoneNumber.number}',
+        'riderId': riderId,
+        'driverId':driverId,
+        'newRatingVal': newRatingVal,
+        'bookingId': bookingId
+      }));
+  return response;
+}

@@ -1,12 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/api%20calls/drivers.dart';
+import 'package:frontend/api%20calls/users.dart';
 import 'package:frontend/providers/app.dart';
+import 'package:frontend/providers/user.dart';
 import 'package:frontend/screens/disputes/dispute_guidelines.dart';
 import 'package:frontend/screens/driver/driver_map_for_ride.dart';
+import 'package:frontend/services/user_alert.dart';
 import 'package:frontend/widgets/ui/long_button.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:http/http.dart';
 import 'package:provider/provider.dart';
 
-import 'home.dart';
+import '../../models/booking.dart';
+import '../../models/user.dart';
+import '../../providers/booking.dart';
+import '../home.dart';
 
 class Rating extends StatefulWidget {
   static const routeName = '/rating';
@@ -17,12 +25,13 @@ class Rating extends StatefulWidget {
 }
 
 class _RatingState extends State<Rating> {
-  int rating = 1;
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
+  double rating = 1;
   bool ratingChanged = false;
 
-  void setRating(double rating) {
+  void setRating(double newRatingVal) {
     setState(() {
-      rating = rating;
+      rating = newRatingVal;
     });
   }
 
@@ -32,21 +41,50 @@ class _RatingState extends State<Rating> {
     });
   }
 
-  void onSubmit() {
-    //http request for submitting rating
-
-    if (Provider.of<AppProvider>(context, listen: false).app.getAppMode() ==
-        'driver') {
-      Navigator.of(context).pushReplacementNamed(Home.routeName);
-      Navigator.of(context).pushNamed(DriverMapForRide.routeName);
-    } else {
-      Navigator.of(context).pushReplacementNamed(Home.routeName);
+  void onSubmit() async {
+    Response response = await addRating();
+    addRatingResponseHandler(response);
+    if (response.statusCode == 201) {
+      if (Provider.of<AppProvider>(context, listen: false).app.getAppMode() ==
+          'driver') {
+        Navigator.of(context).pushReplacementNamed(Home.routeName);
+        Navigator.of(context).pushNamed(DriverMapForRide.routeName);
+      } else {
+        Navigator.of(context).pushReplacementNamed(Home.routeName);
+      }
     }
   }
 
-  void onRaiseDispute() {
-    //http request for submitting rating
-    Navigator.of(context).pushNamed(DisputeGuidelines.routeName);
+  void onRaiseDispute() async {
+    
+    Response response = await addRating();
+    addRatingResponseHandler(response);
+    if (response.statusCode == 201) {
+      Navigator.of(context).pushNamed(DisputeGuidelines.routeName);
+    }
+  }
+
+  void addRatingResponseHandler(Response response) {
+    if (response.statusCode != 201 && response.statusCode != 401) {
+      snackBar(scaffoldKey, 'Internal server error.');
+    }
+    if (response.statusCode == 401) {
+      snackBar(scaffoldKey, 'You are not allowed to add to rate.');
+    }
+  }
+
+  Future<Response>addRating() async {
+    User user = Provider.of<UserProvider>(context, listen: false).user;
+    Booking booking =
+        Provider.of<BookingProvider>(context, listen: false).booking;
+    Response? response;
+    Provider.of<AppProvider>(context, listen: false).app.getAppMode() ==
+            'driver'
+        ? response = await addUserRating(booking.riderId, booking.driverId,
+            rating, booking.id, user.phoneNumber, user.token)
+        : response = await addDriverRating(booking.riderId, booking.driverId,
+            rating, booking.id, user.phoneNumber, user.token);
+    return response;
   }
 
   @override
@@ -54,6 +92,7 @@ class _RatingState extends State<Rating> {
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
+        key: scaffoldKey,
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
           title: const Text('Rating'),
@@ -88,9 +127,9 @@ class _RatingState extends State<Rating> {
                       Icons.star,
                       color: Theme.of(context).primaryColor,
                     ),
-                    onRatingUpdate: (rating) {
+                    onRatingUpdate: (newRatingVal) {
                       setRatingChanged(true);
-                      setRating(rating);
+                      setRating(newRatingVal);
                     },
                   ),
                 ),
@@ -101,9 +140,11 @@ class _RatingState extends State<Rating> {
                     style: Theme.of(context).textTheme.titleSmall,
                   ),
                 ),
-                const SizedBox(height: 20,),
+                const SizedBox(
+                  height: 20,
+                ),
                 TextButton(
-                  onPressed: () {},
+                  onPressed: onRaiseDispute,
                   child: Text(
                     'Raise a dispute for voting',
                     style: TextStyle(

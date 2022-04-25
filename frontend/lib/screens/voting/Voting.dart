@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:frontend/api%20calls/dispute.dart';
+import 'package:frontend/api%20calls/disputes.dart';
 import 'package:frontend/screens/disputes/dispute_tabs.dart';
 import 'package:frontend/widgets/ui/text_view.dart';
 import 'package:frontend/widgets/ui/spinner.dart';

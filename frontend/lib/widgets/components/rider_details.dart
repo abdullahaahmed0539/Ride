@@ -221,26 +221,14 @@ class _RiderDetailsState extends State<RiderDetails> {
                 ),
 
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    ElevatedButton.icon(
-                        style: ElevatedButton.styleFrom(primary: Colors.red),
-                        onPressed: () {},
-                        icon: const Icon(
-                          Icons.cancel,
-                          color: Colors.white,
-                          size: 22,
-                        ),
-                        label: const Text('Cancel')),
-                    const SizedBox(
-                      width: 8,
-                    ),
                     ElevatedButton.icon(
                         style: ElevatedButton.styleFrom(
                             primary: Theme.of(context).primaryColor),
                         onPressed: () async {
-                          // await url_launcher.launchUrl(
-                          //     Uri.parse('tel://${widget.driverPhoneNumber!}'));
+                          await url_launcher.launchUrl(
+                              Uri.parse('tel://${widget.riderRideRequestInformation!.riderPhoneNumber}'));
                         },
                         icon: const Icon(
                           Icons.phone_android,

@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_geofire/flutter_geofire.dart';
-import 'package:frontend/api%20calls/driver.dart';
+import 'package:frontend/api%20calls/drivers.dart';
 import 'package:frontend/global/global.dart';
 import 'package:frontend/models/active_nearby_drivers.dart';
 import 'package:frontend/providers/booking.dart';
@@ -482,12 +482,10 @@ class _RiderBooking extends State<RiderBooking> {
         }
       }
       if ((eventSnap.snapshot.value as Map)['driverPhone'] != null) {
-        
         if (mounted) {
           setState(() {
             driverPhoneNumber =
-                (eventSnap.snapshot.value as Map)['driverPhone']
-                    .toString();
+                (eventSnap.snapshot.value as Map)['driverPhone'].toString();
           });
         }
       }
@@ -677,7 +675,7 @@ class _RiderBooking extends State<RiderBooking> {
               .child('rideRequestStatus')
               .onValue
               .listen((eventSnapshot) {
-            if (eventSnapshot.snapshot.value == 'idle') {
+            if (eventSnapshot.snapshot.value == 'driverCancelled') {
               Fluttertoast.showToast(
                   msg:
                       'Driver has cancelled your request. Choose another driver.',
@@ -738,6 +736,18 @@ class _RiderBooking extends State<RiderBooking> {
         driversList.add(driverdata);
       }
     }
+  }
+
+  cancelRequest() {
+    setState(() {
+      displayConfirmWidget = true;
+    });
+    FirebaseDatabase.instance
+        .ref()
+        .child('drivers')
+        .child(chosenDriverId!)
+        .child('rideRequestStatus')
+        .set('userCancelled');
   }
 
   @override
@@ -820,11 +830,13 @@ class _RiderBooking extends State<RiderBooking> {
                               editTripDetails: removeMarkers,
                             ),
                           )
-                    : const Positioned(
+                    : Positioned(
                         bottom: 10,
                         left: 0,
                         right: 0,
-                        child: WaitingForDriverUI())
+                        child: WaitingForDriverUI(
+                          cancelRequest: cancelRequest,
+                        ))
                 : Positioned(
                     bottom: 10,
                     left: 0,

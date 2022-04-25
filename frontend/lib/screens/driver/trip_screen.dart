@@ -160,7 +160,6 @@ class _NewTripScreenState extends State<NewTripScreen> {
   }
 
   void getDriversLocationUpdatesAtRealTime() {
-    LatLng oldLatLng = LatLng(0, 0);
     streamSubscriptionDriverLivePosition =
         Geolocator.getPositionStream().listen((Position position) {
       if (mounted) {
@@ -188,7 +187,6 @@ class _NewTripScreenState extends State<NewTripScreen> {
               (element) => element.markerId.value == 'animatedMarker');
           setOfMarkers.add(driverAnimatedMarker);
         });
-        oldLatLng = latLngLiveDriverPosition;
         updateDurationTimeInRealTime();
 
         Map driverLatLngMap = {
@@ -403,9 +401,8 @@ class _NewTripScreenState extends State<NewTripScreen> {
             GoogleMap(
               padding: EdgeInsets.only(bottom: bottomPaddingOfMap),
               mapType: MapType.normal,
-              // myLocationEnabled: true,
               zoomGesturesEnabled: true,
-              zoomControlsEnabled: true,
+              zoomControlsEnabled: false,
               initialCameraPosition: _kGooglePlex,
               markers: setOfMarkers,
               circles: setOfCircles,

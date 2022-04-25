@@ -1,8 +1,9 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:frontend/api%20calls/dispute.dart';
+import 'package:frontend/api%20calls/disputes.dart';
 import 'package:frontend/screens/disputes/dispute_tabs.dart';
+import 'package:frontend/screens/home.dart';
 import 'package:frontend/services/user_alert.dart';
 import 'package:frontend/widgets/ui/grey_block.dart';
 import 'package:frontend/widgets/ui/long_button.dart';
@@ -85,8 +86,7 @@ class _DisputeDetailState extends State<DisputeDetail> {
     }
 
     if (response.statusCode == 201 || response.statusCode == 204) {
-      Navigator.of(context).pop();
-      Navigator.of(context).pop();
+      Navigator.of(context).pushNamedAndRemoveUntil(Home.routeName, (route) => false);
       Navigator.of(context)
           .pushNamed(DisputeTabs.routeName, arguments: {'initialIndex': 1});
           

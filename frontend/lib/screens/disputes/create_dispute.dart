@@ -1,5 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/api%20calls/disputes.dart';
+import 'package:frontend/models/booking.dart';
+import 'package:frontend/models/user.dart';
+import 'package:frontend/providers/app.dart';
+import 'package:frontend/providers/booking.dart';
+import 'package:frontend/providers/user.dart';
+import 'package:frontend/services/user_alert.dart';
 import 'package:frontend/widgets/ui/dark_text_field.dart';
+import 'package:http/http.dart';
+import 'package:provider/provider.dart';
 import '../../widgets/ui/long_button.dart';
 import '../../widgets/ui/text_area.dart';
 import '../home.dart';
@@ -17,6 +26,7 @@ class _PublishDisputeState extends State<PublishDispute> {
   String shortDescription = '';
   String description = '';
   bool agreed = false;
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
 
   void setSubject(String val) {
     setState(() {
@@ -36,10 +46,45 @@ class _PublishDisputeState extends State<PublishDispute> {
     });
   }
 
-  void onSubmit() {
-    //http request for submission
-    Navigator.of(context)
-        .pushNamedAndRemoveUntil(Home.routeName, (route) => false);
+  void onSubmit() async {
+    User user = Provider.of<UserProvider>(context, listen: false).user;
+    Booking booking =
+        Provider.of<BookingProvider>(context, listen: false).booking;
+    String appMode =
+        Provider.of<AppProvider>(context, listen: false).app.getAppMode();
+    if (appMode == 'driver') {
+      Response response = await createDispute(
+          user.id,
+          booking.riderId,
+          subject,
+          shortDescription,
+          description,
+          'driver',
+          user.phoneNumber,
+          user.token);
+
+      createDisputeResponseHandler(response);
+    } else {
+      Response response = await createDispute(
+          user.id,
+          booking.driverId,
+          subject,
+          shortDescription,
+          description,
+          'rider',
+          user.phoneNumber,
+          user.token);
+      createDisputeResponseHandler(response);
+    }
+  }
+
+  createDisputeResponseHandler(Response response) {
+    if (response.statusCode == 201) {
+     Navigator.of(context)
+         .pushNamedAndRemoveUntil(Home.routeName, (route) => false);
+    } else {
+      snackBar(scaffoldKey, 'Error occured. Please try again.');
+    }
   }
 
   @override
@@ -47,6 +92,7 @@ class _PublishDisputeState extends State<PublishDispute> {
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
+        key: scaffoldKey,
         resizeToAvoidBottomInset: false,
         backgroundColor: Theme.of(context).backgroundColor,
         appBar: AppBar(
@@ -77,11 +123,10 @@ class _PublishDisputeState extends State<PublishDispute> {
                   Container(
                     margin: const EdgeInsets.only(top: 15),
                     child: DarkTextField(
-                      label: 'Short description',
-                      placeholder: 'Enter short description',
-                      onChangeHandler: (val) => setShortDescription(val),
-                      keyboardType: TextInputType.text
-                    ),
+                        label: 'Short description',
+                        placeholder: 'Enter short description',
+                        onChangeHandler: (val) => setShortDescription(val),
+                        keyboardType: TextInputType.text),
                   ),
                   Container(
                     margin: const EdgeInsets.only(top: 15),
@@ -89,8 +134,7 @@ class _PublishDisputeState extends State<PublishDispute> {
                       radius: 5,
                       label: 'Description',
                       placeholder: 'Please Enter the details of the event.',
-                      onChangeHandler: (val) =>
-                          setDescription(val),
+                      onChangeHandler: (val) => setDescription(val),
                     ),
                   ),
                   Container(
@@ -116,7 +160,10 @@ class _PublishDisputeState extends State<PublishDispute> {
                           ))
                         ],
                       )),
-                  agreed &&  subject != '' && shortDescription != ''  && description != ''
+                  agreed &&
+                          subject != '' &&
+                          shortDescription != '' &&
+                          description != ''
                       ? Container(
                           margin: const EdgeInsets.only(top: 20, bottom: 40),
                           child: LongButton(

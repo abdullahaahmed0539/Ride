@@ -44,6 +44,8 @@ class Booking {
   String get id => _id!;
   String get pickup => _pickup!;
   String get dropoff => _dropoff!;
+  String get driverId => _driverId!;
+  String get riderId => _riderId!;
   String get status => _status!;
   RiderRideRequestInformation get riderRideRequestInformation =>
       _riderRideRequestInformation!;

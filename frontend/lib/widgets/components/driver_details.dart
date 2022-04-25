@@ -37,7 +37,6 @@ class DriverDetails extends StatelessWidget {
                   'Driver Information',
                   style: Theme.of(context).textTheme.titleMedium,
                 ),
-                // TextualButton(handler: () {}, buttonText: 'Raise a dispute')
               ],
             ),
             Container(

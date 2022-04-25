@@ -6,7 +6,7 @@ import 'package:frontend/widgets/ui/card_item.dart';
 import 'package:frontend/widgets/ui/spinner.dart';
 import 'package:http/http.dart';
 import 'package:provider/provider.dart';
-import '../../api calls/dispute.dart';
+import '../../api calls/disputes.dart';
 import '../../models/user.dart';
 import '../../providers/user.dart';
 

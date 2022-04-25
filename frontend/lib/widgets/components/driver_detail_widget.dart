@@ -89,17 +89,7 @@ class _DriverDetailWidgetState extends State<DriverDetailWidget> {
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                ElevatedButton.icon(
-                    style: ElevatedButton.styleFrom(
-                        primary: Colors.red),
-                    onPressed: (){},
-                    icon: const Icon(
-                      Icons.cancel,
-                      color: Colors.white,
-                      size: 22,
-                    ),
-                    label: const Text('Cancel')),
-                    const SizedBox(width: 8,),
+               
                 ElevatedButton.icon(
                     style: ElevatedButton.styleFrom(
                         primary: Theme.of(context).primaryColor),

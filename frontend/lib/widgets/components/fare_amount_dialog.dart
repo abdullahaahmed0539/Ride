@@ -3,7 +3,7 @@ import 'package:frontend/providers/app.dart';
 import 'package:frontend/widgets/ui/long_button.dart';
 import 'package:provider/provider.dart';
 
-import '../../screens/rating.dart';
+import '../../screens/booking/rating.dart';
 
 class FairCollectionDialog extends StatefulWidget {
   dynamic disputeCost;

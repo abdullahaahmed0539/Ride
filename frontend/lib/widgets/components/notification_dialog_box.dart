@@ -175,7 +175,8 @@ class _NotificationDialogBoxState extends State<NotificationDialogBox> {
                     style: ElevatedButton.styleFrom(primary: Colors.red),
                     onPressed: () {
                       Driver driver =
-                          Provider.of<DriverProvider>(context, listen: false).driver;
+                          Provider.of<DriverProvider>(context, listen: false)
+                              .driver;
                       FirebaseDatabase.instance
                           .ref()
                           .child('allRideRequests')
@@ -188,12 +189,22 @@ class _NotificationDialogBoxState extends State<NotificationDialogBox> {
                             .child('drivers')
                             .child(driver.driverId)
                             .child('rideRequestStatus')
-                            .set('idle')
-                            .then((value) => Fluttertoast.showToast(
-                                msg: 'Request rejected',
-                                backgroundColor: Colors.black,
-                                timeInSecForIosWeb: 5,
-                                gravity: ToastGravity.TOP));
+                            .once()
+                            .then((statusVal) {
+                          if (statusVal.snapshot.value != 'userCancelled') {
+                            FirebaseDatabase.instance
+                                .ref()
+                                .child('drivers')
+                                .child(driver.driverId)
+                                .child('rideRequestStatus')
+                                .set('driverCancelled')
+                                .then((value) => Fluttertoast.showToast(
+                                    msg: 'Request rejected',
+                                    backgroundColor: Colors.black,
+                                    timeInSecForIosWeb: 5,
+                                    gravity: ToastGravity.TOP));
+                          }
+                        });
                       });
 
                       audioPlayer.stop();

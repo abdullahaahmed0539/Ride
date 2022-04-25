@@ -50,14 +50,15 @@ Future<Response> fetchMyDisputes(
 
 Future<Response> fetchDisputesForVotingBrief(
     String userId, PhoneNumber phoneNumber, String token) async {
-  final response = await post(Uri.parse('$url/disputes_available_for_voting_brief/$userId'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-        'Authorization': 'Bearer $token'
-      },
-      body: jsonEncode(<String, String>{
-        'phoneNumber': '${phoneNumber.countryCode}${phoneNumber.number}',
-      }));
+  final response =
+      await post(Uri.parse('$url/disputes_available_for_voting_brief/$userId'),
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+            'Authorization': 'Bearer $token'
+          },
+          body: jsonEncode(<String, String>{
+            'phoneNumber': '${phoneNumber.countryCode}${phoneNumber.number}',
+          }));
   return response;
 }
 
@@ -125,6 +126,32 @@ Future<Response> addClaim(String disputeId, String defendentsClaim,
         'disputeId': disputeId,
         'userId': userId,
         'defendentsClaim': defendentsClaim
+      }));
+  return response;
+}
+
+Future<Response> createDispute(
+    String initiatorId,
+    String defenderId,
+    String subject,
+    String shortDescription,
+    String initiatorsClaim,
+    String disputeBy,
+    PhoneNumber phoneNumber,
+    String token) async {
+  final response = await post(Uri.parse('$url/create_dispute'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer $token'
+      },
+      body: jsonEncode(<String, String>{
+        'phoneNumber': '${phoneNumber.countryCode}${phoneNumber.number}',
+        'initiatorId': initiatorId,
+        'defenderId': defenderId,
+        'subject': subject,
+        'shortDescription': shortDescription,
+        'initiatorsClaim': initiatorsClaim,
+        'disputeBy': disputeBy
       }));
   return response;
 }

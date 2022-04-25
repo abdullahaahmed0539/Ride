@@ -12,7 +12,7 @@ import '../screens/home.dart';
 import '../screens/driver/trip_screen.dart';
 import '../screens/users/login.dart';
 import '../screens/disputes/create_dispute.dart';
-import '../screens/rating.dart';
+import '../screens/booking/rating.dart';
 import '../screens/users/verification.dart';
 import '../screens/users/register.dart';
 import '../screens/profile.dart';

@@ -9,7 +9,7 @@ import '../../services/utilities.dart';
 import '../home.dart';
 import '../../widgets/ui/dark_text_field.dart';
 import '../../widgets/ui/long_button.dart';
-import '../../api calls/user.dart';
+import '../../api calls/users.dart';
 import '../../providers/user.dart';
 import '../../services/user_alert.dart';
 import 'login.dart';
