@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.9;
 
 import "./rideToken.sol";
 import "./investorToken.sol";
@@ -9,6 +9,7 @@ contract Controller {
     rideToken coins;
     investorToken stocks;
     address watcher;
+    address owner;
     address vault;
     uint collatForDriver;
     mapping (address => uint) collatAmount;
@@ -24,9 +25,10 @@ contract Controller {
 
     disputeInfo[] disputeInfoHolder;
 
-    constructor() public {
+    constructor() {
+        owner = msg.sender;
         // coins = RideToken(<Address of ERC20 tokens>);
-        coins = RideToken(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2); //THIS IS WETH ADDRESS BEING USED FOR TESTING TILL OUR ERC20 IS READY 
+        coins = rideToken(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2); //THIS IS WETH ADDRESS BEING USED FOR TESTING TILL OUR ERC20 IS READY 
         // stocks = investorToken(<Address of ERC721 tokens>);
         stocks = investorToken(0x6409d3A686c2ab9b418Fb3CB5b4778509c5cADd6); //THIS IS HAPPY SHARK NFT ADDRESS BEING USED FOR TESTING TILL OUT ERC721 IS READY
         watcher = msg.sender;
@@ -52,31 +54,31 @@ contract Controller {
         // custom function code
     }
 
-    function collectCollatFromDriver(uint memory _amount) external { //At the moment, the collateral will be saved in the form of our Ride Coins
+    function collectCollatFromDriver(uint _amount) external { //At the moment, the collateral will be saved in the form of our Ride Coins
         require(_amount >= collatForDriver, "Insufficient amount.");
         coins.approve(vault, _amount);
         coins.transferFrom(msg.sender, vault, _amount);
-        collatAmount(msg.sender) = _amount;
+        collatAmount[msg.sender] = _amount;
 
     }
 
-    function giveAllCollatToDriver(address memory _driver) external {
-        require(driver == msg.sender, "Please specify your valid wallet address.");
-        coins.transferFrom(vault, msg.sender, collatAmount(msg.sender));
-        collatAmount(msg.sender) = 0;
+    function giveAllCollatToDriver(address _driver) external {
+        require(_driver == msg.sender, "Please specify your valid wallet address.");
+        coins.transferFrom(vault, msg.sender, collatAmount[msg.sender]);
+        collatAmount[msg.sender] = 0;
 
     }
 
-    function giveCollatToDriver(address memory _driver, uint memory _amount) external {
-        require(driver == msg.sender, "Please specify your valid wallet address.");
-        require(_amount <= collatAmount(msg.sender), "Insufficient amount held in balance.");
-        _amount = collatAmount(msg.sender) - _amount;
+    function giveCollatToDriver(address _driver, uint _amount) external {
+        require(_driver == msg.sender, "Please specify your valid wallet address.");
+        require(_amount <= collatAmount[msg.sender], "Insufficient amount held in balance.");
+        _amount = collatAmount[msg.sender] - _amount;
         coins.transferFrom(vault, msg.sender, _amount);
-        collatAmount(msg.sender) = 0;
+        collatAmount[msg.sender] = 0;
 
     }
 
-    function setAmountForCollat(uint memory _amount) private onlyOwner { //Allow admin to adjust the collateral amount
+    function setAmountForCollat(uint _amount) private onlyOwner { //Allow admin to adjust the collateral amount
         require(msg.sender == watcher, "Only the admin can set this value.");
         // collatForDriver = amount * (1 ether);
         collatForDriver = _amount;
@@ -86,8 +88,8 @@ contract Controller {
     //The Rider will use that number to begin the ride from his end. This way, the ride only starts when both the parties agree.
     //paramOne is the phone number of the Driver.
     function startRideDriver(string memory _paramOne) public returns (uint) { 
-        uint memory random = uint(keccak256(abi.encode(_paramOne, msg.sender, block.timestamp)));
-        driverToCode(msg.sender) = random;
+        uint random = uint(keccak256(abi.encode(_paramOne, msg.sender, block.timestamp)));
+        driverToCode[msg.sender] = random;
         return random;
     }
 
@@ -98,8 +100,8 @@ contract Controller {
         return 1;
     }
 
-    function startRideRider(uint memory _code, address memory _driver) public view returns (uint8){ //NEED TO ADD PRICE VARIABLE
-        require(driverToCode(_driver) == _code, "Driver has sent an invalid code.");
+    function startRideRider(uint _code, address _driver) public view returns (uint8){ //NEED TO ADD PRICE VARIABLE
+        require(driverToCode[_driver] == _code, "Driver has sent an invalid code.");
         return 1; // 1 means the session is good to go.
 
     }
@@ -118,35 +120,37 @@ contract Controller {
     //Extra info will be kept in the Database. This includes location and cost of ride.
     //Decide what to save on-chain. This may include voting related data.
 
-    function mintRideCoins(address memory _rider, uint memory _amount) public {
+    function mintRideCoins(address _rider, uint _amount) public {
         // require(_amount >= collatForDriver, "Insufficient amount.");
+        //call mint here
         coins.approve(vault, _amount);
         coins.transferFrom(_rider, vault, _amount);
-        userBalances(_rider) = _amount;
+        userBalances[_rider] = _amount;
     } 
 
-    function riderBalances(address memory _rider) public view returns (uint){
+    function riderBalances(address _rider) public view returns (uint){
         return riderBalances(_rider);
     }
 
-    function collectDisputeAmount(address memory _rider, uint memory _riderAmount, address memory _driver, uint memory _driverAmount) public returns (uint) {
-        require(_riderAmount >= userBalances(_rider), "User has insufficient funds.");
-        require(_driverAmount >= collatAmount(_driver), "Driver has insufficient collateral amount.");
-        userBalances(_rider) = userBalances(_rider) - _riderAmount;
-        collatAmount(_driver) = collatAmount(_driver) - _driverAmount;
-        uint index = disputeInfoHolder.push(_rider, _driver, (_riderAmount + _driverAmount), 0);
+    function collectDisputeAmount(address _rider, uint _riderAmount, address _driver, uint _driverAmount) public returns (uint) {
+        require(_riderAmount >= userBalances[_rider], "User has insufficient funds.");
+        require(_driverAmount >= collatAmount[_driver], "Driver has insufficient collateral amount.");
+        userBalances[_rider] = userBalances[_rider] - _riderAmount;
+        collatAmount[_driver] = collatAmount[_driver] - _driverAmount;
+        disputeInfoHolder[disputeInfoHolder.length] = disputeInfo(_rider, _driver, (_riderAmount + _driverAmount), 0);
+        uint index = disputeInfoHolder.length - 1;
         return index;
     }
 
-    function disputeResult(uint memory _riderVote, uint memory _driverVote, uint memory index) public {
-            disputeInfo resolvedDispute = disputeInfoHolder[index];
+    function disputeResult(uint _riderVote, uint _driverVote, uint index) public {
+            disputeInfo memory resolvedDispute = disputeInfoHolder[index];
         if (_riderVote > _driverVote) {
             // disputeInfo resolvedDispute = disputeInfoHolder[index];
-            userBalances(resolvedDispute.rider) = userBalances(resolvedDispute.rider) + resolvedDispute.disputeAmount;
+            userBalances[resolvedDispute.rider] = userBalances[resolvedDispute.rider] + resolvedDispute.disputeAmount;
             resolvedDispute.winner = 1;
         } else {
             // disputeInfo resolvedDispute = disputeInfoHolder[index];
-            collatAmount(resolvedDispute.driver) = collatAmount(resolvedDispute.driver) + resolvedDispute.disputeAmount;
+            collatAmount[resolvedDispute.driver] = collatAmount[resolvedDispute.driver] + resolvedDispute.disputeAmount;
             resolvedDispute.winner = 2;
         }
     }
