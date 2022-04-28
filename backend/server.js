@@ -1,6 +1,11 @@
 const mongoose = require("mongoose");
+const { initializeApp } = require("firebase/app");
+const { getDatabase, ref, set } = require("firebase/database");
 const app = require("./app");
 require("dotenv").config();
+
+
+
 
 let MONGODB;
 process.env.NODE_ENV === "development" 

@@ -7,15 +7,15 @@ const {
 } = require("../../helper/responses");
 
 exports.switchModes = async (req, res) => {
-  const { userId } = req.body;
-  if (!userId) {
-    onMissingValResponse(res, "MISSING_VALUE", "User id is missing.");
+  const { userId, appMode } = req.body;
+  if (!userId || !appMode) {
+    onMissingValResponse(res, "MISSING_VALUE", "User id or app mode is missing.");
     return;
   }
 
   try {
-    const user = await Driver.findOne({ userId }).select("isActive");
-    if (!user) {
+    const driver = await Driver.findOne({ userId }).select("isActive");
+    if (!driver) {
       notFoundResponse(
         res,
         "NOT_FOUND",
@@ -24,8 +24,17 @@ exports.switchModes = async (req, res) => {
       );
       return;
     }
-    await Driver.updateOne({ userId }, { isActive: !user.isActive });
-    onCreationResponse(res, {});
+    let isActive = false;
+    if (appMode === 'rider') {
+      isActive = true;
+    }
+    await Driver.updateOne({ userId }, { isActive });
+    const driverDetails = await Driver.findOne({ userId }).select(
+      "-licenseURL -carRegistrationURL"
+    );
+    onCreationResponse(res, {
+      driverDetails,
+    });
   } catch (err) {
     serverErrorResponse(res, err, "INTERNAL_SERVER_ERROR");
   }

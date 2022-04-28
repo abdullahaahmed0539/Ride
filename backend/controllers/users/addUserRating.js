@@ -1,5 +1,6 @@
 const User = require("../../models/Users");
 const Trip = require("../../models/Trips");
+const Booking = require("../../models/Bookings");
 const {
   serverErrorResponse,
   onCreationResponse,
@@ -14,7 +15,7 @@ const errorCodes = {
 };
 
 exports.addUserRating = async (req, res) => {
-  const { userId, driverId, newRatingVal, bookingId } = req.body;
+  const { riderId, driverId, newRatingVal, bookingId } = req.body;
   if (newRatingVal < 0 || newRatingVal > 5) {
     incorrectFormatResponse(
       res,
@@ -27,11 +28,11 @@ exports.addUserRating = async (req, res) => {
 
   try {
     const booking = await Booking.findOne({ _id: bookingId, driverId });
-    if (booking) {
+    if (!booking) {
       unAuthorizedResponse(res, "UNAUTHORIZED_ACCESS");
       return;
     }
-    const userDetails = await User.findById({ _id: userId }).select("ratings");
+    const userDetails = await User.findById({ _id: riderId }).select("ratings");
     if (!userDetails) {
       notFoundResponse(
         res,
@@ -43,7 +44,7 @@ exports.addUserRating = async (req, res) => {
     }
     const userRating = userDetails.ratings;
     userRating.push(newRatingVal);
-    await User.updateOne({ _id: userId }, { ratings: userRating });
+    await User.updateOne({ _id: riderId  }, { ratings: userRating });
     await Trip.updateOne({ bookingId }, { riderRating: newRatingVal });
     onCreationResponse(res, {});
   } catch (err) {

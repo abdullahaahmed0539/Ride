@@ -8,6 +8,7 @@ const tripRouter = require("./routes/trip");
 const requestRouter = require("./routes/request");
 
 const app = express();
+
 app.use(express.json());
 app.use(cors());
 

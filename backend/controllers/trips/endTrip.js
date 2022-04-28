@@ -37,14 +37,12 @@ exports.endTrip = async (req, res) => {
     const milage = (await Driver.findOne({_id: booking.driverId}).select('milage')).milage
     const trip = await Trip.findOne({ bookingId });
     const endTime = Date.now();
-    let disputeCost;
-    booking.disputeEnabled? disputeCost = process.env.DISPUTE_COST: disputeCost = 0
     const tripDetails = {
       endTime,
       duration: endTime - trip.startTime,
-      distance,
+      distance: distance / 1000,
       fuelCost: process.env.FUEL_PRICE,
-      disputeCost,
+      disputeCost: process.env.DISPUTE_COST,
       milesCost: calculateTravellingCost(distance, milage),
       waitTimeCost: calculateWaitTime(trip.waitTime.getTime() / (1000 * 60)),
       waitTimeCostPerMin: process.env.WAIT_TIME_COST_PER_MIN,
@@ -52,7 +50,6 @@ exports.endTrip = async (req, res) => {
         distance,
         milage,
         trip.waitTime.getTime() / (1000 * 60),
-        booking.disputeEnabled
       ),
     };
     await Trip.updateOne({ bookingId }, tripDetails);

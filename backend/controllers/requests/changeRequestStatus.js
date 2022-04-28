@@ -1,13 +1,33 @@
 const Request = require("../../models/Requests");
 const Driver = require("../../models/Drivers");
 const User = require("../../models/Users");
+const { initializeApp } = require("firebase/app");
+const { getDatabase, ref, set } = require("firebase/database");
+
 const {
   onMissingValResponse,
   serverErrorResponse,
   notFoundResponse,
   onCreationResponse,
 } = require("../../helper/responses");
-const { updateOne } = require("../../models/Requests");
+
+FIREBASE_CONFIGURATION = {
+  apiKey: process.env.FIREBASE_CONFIGURATION_API_KEY,
+  authDomain: "ride-347116.firebaseapp.com",
+  databaseURL:
+    "https://ride-347116-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "ride-347116",
+  storageBucket: "ride-347116.appspot.com",
+  messagingSenderId: "538809823991",
+  appId: "1:538809823991:web:1066a170a8f7bf323d99f2",
+  measurementId: "G-3VNJLKDWYM",
+};
+
+const firebaseDb = getDatabase(initializeApp(FIREBASE_CONFIGURATION));
+
+// set(ref(firebaseDb, "dummy/"), {
+//   'h': 'i'
+// });
 
 exports.changeRequestStatus = async (req, res) => {
   const { _id, decision } = req.body;
@@ -33,7 +53,6 @@ exports.changeRequestStatus = async (req, res) => {
         const newDriver = Driver({
           userId: driverDetails.userId,
           licenseURL: driverDetails.licenseURL,
-          carRegistrationURL: driverDetails.carRegistrationURL,
           cnic: driverDetails.cnic,
           milage: driverDetails.milage,
           carModel: driverDetails.carModel,
@@ -43,7 +62,16 @@ exports.changeRequestStatus = async (req, res) => {
           isActive: false,
           isBusy: false,
         });
-        await newDriver.save();
+        const driverDetailsFromDb = await newDriver.save();
+        
+        if (driverDetailsFromDb !== null){
+          
+          await set(ref(firebaseDb, "drivers/" + driverDetailsFromDb._id), {
+            'rideRequestStatus': 'idle',
+            });
+        }  
+          
+        
         await User.updateOne({ _id: driverDetails.userId }, { isDriver: true });
       }
       onCreationResponse(res, {});

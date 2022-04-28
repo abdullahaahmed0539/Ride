@@ -1,5 +1,7 @@
 const Booking = require("../../models/Bookings");
 const User = require("../../models/Users");
+const Driver = require("../../models/Drivers");
+
 const {
   serverErrorResponse,
   onMissingValResponse,
@@ -16,35 +18,30 @@ const errorCodes = {
 };
 
 exports.createBooking = async (req, res) => {
-  const { riderId, pickup, dropoff, phoneNumber, disputeEnabled } = req.body;
-  if (!riderId || !pickup || !dropoff || !phoneNumber, !disputeEnabled) {
+  const { riderId, driverId, pickup, dropoff} = req.body;
+  if (!riderId || !pickup || !dropoff || !driverId) {
     onMissingValResponse(
       res,
       errorCodes.MISSING_VAL,
-      "Either phone number, disputeEnabled, riderId, pickup or dropoff is missing."
+      "Either riderId, pickup, driverId or dropoff is missing."
     );
+    
     return;
   }
 
   try {
     const user = await User.findById({_id: riderId});
-    
     if (!user) {
       notFoundResponse(res, 'NOT_FOUND', 'USER_NOT_FOUND', 'No user against the following id')
       return;
     }
     
-    if (user.phoneNumber !== phoneNumber) {
-      unAuthorizedResponse(res, "UNAUTHORIZED_ACCESS");
-      return;
-    }
-
     //making sure not more than 1 bookings are scheduled at one time
     const bookingAlreadyMade = await Booking.find({
       riderId,
       $or: [
         {
-          status: "insearch",
+          status: "accepted",
         },
         {
           status: "inprogress",
@@ -70,18 +67,39 @@ exports.createBooking = async (req, res) => {
     return;
   }
 
+  const driverDetails = await Driver.findById({ _id: driverId }).select(
+    "userId isActive isBusy"
+  );
+  if (
+    !driverDetails.isActive ||
+    (driverDetails.isActive && driverDetails.isBusy)
+  ) {
+    unAuthorizedResponse(res, "FORBIDDEN");
+    return;
+  }
+
+  const riderIsDriver = await Driver.findOne({
+    _id: driverId,
+    userId: riderId,
+  });
+  if (riderIsDriver) {
+    unAuthorizedResponse(res, "FORBIDDEN");
+    return;
+  }
+
   const newBooking = Booking({
     riderId,
+    driverId,
     pickup,
     dropoff,
     bookingTime: new Date(),
-    disputeEnabled,
-    status: "insearch",
+    status: "accepted",
   });
 
   try {
     await newBooking.save();
-    onCreationResponse(res, {});
+    await Driver.updateOne({ _id: driverId }, { isBusy: true });
+    onCreationResponse(res, {booking: newBooking});
   } catch (err) {
     serverErrorResponse(res, err, errorCodes.SERVER_ERROR);
   }

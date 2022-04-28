@@ -3,7 +3,6 @@ const {
   serverErrorResponse,
   onMissingValResponse,
   notFoundResponse,
-  unAuthorizedResponse,
   successfulGetResponse,
 } = require("../../helper/responses");
 
@@ -15,18 +14,22 @@ const errorCodes = {
 };
 
 exports.bookingDetails = async (req, res) => {
-  const { bookingId, userId } = req.body;
-  if (!bookingId || !userId) {
+  const { driverId, riderId } = req.body;
+  if (!driverId || !driverId) {
     onMissingValResponse(
       res,
       errorCodes.MISSING_VAL,
-      "booking id or user id is missing."
+      "Driver id or user id is missing."
     );
     return;
   }
 
   try {
-    const booking = await Booking.findById({ _id: bookingId });
+    const booking = await Booking.findOne({
+      riderId,
+      driverId,
+      status: "accepted",
+    });
     if (!booking) {
       notFoundResponse(
         res,
@@ -34,10 +37,8 @@ exports.bookingDetails = async (req, res) => {
         "BOOKING_NOT_FOUND",
         "There is no booking against the booking id."
       );
-    } else if (booking.riderId === userId || booking.driverId === userId) {
-      successfulGetResponse(res, { booking });
     } else {
-      unAuthorizedResponse(res, errorCodes.UNAUTHORIZED);
+      successfulGetResponse(res, { booking });
     }
   } catch (err) {
     serverErrorResponse(res, err, errorCodes.SERVER_ERROR);

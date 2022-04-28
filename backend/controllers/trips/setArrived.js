@@ -35,7 +35,7 @@ exports.setArrived = async (req, res) => {
     const booking = await Booking.findOne({
       _id: bookingId,
       driverId,
-      status: "waiting",
+      status: "accepted",
     });
     if (!booking) {
       unAuthorizedResponse(res, errorCodes.UNAUTHORIZED);

@@ -1,5 +1,7 @@
 const Driver = require("../../models/Drivers");
 const Trip = require("../../models/Trips");
+const Booking = require("../../models/Bookings");
+
 const {
   serverErrorResponse,
   onCreationResponse,
@@ -7,7 +9,6 @@ const {
   incorrectFormatResponse,
   unAuthorizedResponse,
 } = require("../../helper/responses");
-const Booking = require("../../models/Bookings");
 
 const errorCodes = {
   NOT_FOUND: "USER_NOT_FOUND",
@@ -29,7 +30,7 @@ exports.addDriverRating = async (req, res) => {
 
   try {
     const booking = await Booking.findOne({ _id: bookingId, riderId });
-    if (booking) {
+    if (!booking) {
       unAuthorizedResponse(res, "UNAUTHORIZED_ACCESS");
       return;
     }

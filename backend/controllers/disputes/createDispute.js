@@ -1,4 +1,5 @@
 const Dispute = require("../../models/Disputes");
+const Driver = require("../../models/Drivers");
 const {
   serverErrorResponse,
   onMissingValResponse,
@@ -13,29 +14,39 @@ const errorCodes = {
 exports.createDispute = async (req, res) => {
   const {
     initiatorId,
-    defenderId,
     subject,
     shortDescription,
     initiatorsClaim,
+    disputeBy,
   } = req.body;
+  let { defenderId } = req.body
   if (
     !initiatorId ||
     !defenderId ||
     !subject ||
     !shortDescription ||
-    !initiatorsClaim
+    !initiatorsClaim ||
+    !disputeBy
   ) {
     onMissingValResponse(
       res,
       errorCodes.MISSING_VAL,
-      "Either initiator id, rider's id, driver's id, subject or initiators claim is missing."
+      "Either initiator id, rider's id, driver's id, subject, dispute by or initiators claim is missing."
     );
     return;
   }
 
+  if (disputeBy == "rider") {
+    try {
+      defenderId = (await Driver.findById({ _id: defenderId }).select("userId")).userId;
+    } catch (error) {
+      console.log(error.message);
+    }
+  }
+
   const newDispute = Dispute({
     initiatorId,
-    defenderId,
+    defenderId: defenderId,
     subject,
     shortDescription,
     initiatorsClaim,

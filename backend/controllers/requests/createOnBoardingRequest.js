@@ -8,7 +8,17 @@ const {
 const { validateCNIC } = require("../../helper/validators");
 
 exports.createOnBoardingRequest = async (req, res) => {
-  const { userId, cnic, carModel, color, registrationNumber, milage } = req.body;
+  const {
+    userId,
+    cnic,
+    carModel,
+    color,
+    registrationNumber,
+    milage,
+    licenseURL,
+    
+  
+  } = req.body;
   if (!userId || !cnic || !carModel || !color || !registrationNumber || !milage) {
     onMissingValResponse(
       res,
@@ -32,8 +42,7 @@ exports.createOnBoardingRequest = async (req, res) => {
   const onBoardingRequest = Request({
     userId,
     cnic,
-    licenseURL: "dummy",
-    carRegistrationURL: "dummy",
+    licenseURL,
     carModel,
     color,
     milage,

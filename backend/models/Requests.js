@@ -22,11 +22,6 @@ const requestSchema = new mongoose.Schema({
     require: [true, "User id is required."],
     trim: true,
   },
-  carRegistrationURL: {
-    type: String,
-    require: [true, "User id is required."],
-    trim: true,
-  },
   carModel: {
     type: String,
     require: [true, "Car model is required."],

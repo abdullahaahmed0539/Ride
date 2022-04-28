@@ -31,10 +31,6 @@ const bookingSchema = new mongoose.Schema({
     require: [true, "Status is required."],
     trim: true,
   },
-  disputeEnabled: {
-    type: Boolean,
-    require: [true, "disputeEnabled is required."],
-  },
 });
 
 const Booking = mongoose.model("Bookings", bookingSchema);
