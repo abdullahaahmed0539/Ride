@@ -1,6 +1,7 @@
 const User = require("../../models/Users");
-const { AES_encrypt, SHA3 } = require("../../helper/encryption");
-const { validateUserInfo } = require("../../helper/validators");
+const { validateUserInfo, validateMetamask } = require("../../helper/validators");
+const { errorCodes } = require("../../helper/errorCodes");
+
 const {
   serverErrorResponse,
   onCreationResponse,
@@ -8,13 +9,6 @@ const {
   notUniqueResponse,
   incorrectFormatResponse,
 } = require("../../helper/responses");
-
-const errorCodes = {
-  SERVER_ERROR: "INTERNAL_SERVER_ERROR",
-  MISSING_VAL: "MISSING-VALUE",
-  INCORRECT_FORMAT: "INCORRECT-FORMAT",
-  NOT_UNIQUE: "NOT-UNIQUE",
-};
 
 exports.register = async (req, res) => {
   const { phoneNumber, country, firstName, lastName, email, walletAddress } =
@@ -38,19 +32,15 @@ exports.register = async (req, res) => {
   }
 
   //validate format
-  if (validateUserInfo(email, phoneNumber, country)) {
-    encryptedWalletAddress = AES_encrypt(walletAddress);
-    hash = SHA3(walletAddress);
-  } else {
+  if (!validateUserInfo(email, phoneNumber, country) || !validateMetamask(walletAddress)) {
     incorrectFormatResponse(
       res,
       errorCodes.INCORRECT_FORMAT,
       "FormatError",
-      "Either phone number or email is invalid"
+      "Either phone number, metamask wallet or email is invalid"
     );
-    return;
-  }
-
+  } 
+  
   //creating a new user
   const newUser = new User({
     phoneNumber,
@@ -58,8 +48,7 @@ exports.register = async (req, res) => {
     firstName,
     lastName,
     email,
-    walletAddress: encryptedWalletAddress,
-    walletHash: hash,
+    walletAddress,
     isDriver: false,
     rating: [],
   });

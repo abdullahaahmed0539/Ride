@@ -1,10 +1,6 @@
 const router = require("express").Router();
 const { createBooking } = require("../controllers/bookings/createBooking");
 const {
-  riderCancellation,
-  driverCancellation,
-} = require("../controllers/bookings/cancelRide");
-const {
   myBookingHistory,
 } = require("../controllers/bookings/myBookingHistory");
 const {
@@ -17,8 +13,6 @@ const { driverBookingHistory } = require('../controllers/drivers/myBookingHistor
 const { driverScheduledBookings} = require("../controllers/drivers/myScheduledBookings");
 
 router.route("/create_booking").post(driverAuth, createBooking);
-router.route("/cancel_booking/rider").patch(userAuth, riderCancellation);
-router.route("/cancel_booking/driver").patch(driverAuth, driverCancellation);
 router.route("/rider/my_bookings_history").post(userAuth, myBookingHistory);
 router
   .route("/rider/my_scheduled_bookings")

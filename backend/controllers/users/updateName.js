@@ -5,12 +5,7 @@ const {
   onMissingValResponse,
   serverErrorResponse,
 } = require("../../helper/responses");
-
-const errorCodes = {
-  NOT_FOUND: "USR_NOT_FOUND",
-  SERVER_ERROR: "INTERNAL_SERVER_ERROR",
-  MISSING_VAL: "MISSING_VALUE",
-};
+const { errorCodes } = require("../../helper/errorCodes");
 
 exports.updateName = async (req, res) => {
   const { firstName, lastName, phoneNumber } = req.body;

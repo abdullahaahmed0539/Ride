@@ -1,6 +1,7 @@
 const Driver = require("../../models/Drivers");
 const User = require("../../models/Users");
 const Booking = require("../../models/Bookings");
+const {errorCodes} = require("../../helper/errorCodes");
 const {
   onMissingValResponse,
   successfulGetResponse,
@@ -14,7 +15,7 @@ exports.driverDetailsForTrip = async (req, res) => {
   if (!driverId || !bookingId || !riderId) {
     onMissingValResponse(
       res,
-      "MISSING_VALUE",
+      errorCodes.MISSING_VAL,
       "Driver id, rider id or booking id is missing."
     );
     return;
@@ -27,7 +28,7 @@ exports.driverDetailsForTrip = async (req, res) => {
       riderId,
     });
     if (!booking) {
-      unAuthorizedResponse(res, "UNAUTHORIZED_ACCESS");
+      unAuthorizedResponse(res, errorCodes.UNAUTHORIZED);
       return;
     }
     const driverDetails = await Driver.findById({ _id: driverId }).select(
@@ -51,12 +52,12 @@ exports.driverDetailsForTrip = async (req, res) => {
     } else {
       notFoundResponse(
         res,
-        "NOT_FOUND",
+        errorCodes.DRIVER_NOT_FOUND,
         "DriverNotFound",
         "There is no driver with the id provided."
       );
     }
   } catch (err) {
-    serverErrorResponse(res, err, "INTERNAL_SERVER_ERROR");
+    serverErrorResponse(res, err, errorCodes.SERVER_ERROR);
   }
 };

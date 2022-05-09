@@ -1,18 +1,14 @@
 const User = require("../../models/Users");
 const Trip = require("../../models/Trips");
 const Booking = require("../../models/Bookings");
+const { errorCodes } = require("../../helper/errorCodes");
+
 const {
   serverErrorResponse,
   onCreationResponse,
   notFoundResponse,
   incorrectFormatResponse,
 } = require("../../helper/responses");
-
-const errorCodes = {
-  NOT_FOUND: "USER_NOT_FOUND",
-  SERVER_ERROR: "INTERNAL_SERVER_ERROR",
-  VALUE_NOT_ACCEPTABLE: "VALUE_NOT_ACCEPTABLE",
-};
 
 exports.addUserRating = async (req, res) => {
   const { riderId, driverId, newRatingVal, bookingId } = req.body;
@@ -36,7 +32,7 @@ exports.addUserRating = async (req, res) => {
     if (!userDetails) {
       notFoundResponse(
         res,
-        errorCodes.NOT_FOUND,
+        errorCodes.USER_NOT_FOUND,
         "UserNotFound",
         "The following user does not exist."
       );

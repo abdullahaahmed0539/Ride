@@ -6,6 +6,7 @@ const {
   incorrectFormatResponse,
 } = require("../../helper/responses");
 const { validateCNIC } = require("../../helper/validators");
+const { errorCodes } = require("../../helper/errorCodes");
 
 exports.createOnBoardingRequest = async (req, res) => {
   const {
@@ -22,7 +23,7 @@ exports.createOnBoardingRequest = async (req, res) => {
   if (!userId || !cnic || !carModel || !color || !registrationNumber || !milage) {
     onMissingValResponse(
       res,
-      "MISSING_VALUE",
+      errorCodes.MISSING_VAL,
       "User id, cnic, car model, milage, color or registration number is missing."
     );
     return;
@@ -31,14 +32,13 @@ exports.createOnBoardingRequest = async (req, res) => {
   if (!validateCNIC(cnic)) {
     incorrectFormatResponse(
       res,
-      "INCORRECT_FORMAT",
+      errorCodes.INCORRECT_FORMAT,
       "Incorrect format",
       "CNIC is not in correct format."
     );
     return;
   }
 
-  //add s3 links here
   const onBoardingRequest = Request({
     userId,
     cnic,
@@ -78,6 +78,6 @@ exports.createOnBoardingRequest = async (req, res) => {
     const request = await onBoardingRequest.save();
     onCreationResponse(res, { request });
   } catch (err) {
-    serverErrorResponse(res, err, "INTERNAL_SERVER_ERROR");
+    serverErrorResponse(res, err, errorCodes.SERVER_ERROR);
   }
 };

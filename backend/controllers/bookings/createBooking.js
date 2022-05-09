@@ -1,7 +1,7 @@
 const Booking = require("../../models/Bookings");
 const User = require("../../models/Users");
 const Driver = require("../../models/Drivers");
-
+const {errorCodes} = require("../../helper/errorCodes");
 const {
   serverErrorResponse,
   onMissingValResponse,
@@ -10,12 +10,6 @@ const {
   notFoundResponse,
 } = require("../../helper/responses");
 
-const errorCodes = {
-  NOT_FOUND: "BOOKING_NOT_FOUND",
-  BOOKING_ALREADY_MADE: "BOOKING_ALREADY_MADE",
-  SERVER_ERROR: "INTERNAL_SERVER_ERROR",
-  MISSING_VAL: "MISSING_VALUE",
-};
 
 exports.createBooking = async (req, res) => {
   const { riderId, driverId, pickup, dropoff} = req.body;
@@ -32,7 +26,12 @@ exports.createBooking = async (req, res) => {
   try {
     const user = await User.findById({_id: riderId});
     if (!user) {
-      notFoundResponse(res, 'NOT_FOUND', 'USER_NOT_FOUND', 'No user against the following id')
+      notFoundResponse(
+        res,
+        errorCodes.USER_NOT_FOUND,
+        "USER_NOT_FOUND",
+        "No user against the following id"
+      );
       return;
     }
     
@@ -74,7 +73,7 @@ exports.createBooking = async (req, res) => {
     !driverDetails.isActive ||
     (driverDetails.isActive && driverDetails.isBusy)
   ) {
-    unAuthorizedResponse(res, "FORBIDDEN");
+    unAuthorizedResponse(res, errorCodes.UNAUTHORIZED);
     return;
   }
 
@@ -83,7 +82,7 @@ exports.createBooking = async (req, res) => {
     userId: riderId,
   });
   if (riderIsDriver) {
-    unAuthorizedResponse(res, "FORBIDDEN");
+    unAuthorizedResponse(res, errorCodes.UNAUTHORIZED);
     return;
   }
 

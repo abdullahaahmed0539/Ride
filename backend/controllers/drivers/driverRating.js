@@ -1,6 +1,7 @@
 const Driver = require("../../models/Drivers");
 const Trip = require("../../models/Trips");
 const Booking = require("../../models/Bookings");
+const {errorCodes} = require('../../helper/errorCodes')
 
 const {
   serverErrorResponse,
@@ -9,12 +10,6 @@ const {
   incorrectFormatResponse,
   unAuthorizedResponse,
 } = require("../../helper/responses");
-
-const errorCodes = {
-  NOT_FOUND: "USER_NOT_FOUND",
-  SERVER_ERROR: "INTERNAL_SERVER_ERROR",
-  VALUE_NOT_ACCEPTABLE: "VALUE_NOT_ACCEPTABLE",
-};
 
 exports.addDriverRating = async (req, res) => {
   const { riderId, driverId, newRatingVal, bookingId } = req.body;
@@ -31,7 +26,7 @@ exports.addDriverRating = async (req, res) => {
   try {
     const booking = await Booking.findOne({ _id: bookingId, riderId });
     if (!booking) {
-      unAuthorizedResponse(res, "UNAUTHORIZED_ACCESS");
+      unAuthorizedResponse(res, errorCodes.UNAUTHORIZED);
       return;
     }
     const driverDetails = await Driver.findById({ _id: driverId }).select(

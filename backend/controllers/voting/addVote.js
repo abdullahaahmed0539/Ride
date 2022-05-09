@@ -1,7 +1,8 @@
 const Dispute = require("../../models/Disputes");
+const { errorCodes } = require("../../helper/errorCodes");
+
 const {
   serverErrorResponse,
-  notFoundResponse,
   onCreationResponse,
   unAuthorizedResponse,
   incorrectFormatResponse,
@@ -13,7 +14,7 @@ exports.addVote = async (req, res) => {
   if (voteFor !== "1" && voteFor !== "0") {
     incorrectFormatResponse(
       res,
-      "INCORRECT_FORMAT",
+      errorCodes.INCORRECT_FORMAT,
       "INCORRECT_FORMAT",
       "Invalid value for votefor."
     );
@@ -24,7 +25,7 @@ exports.addVote = async (req, res) => {
     const dispute = await Dispute.findOne({ _id: disputeId, status: "active" });
 
     if (dispute.votedBy.includes(userId)) {
-      unAuthorizedResponse(res, "UNAUTHORIZED_ACCESS");
+      unAuthorizedResponse(res, errorCodes.UNAUTHORIZED);
       return;
     }
 
@@ -50,6 +51,6 @@ exports.addVote = async (req, res) => {
       vote: "successful",
     });
   } catch (error) {
-    serverErrorResponse(res, error, "INTERNAL_SERVER_ERROR");
+    serverErrorResponse(res, error, errorCodes.SERVER_ERROR);
   }
 };

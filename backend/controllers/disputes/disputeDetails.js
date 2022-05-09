@@ -1,14 +1,11 @@
 const Dispute = require("../../models/Disputes");
+const {errorCodes} = require("../../helper/errorCodes");
+
 const {
   serverErrorResponse,
   notFoundResponse,
   successfulGetResponse,
 } = require("../../helper/responses");
-
-const errorCodes = {
-  NOT_FOUND: "DISPUTE_NOT_FOUND",
-  SERVER_ERROR: "INTERNAL_SERVER_ERROR",
-};
 
 exports.disputeDetails = async (req, res) => {
   const _id = req.params.id;
@@ -22,7 +19,7 @@ exports.disputeDetails = async (req, res) => {
     } else {
       notFoundResponse(
         res,
-        errorCodes.NOT_FOUND,
+        errorCodes.DISPUTE_NOT_FOUND,
         "disputeNotFound",
         "The following dispute does not exist."
       );

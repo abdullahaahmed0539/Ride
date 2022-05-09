@@ -1,4 +1,5 @@
 const Booking = require("../../models/Bookings");
+const {errorCodes} = require("../../helper/errorCodes");
 
 const {
   serverErrorResponse,
@@ -6,11 +7,7 @@ const {
   successfulGetResponse,
 } = require("../../helper/responses");
 
-const errorCodes = {
-  NOT_FOUND: "BOOKINGS_NOT_FOUND",
-  SERVER_ERROR: "INTERNAL_SERVER_ERROR",
-  MISSING_VAL: "MISSING_VALUE",
-};
+
 
 exports.myScheduledBookings = async (req, res) => {
   const riderId = req.body.riderId;
@@ -34,7 +31,7 @@ exports.myScheduledBookings = async (req, res) => {
     } else {
       notFoundResponse(
         res,
-        errorCodes.NOT_FOUND,
+        errorCodes.BOOKING_NOT_FOUND,
         "NO_BOOKINGS",
         "There are no bookings."
       );

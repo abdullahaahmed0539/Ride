@@ -1,5 +1,7 @@
 const User = require("../../models/Users");
 const { validateEmail } = require("../../helper/validators");
+const { errorCodes } = require("../../helper/errorCodes");
+
 const {
   incorrectFormatResponse,
   onCreationResponse,
@@ -7,13 +9,6 @@ const {
   onMissingValResponse,
   serverErrorResponse,
 } = require("../../helper/responses");
-
-const errorCodes = {
-  NOT_FOUND: "USR_NOT_FOUND",
-  SERVER_ERROR: "INTERNAL_SERVER_ERROR",
-  INCORRECT_FORMAT: "INCORRECT-FORMAT",
-  MISSING_VAL: "MISSING_VALUE",
-};
 
 exports.updateEmail = async (req, res) => {
   const { phoneNumber, email } = req.body;

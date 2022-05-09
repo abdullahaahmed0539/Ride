@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const { default: phone } = require("phone");
+const { errorCodes } = require("../helper/errorCodes");
 const { unAuthorizedResponse } = require("../helper/responses");
 
 module.exports = (req, res, next) => {
@@ -13,7 +13,7 @@ module.exports = (req, res, next) => {
       
     next();
   } catch (error) {
-      unAuthorizedResponse(res, 'UNAUTHORIZED_ACCESS');
+      unAuthorizedResponse(res, errorCodes.UNAUTHORIZED);
 
   }
 };

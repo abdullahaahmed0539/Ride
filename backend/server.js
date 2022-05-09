@@ -1,10 +1,6 @@
 const mongoose = require("mongoose");
-const { initializeApp } = require("firebase/app");
-const { getDatabase, ref, set } = require("firebase/database");
 const app = require("./app");
 require("dotenv").config();
-
-
 
 
 let MONGODB;
@@ -29,7 +25,7 @@ mongoose
   });
 
 //Starting up server
-const PORT = 8080;
+const PORT = process.env.PORT;
 app.listen(PORT, () => {
   console.clear();
   console.log(`Running on port ${PORT}.`);

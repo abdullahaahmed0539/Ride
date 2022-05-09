@@ -2,20 +2,15 @@ const { phone } = require("phone");
 const emailValidator = require("email-validator");
 const pakCnicValidator = require("stdnum").stdnum.PK.cnic;
 
-exports.validatePhoneNumber = (phoneNumber, country) => {
-  return phone(phoneNumber, { country }).isValid;
-};
+exports.validatePhoneNumber = (phoneNumber, country) => phone(phoneNumber, { country }).isValid;
 
-exports.validateEmail = email => {
-  return emailValidator.validate(email);
-};
+exports.validateEmail = email => emailValidator.validate(email);
 
-exports.validateUserInfo = (email, phoneNumber, country) => {
-  return (
-    this.validateEmail(email) && this.validatePhoneNumber(phoneNumber, country)
-  );
-};
+exports.validateUserInfo = (email, phoneNumber, country) => this.validateEmail(email) &&
+  this.validatePhoneNumber(phoneNumber, country)
+  
+exports.validateCNIC = cnic =>  pakCnicValidator.validate(cnic).isValid;
 
-exports.validateCNIC = cnic => {
-  return pakCnicValidator.validate(cnic).isValid;
-};
+exports.validateMetamask = address => address.length === 42;
+
+

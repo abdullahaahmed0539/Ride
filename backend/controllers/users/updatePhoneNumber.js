@@ -1,6 +1,8 @@
 const jwt = require("jsonwebtoken");
 const User = require("../../models/Users");
 const { validatePhoneNumber } = require("../../helper/validators");
+const { errorCodes } = require("../../helper/errorCodes");
+
 const {
   incorrectFormatResponse,
   onCreationResponse,
@@ -8,13 +10,6 @@ const {
   onMissingValResponse,
   serverErrorResponse,
 } = require("../../helper/responses");
-
-const errorCodes = {
-  NOT_FOUND: "USR_NOT_FOUND",
-  MISSING_VAL: "MISSING_VALUE",
-  SERVER_ERROR: "INTERNAL_SERVER_ERROR",
-  INCORRECT_FORMAT: "INCORRECT-FORMAT",
-};
 
 exports.updatePhoneNumber = async (req, res) => {
   const { phoneNumber, newPhoneNumber, country } = req.body;

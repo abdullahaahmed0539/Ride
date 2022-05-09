@@ -33,12 +33,6 @@ const userSchema = new mongoose.Schema({
     required: [true, "Wallet address is required."],
     trim: true,
   },
-  walletHash: {
-    type: String,
-    required: [true, "Wallet hash is required."],
-    unique: true,
-    trim: true,
-  },
   isDriver: {
     type: Boolean,
     required: [true, "isDriver is required."],

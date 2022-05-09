@@ -1,5 +1,7 @@
 const jwt = require("jsonwebtoken");
 const User = require("../../models/Users");
+const { errorCodes } = require("../../helper/errorCodes");
+
 const {
   serverErrorResponse,
   onMissingValResponse,
@@ -10,7 +12,7 @@ const {
 exports.login = async (req, res) => {
   const { phoneNumber } = req.body;
   if (!phoneNumber) {
-    onMissingValResponse(res, "MISSING_VAL", "phoneNumber is missing.");
+    onMissingValResponse(res, errorCodes.MISSING_VAL, "phoneNumber is missing.");
     return;
   }
 
@@ -19,7 +21,7 @@ exports.login = async (req, res) => {
     if (!user) {
       notFoundResponse(
         res,
-        "USER_NOT_FOUND",
+        errorCodes.USER_NOT_FOUND,
         "UserNotFound",
         "The following user does not exist."
       );
@@ -49,6 +51,6 @@ exports.login = async (req, res) => {
       successfulGetResponse(res, data);
     }
   } catch (err) {
-    serverErrorResponse(res, err, "INTERNAL_SERVER_ERROR");
+    serverErrorResponse(res, err, errorCodes.SERVER_ERROR);
   }
 };

@@ -1,15 +1,11 @@
 const Dispute = require("../../models/Disputes");
 const Driver = require("../../models/Drivers");
+const {errorCodes} = require("../../helper/errorCodes");
 const {
   serverErrorResponse,
   onMissingValResponse,
   onCreationResponse,
 } = require("../../helper/responses");
-
-const errorCodes = {
-  MISSING_VAL: "MISSING_VALUE",
-  SERVER_ERROR: "INTERNAL_SERVER_ERROR",
-};
 
 exports.createDispute = async (req, res) => {
   const {

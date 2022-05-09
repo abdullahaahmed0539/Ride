@@ -1,5 +1,6 @@
 const Trip = require("../../models/Trips");
 const Booking = require("../../models/Bookings");
+const { errorCodes } = require("../../helper/errorCodes");
 
 const {
   serverErrorResponse,
@@ -7,12 +8,6 @@ const {
   onCreationResponse,
   unAuthorizedResponse,
 } = require("../../helper/responses");
-
-const errorCodes = {
-  MISSING_VAL: "MISSING_VALUE",
-  SERVER_ERROR: "INTERNAL_SERVER_ERROR",
-  UNAUTHORIZED: "UNAUTHORIZED_ACCESS",
-};
 
 exports.startTrip = async (req, res) => {
   const { bookingId, driverId } = req.body;

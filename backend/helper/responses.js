@@ -46,7 +46,6 @@ exports.onMissingValResponse = (res, MISSING_VAL, message) => {
 };
 
 exports.notUniqueResponse = (res, err, NOT_UNIQUE) => {
-  
   res.status(406).json({
     request: "unsuccessful",
     error: {
@@ -92,16 +91,3 @@ exports.unAuthorizedResponse = (res, UNAUTHORIZED_ACCESS) => {
     data: {},
   });
 };
-
-// exports.onBadParameters = (res, BAD_PARAMS) => {
-//   res.status(401).json({
-//     request: "unsuccessful",
-//     error: {
-//       code: BAD_PARAMS,
-//       name: "ParamNotAcceptable.",
-//       message: "Parameter value is not acceptable.",
-//       logs: "",
-//     },
-//     data: {},
-//   });
-// };

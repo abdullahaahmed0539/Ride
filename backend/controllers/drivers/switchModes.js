@@ -1,4 +1,6 @@
 const Driver = require("../../models/Drivers");
+const {errorCodes} = require("../../helper/errorCodes");
+
 const {
   onMissingValResponse,
   notFoundResponse,
@@ -9,7 +11,7 @@ const {
 exports.switchModes = async (req, res) => {
   const { userId, appMode } = req.body;
   if (!userId || !appMode) {
-    onMissingValResponse(res, "MISSING_VALUE", "User id or app mode is missing.");
+    onMissingValResponse(res, errorCodes.MISSING_VAL, "User id or app mode is missing.");
     return;
   }
 
@@ -18,7 +20,7 @@ exports.switchModes = async (req, res) => {
     if (!driver) {
       notFoundResponse(
         res,
-        "NOT_FOUND",
+        errorCodes.DRIVER_NOT_FOUND,
         "DRIVER_NOT_FOUND",
         "There is no driver with the following user id."
       );
@@ -36,6 +38,6 @@ exports.switchModes = async (req, res) => {
       driverDetails,
     });
   } catch (err) {
-    serverErrorResponse(res, err, "INTERNAL_SERVER_ERROR");
+    serverErrorResponse(res, err, errorCodes.SERVER_ERROR);
   }
 };

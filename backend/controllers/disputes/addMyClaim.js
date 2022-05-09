@@ -1,4 +1,5 @@
 const Dispute = require("../../models/Disputes");
+const {errorCodes} = require("../../helper/errorCodes");
 const {
   serverErrorResponse,
   onMissingValResponse,
@@ -6,13 +7,6 @@ const {
   notFoundResponse,
   unAuthorizedResponse,
 } = require("../../helper/responses");
-
-const errorCodes = {
-  NOT_FOUND: "DISPUTE_NOT_FOUND",
-  MISSING_VAL: "MISSING_VALUE",
-  SERVER_ERROR: "INTERNAL_SERVER_ERROR",
-  UNAUTHORIZED: "UNAUTHORIZED_ACCESS",
-};
 
 exports.addMyClaim = async (req, res) => {
   const { disputeId, defendentsClaim, userId } = req.body;
@@ -47,7 +41,7 @@ exports.addMyClaim = async (req, res) => {
     } else {
       notFoundResponse(
         res,
-        errorCodes.NOT_FOUND,
+        errorCodes.DISPUTE_NOT_FOUND,
         "DisputeNotFound",
         "The following dispute does not exist."
       );

@@ -1,16 +1,10 @@
 const Booking = require("../../models/Bookings");
-
+const {errorCodes} = require("../../helper/errorCodes");
 const {
   serverErrorResponse,
   notFoundResponse,
   successfulGetResponse,
 } = require("../../helper/responses");
-
-const errorCodes = {
-  NOT_FOUND: "BOOKINGS_NOT_FOUND",
-  SERVER_ERROR: "INTERNAL_SERVER_ERROR",
-  MISSING_VAL: "MISSING_VALUE",
-};
 
 exports.driverScheduledBookings = async (req, res) => {
   const driverId = req.body.driverId;
@@ -38,7 +32,7 @@ exports.driverScheduledBookings = async (req, res) => {
     } else {
       notFoundResponse(
         res,
-        errorCodes.NOT_FOUND,
+        errorCodes.BOOKING_NOT_FOUND,
         "NO_BOOKINGS",
         "There are no bookings."
       );

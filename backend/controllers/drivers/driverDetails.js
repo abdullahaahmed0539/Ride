@@ -1,6 +1,6 @@
 const Driver = require("../../models/Drivers");
 const User = require("../../models/Users");
-
+const {errorCodes} = require("../../helper/errorCodes");
 const {
   onMissingValResponse,
   successfulGetResponse,
@@ -11,7 +11,7 @@ const {
 exports.driverDetails = async (req, res) => {
     const { driverId } = req.body;
   if (!driverId) {
-    onMissingValResponse(res, "MISSING_VALUE", "Driver id is missing.");
+    onMissingValResponse(res, errorCodes.MISSING_VAL, "Driver id is missing.");
     return;
   }
 
@@ -39,12 +39,12 @@ exports.driverDetails = async (req, res) => {
     } else {
       notFoundResponse(
         res,
-        "NOT_FOUND",
+        errorCodes.DRIVER_NOT_FOUND,
         "DriverNotFound",
         "There is no driver with the id provided."
       );
     }
   } catch (err) {
-    serverErrorResponse(res, err, "INTERNAL_SERVER_ERROR");
+    serverErrorResponse(res, err, errorCodes.SERVER_ERROR);
   }
 };

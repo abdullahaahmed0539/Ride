@@ -1,17 +1,11 @@
 const Booking = require("../../models/Bookings");
+const {errorCodes} = require('../../helper/errorCodes');
 const {
   serverErrorResponse,
   onMissingValResponse,
   notFoundResponse,
   successfulGetResponse,
 } = require("../../helper/responses");
-
-const errorCodes = {
-  NOT_FOUND: "BOOKING_NOT_FOUND",
-  SERVER_ERROR: "INTERNAL_SERVER_ERROR",
-  MISSING_VAL: "MISSING_VAL",
-  UNAUTHORIZED: "UNAUTHORIZED_ACCESS",
-};
 
 exports.bookingDetails = async (req, res) => {
   const { driverId, riderId } = req.body;
@@ -33,7 +27,7 @@ exports.bookingDetails = async (req, res) => {
     if (!booking) {
       notFoundResponse(
         res,
-        errorCodes.NOT_FOUND,
+        errorCodes.BOOKING_NOT_FOUND,
         "BOOKING_NOT_FOUND",
         "There is no booking against the booking id."
       );
