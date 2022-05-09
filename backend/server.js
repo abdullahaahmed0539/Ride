@@ -1,8 +1,12 @@
 const mongoose = require("mongoose");
 const app = require("./app");
-require('dotenv').config()
+require("dotenv").config();
 
-const MONGODB = process.env.MONGODB;
+
+let MONGODB;
+process.env.NODE_ENV === "development" 
+  ? (MONGODB = "mongodb://127.0.0.1:27017/ride")
+  : (MONGODB = process.env.MONGODB);
 
 mongoose
   .connect(MONGODB, {
@@ -13,7 +17,6 @@ mongoose
     process.stdout.write("Database connection:");
     console.log("\x1b[32m", "SUCCESS");
     console.log("\x1b[0m", `\n`);
-    
   })
   .catch(err => {
     process.stdout.write("Database connection:");
@@ -22,7 +25,7 @@ mongoose
   });
 
 //Starting up server
-const PORT = 5000;
+const PORT = process.env.PORT;
 app.listen(PORT, () => {
   console.clear();
   console.log(`Running on port ${PORT}.`);
