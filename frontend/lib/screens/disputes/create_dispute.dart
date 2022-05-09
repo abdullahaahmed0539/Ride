@@ -118,6 +118,7 @@ class _PublishDisputeState extends State<PublishDispute> {
                       placeholder: 'Enter subject',
                       onChangeHandler: (val) => setSubject(val),
                       keyboardType: TextInputType.text,
+                      color: Colors.transparent,
                     ),
                   ),
                   Container(
@@ -126,7 +127,8 @@ class _PublishDisputeState extends State<PublishDispute> {
                         label: 'Short description',
                         placeholder: 'Enter short description',
                         onChangeHandler: (val) => setShortDescription(val),
-                        keyboardType: TextInputType.text),
+                        keyboardType: TextInputType.text,
+                        color: Colors.transparent,),
                   ),
                   Container(
                     margin: const EdgeInsets.only(top: 15),

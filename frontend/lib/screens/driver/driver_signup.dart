@@ -155,6 +155,7 @@ class _DriverSignupState extends State<DriverSignup> {
                               label: 'Car model',
                               placeholder: 'Enter your car model',
                               keyboardType: TextInputType.text,
+                              color: Colors.transparent,
                               onChangeHandler: (val) =>
                                   setState(() => carModel = val.toLowerCase()),
                             ),
@@ -164,6 +165,7 @@ class _DriverSignupState extends State<DriverSignup> {
                             child: DarkTextField(
                                 label: 'Color',
                                 placeholder: 'Enter your car\'s color',
+                                color: Colors.transparent,
                                 keyboardType: TextInputType.text,
                                 onChangeHandler: (val) =>
                                     setState(() => color = val.toLowerCase())),
@@ -173,6 +175,7 @@ class _DriverSignupState extends State<DriverSignup> {
                             child: DarkTextField(
                                 label: 'Car milage',
                                 placeholder: 'Enter your car\'s milage',
+                                color: Colors.transparent,
                                 keyboardType: TextInputType.number,
                                 onChangeHandler: (val) => setState(() {
                                       if (val != '') {
@@ -186,6 +189,7 @@ class _DriverSignupState extends State<DriverSignup> {
                             margin: const EdgeInsets.only(top: 16),
                             child: DarkTextField(
                                 label: 'Registration number',
+                                color: Colors.transparent,
                                 placeholder: 'Ex AVD-868',
                                 keyboardType: TextInputType.text,
                                 onChangeHandler: (val) =>

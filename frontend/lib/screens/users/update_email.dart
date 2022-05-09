@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:frontend/api%20calls/users.dart';
 import 'package:http/http.dart';
 import 'package:provider/provider.dart';
@@ -41,9 +42,15 @@ class _UpdateEmailState extends State<UpdateEmail> {
     if (response.statusCode == 201) {
       var responseData = json.decode(response.body)['data'];
       Provider.of<UserProvider>(context, listen: false)
-          .user.updateUserEmail(responseData['updated_email']);
+          .user
+          .updateUserEmail(responseData['updated_email']);
       snackBar(
           scaffoldKey, 'Successfully updated. Redirecting to profile page.');
+      Fluttertoast.showToast(
+          msg: 'Successfully updated email',
+          backgroundColor: Colors.green,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 2);
       Navigator.of(context).pushNamedAndRemoveUntil(
           Profile.routeName, ModalRoute.withName('/home'));
     }
@@ -133,6 +140,7 @@ class _UpdateEmailState extends State<UpdateEmail> {
                                       label: 'Email',
                                       placeholder: 'Enter your email',
                                       keyboardType: TextInputType.emailAddress,
+                                      color: Colors.transparent,
                                       onChangeHandler: (val) => setState(
                                           () => email = val.toLowerCase())),
                                 ),
@@ -162,6 +170,9 @@ class _UpdateEmailState extends State<UpdateEmail> {
                                             handler: () {}),
                                       )
                               ])
-                        : Spinner(text: 'Updating', height: 300,)))));
+                        : Spinner(
+                            text: 'Updating',
+                            height: 300,
+                          )))));
   }
 }

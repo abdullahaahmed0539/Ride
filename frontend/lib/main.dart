@@ -6,6 +6,8 @@ import 'package:frontend/providers/driver.dart';
 import 'package:frontend/providers/location.dart';
 import 'package:frontend/services/routes.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
+import 'global/configuration.dart';
 import 'screens/home.dart';
 import 'screens/users/login.dart';
 import 'providers/user.dart';
@@ -13,6 +15,7 @@ import 'providers/user.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  Stripe.publishableKey = stripePublishableKey;
   await Firebase.initializeApp();
   runApp(const MyApp());
 }

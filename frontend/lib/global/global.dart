@@ -18,3 +18,4 @@ String? chosenDriverId = '';
 AssetsAudioPlayer audioPlayer = AssetsAudioPlayer();
 
 Position? driverCurrentLocation;
+

@@ -371,7 +371,7 @@ class _NewTripScreenState extends State<NewTripScreen> {
       }
       var directionInfo =
           await obtainDirectionDetails(pickupLatLng, dropoffLatLng);
-      if (directionInfo!.distanceValue! <= 350) {
+      if (directionInfo!.distanceValue! <= 500) {
         setState(() {
           nearby = true;
         });

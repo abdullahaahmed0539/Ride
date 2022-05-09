@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/providers/app.dart';
 import 'package:frontend/services/user_alert.dart';
 import 'package:frontend/widgets/components/disputes_on_you_shortcut.dart';
 import 'package:frontend/widgets/components/my_disputes_shortcut.dart';

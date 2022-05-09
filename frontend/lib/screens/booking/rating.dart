@@ -14,6 +14,7 @@ import 'package:provider/provider.dart';
 import '../../models/booking.dart';
 import '../../models/user.dart';
 import '../../providers/booking.dart';
+import '../../widgets/ui/spinner.dart';
 import '../home.dart';
 
 class Rating extends StatefulWidget {
@@ -28,6 +29,7 @@ class _RatingState extends State<Rating> {
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
   double rating = 1;
   bool ratingChanged = false;
+  bool loading = false;
 
   void setRating(double newRatingVal) {
     setState(() {
@@ -42,6 +44,11 @@ class _RatingState extends State<Rating> {
   }
 
   void onSubmit() async {
+    if(mounted){
+     setState(() {
+       loading=true;
+     });
+    }
     Response response = await addRating();
     addRatingResponseHandler(response);
     if (response.statusCode == 201) {
@@ -66,9 +73,15 @@ class _RatingState extends State<Rating> {
 
   void addRatingResponseHandler(Response response) {
     if (response.statusCode != 201 && response.statusCode != 401) {
+      if(mounted){
+        setState((){loading=false;});
+      }
       snackBar(scaffoldKey, 'Internal server error.');
     }
     if (response.statusCode == 401) {
+       if(mounted){
+        setState((){loading=false;});
+      }
       snackBar(scaffoldKey, 'You are not allowed to add to rate.');
     }
   }
@@ -100,7 +113,7 @@ class _RatingState extends State<Rating> {
         backgroundColor: Theme.of(context).backgroundColor,
         body: Container(
           margin: const EdgeInsets.symmetric(horizontal: 20),
-          child: Column(
+          child: !loading? Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -171,7 +184,7 @@ class _RatingState extends State<Rating> {
                             handler: () {},
                             buttonText: 'Done',
                             isActive: false)),
-              ]),
+              ]): Spinner(text: 'Adding rating', height: 100,),
         ),
       ),
     );

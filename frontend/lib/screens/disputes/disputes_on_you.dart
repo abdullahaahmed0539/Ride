@@ -68,13 +68,13 @@ class _DisputeOnYouState extends State<DisputeOnYou> {
         ? RefreshIndicator(
             onRefresh: () => fetchDisputeOnMeFromServer(),
             child: SingleChildScrollView(
-              physics: const AlwaysScrollableScrollPhysics(),
+                physics: const AlwaysScrollableScrollPhysics(),
                 child: Container(
                     margin: const EdgeInsets.symmetric(
                         horizontal: 20, vertical: 20),
                     child: (pendingDispute.isNotEmpty ||
                             completeDispute.isNotEmpty ||
-                            pendingDispute.isNotEmpty)
+                            activeDispute.isNotEmpty)
                         ? Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisSize: MainAxisSize.min,

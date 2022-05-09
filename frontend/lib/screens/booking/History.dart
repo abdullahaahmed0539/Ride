@@ -1,13 +1,13 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:frontend/screens/booking/booking_detail.dart';
 import 'package:frontend/services/user_alert.dart';
 import 'package:http/http.dart';
 import 'package:provider/provider.dart';
-
 import '../../api calls/bookings.dart';
+import '../../models/driver.dart';
 import '../../models/user.dart';
+import '../../providers/driver.dart';
 import '../../providers/app.dart';
 import '../../providers/user.dart';
 import '../../widgets/ui/rides_item.dart';
@@ -28,11 +28,11 @@ class _HistoryState extends State<History> {
 
   @override
   void initState() {
-    Future.delayed(Duration.zero, fetchBookingsHistoryFromServer);
+    Future.delayed(Duration.zero, () => fetchBookingsHistoryFromServer(context));
     super.initState();
   }
 
-  Future fetchBookingsHistoryFromServer() async {
+  Future fetchBookingsHistoryFromServer(BuildContext context) async {
     user = Provider.of<UserProvider>(context, listen: false).user;
     appMode = Provider.of<AppProvider>(context, listen: false).app.getAppMode();
     late Response response;
@@ -40,8 +40,9 @@ class _HistoryState extends State<History> {
       response =
           await fetchBookingsHistory(user.id, user.phoneNumber, user.token);
     } else if (appMode == 'driver') {
+    Driver driver = Provider.of<DriverProvider>(context, listen: false).driver;
       response = await fetchBookingsHistoryForDriver(
-          user.id, user.phoneNumber, user.token);
+          driver.driverId, user.phoneNumber, user.token);
     }
 
     fetchBookingsResponseHandler(response);
@@ -77,7 +78,7 @@ class _HistoryState extends State<History> {
   @override
   Widget build(BuildContext context) {
     return RefreshIndicator(
-      onRefresh: fetchBookingsHistoryFromServer,
+      onRefresh: () => fetchBookingsHistoryFromServer(context),
       child: SingleChildScrollView(
           physics: const AlwaysScrollableScrollPhysics(),
           child: Container(

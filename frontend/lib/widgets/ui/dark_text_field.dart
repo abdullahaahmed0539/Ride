@@ -5,13 +5,15 @@ class DarkTextField extends StatelessWidget {
   final String placeholder;
   final Function onChangeHandler;
   final TextInputType keyboardType;
+  final Color color;
 
   const DarkTextField(
       {Key? key,
       required this.label,
       required this.placeholder,
       required this.onChangeHandler,
-      required this.keyboardType})
+      required this.keyboardType,
+      required this.color})
       : super(key: key);
 
   @override
@@ -29,9 +31,9 @@ class DarkTextField extends StatelessWidget {
           style: const TextStyle(
               fontFamily: 'SF-Pro-Rounded', fontSize: 18, color: Colors.white),
           decoration: InputDecoration(
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(5),
-            ),
+            enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(5),
+                borderSide: BorderSide(color: color)),
             fillColor: const Color(0xFF43444B),
             filled: true,
             labelText: label,

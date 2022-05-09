@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:frontend/api%20calls/users.dart';
 import 'package:frontend/providers/user.dart';
 import 'package:frontend/services/user_alert.dart';
@@ -43,6 +44,11 @@ class _UpdateNameState extends State<UpdateName> {
           responseData['updated_first_name'],
           responseData['updated_last_name']);
       snackBar(scaffoldKey, 'Successfully updated.');
+       Fluttertoast.showToast(
+          msg: 'Successfully updated name',
+          backgroundColor: Colors.green,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 2);
       Navigator.of(context).pushNamedAndRemoveUntil(
           Profile.routeName, ModalRoute.withName('/home'));
     }
@@ -124,6 +130,7 @@ class _UpdateNameState extends State<UpdateName> {
                           child: DarkTextField(
                               label: 'First name',
                               placeholder: 'Enter your first name',
+                              color: Colors.transparent,
                               keyboardType: TextInputType.text,
                               onChangeHandler: (val) => setState(
                                   () => firstName = val.toLowerCase())),
@@ -133,6 +140,7 @@ class _UpdateNameState extends State<UpdateName> {
                           child: DarkTextField(
                               label: 'Last name',
                               placeholder: 'Enter your last name',
+                              color: Colors.transparent,
                               keyboardType: TextInputType.text,
                               onChangeHandler: (val) =>
                                   setState(() => lastName = val.toLowerCase())),

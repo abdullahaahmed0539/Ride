@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/screens/disputes/dispute_tabs.dart';
 
 import 'package:frontend/screens/voting/voting_guidelines.dart';
 
@@ -55,7 +56,7 @@ class VotingShortcut extends StatelessWidget {
                       const EdgeInsets.symmetric(vertical: 15, horizontal: 12),
                   child: LongButton(
                       handler: () => Navigator.of(context).pushNamed(
-                          VotingGuidelines.routeName,
+                          DisputeTabs.routeName,
                           arguments: {'initialIndex': 2}),
                       buttonText: 'More',
                       isActive: true))

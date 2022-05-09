@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:circular_countdown_timer/circular_countdown_timer.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:frontend/screens/users/update_phone_number.dart';
 import 'package:frontend/services/user_alert.dart';
 import 'package:frontend/widgets/ui/spinner.dart';
@@ -169,6 +170,11 @@ class _VerificationState extends State<Verification> {
           .user
           .updateUserPhoneNumberAndCountry(extractedPhoneNumber,
               responseData['country'], responseData['token']);
+      Fluttertoast.showToast(
+          msg: 'Successfully updated number',
+          backgroundColor: Colors.green,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 2);
       Navigator.of(context).pushNamedAndRemoveUntil(
           Profile.routeName, ModalRoute.withName('/home'));
     }

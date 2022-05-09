@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/providers/app.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 import 'textual_button.dart';
 
@@ -81,10 +83,11 @@ class RidesItem extends StatelessWidget {
                 ],
               ),
             ),
+            Provider.of<AppProvider>(context, listen: false).app.getAppMode() == 'rider'?
             Container(
                 alignment: Alignment.bottomRight,
                 child: TextualButton(
-                    handler: () => handler(), buttonText: buttonText))
+                    handler: () => handler(), buttonText: buttonText)):Container()
           ],
         ));
   }
