@@ -18,6 +18,7 @@ import 'package:provider/provider.dart';
 
 import '../../services/map.dart';
 
+// ignore: must_be_immutable
 class NotificationDialogBox extends StatefulWidget {
   RiderRideRequestInformation? riderRideRequestInformation;
   NotificationDialogBox({this.riderRideRequestInformation, Key? key})

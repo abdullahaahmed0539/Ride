@@ -376,11 +376,9 @@ class _NewTripScreenState extends State<NewTripScreen> {
           nearby = true;
         });
       }
-      if (directionInfo != null) {
-        setState(() {
-          durationFromPickupToDropoff = directionInfo.durationText!;
-        });
-      }
+      setState(() {
+        durationFromPickupToDropoff = directionInfo.durationText!;
+      });
       isRequestDirectionDetails = false;
     }
   }

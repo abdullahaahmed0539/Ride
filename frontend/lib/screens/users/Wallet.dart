@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -64,7 +66,7 @@ class _WalletState extends State<Wallet> {
   Future<void> displayPaymentSheet(context) async {
     try {
       await Stripe.instance.presentPaymentSheet(
-          parameters: PresentPaymentSheetParameters(
+        parameters: PresentPaymentSheetParameters(
         clientSecret: paymentIntent!,
         confirmPayment: true,
       ));

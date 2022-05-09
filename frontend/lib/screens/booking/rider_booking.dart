@@ -189,8 +189,6 @@ class _RiderBooking extends State<RiderBooking> {
     }
     newGoogleMapController!
         .animateCamera(CameraUpdate.newCameraPosition(camPosition!));
-    String humanReadableAddress = await searchLocationFromGeographicCoOrdinated(
-        userCurrentLocation!, context);
     initializeGeofireListener();
   }
 
@@ -370,7 +368,7 @@ class _RiderBooking extends State<RiderBooking> {
           Provider.of<LocationProvider>(context, listen: false)
               .userDropLocation;
       LatLng riderdropoffPosition =
-          LatLng(dropoffLocation!.lat!, dropoffLocation!.long!);
+          LatLng(dropoffLocation!.lat!, dropoffLocation.long!);
       var directionDetailsInfo = await obtainDirectionDetails(
           driverCurrentPositionLatlng, riderdropoffPosition);
       if (directionDetailsInfo == null) {

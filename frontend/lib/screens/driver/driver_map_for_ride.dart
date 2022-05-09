@@ -11,7 +11,6 @@ import 'dart:async';
 import '../../global/global.dart';
 import '../../global/map.dart';
 import '../../models/driver.dart';
-import '../../services/map.dart';
 import '../../widgets/components/waiting_for_riders.dart';
 import '../../widgets/ui/spinner.dart';
 
@@ -53,8 +52,6 @@ class _DriverMapForRideState extends State<DriverMapForRide> {
     });
     newGoogleMapController!
         .animateCamera(CameraUpdate.newCameraPosition(camPosition!));
-    String humanReadableAddress = await searchLocationFromGeographicCoOrdinated(
-        driverCurrentLocation!, context);
   }
 
   void checkIfLocationPermissionAllowed() async {

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:frontend/api%20calls/map.dart';
-import 'package:frontend/global/configuration.dart';
 import 'package:frontend/models/directions.dart';
+import '../../global/configuration.dart';
 import '../../models/predicted_places.dart';
 
 class PlacePredictionDropdown extends StatelessWidget {

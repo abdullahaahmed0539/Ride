@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 
 import '../../screens/booking/rating.dart';
 
+// ignore: must_be_immutable
 class FairCollectionDialog extends StatefulWidget {
   dynamic disputeCost;
   dynamic waitTimeCost;

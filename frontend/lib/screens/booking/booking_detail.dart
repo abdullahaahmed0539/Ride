@@ -68,8 +68,6 @@ class _BookingDetailState extends State<BookingDetail> {
     PhoneNumber phoneNumber =
         Provider.of<UserProvider>(ctx, listen: false).user.phoneNumber;
     String token = Provider.of<UserProvider>(ctx, listen: false).user.token;
-    String appMode =
-        Provider.of<AppProvider>(ctx, listen: false).app.getAppMode();
     final routeArgs =
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
     dynamic bookingDetails = routeArgs['booking'];

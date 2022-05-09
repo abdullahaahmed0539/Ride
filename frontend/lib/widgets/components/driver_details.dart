@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/services/string_extension.dart';
 
+// ignore: must_be_immutable
 class DriverDetails extends StatelessWidget {
   final String firstName, lastName, carModel, color, registrationNumber;
   double top, bottom;

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart' as url_launcher;
 
+// ignore: must_be_immutable
 class DriverDetailWidget extends StatefulWidget {
   String? carColor,
       registrationNumber,
