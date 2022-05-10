@@ -21,6 +21,7 @@ const chainIds = {
   mainnet: 1,
   rinkeby: 4,
   ropsten: 3,
+  // polygon: 45,
 };
 
 // Ensure that we have all the environment variables we need.
