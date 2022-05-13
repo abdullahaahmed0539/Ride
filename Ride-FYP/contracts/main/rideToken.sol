@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import "./IERC20.sol";
-import "./IERC20Metadata.sol";
+import "../token/ERC20/IERC20.sol";
+import "../token/ERC20/extensions/IERC20Metadata.sol";
 // import "../utils/Context.sol";
 
 /**
@@ -30,7 +30,7 @@ import "./IERC20Metadata.sol";
  * functions have been added to mitigate the well-known issues around setting
  * allowances. See {IERC20-approve}.
  */
-contract rideToken is IERC20, IERC20Metadata {
+contract RideToken is IERC20, IERC20Metadata {
     mapping(address => uint256) private _balances;
 
     mapping(address => mapping(address => uint256)) private _allowances;

@@ -1,14 +1,14 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.9;
 
-import "./rideTokens.sol";
+import "./rideToken.sol";
 // import "./investorToken.sol";
 
 contract Controller {
 
-    rideToken public coins;
+    RideToken public coins;
     // investorToken stocks;
-    address watcher;
+    address public watcher;
     address private owner;
     // address private vault;
     uint private collatForDriver;
@@ -72,7 +72,7 @@ contract Controller {
         owner = msg.sender;
         // coins = RideToken(<Address of ERC20 tokens>);
         //THIS IS WETH ADDRESS BEING USED FOR TESTING TILL OUR ERC20 IS READY 
-        coins = rideToken(0xd4E945C1a8EBCbCB9B3411fD4EcE1DA9FE571365); 
+        coins = RideToken(0xd4E945C1a8EBCbCB9B3411fD4EcE1DA9FE571365); 
         watcher = msg.sender;
         moneySum = 0;  
     }
@@ -255,7 +255,18 @@ contract Controller {
         // string memory riderRating,
         // string memory driverRating
     ) public {
-        emit Trip(bookingID, distance, startTime, endTime, total, fuelCost, waitTimeCostPerMin, disputeCost, waitTimeCost,milesCost);
+        emit Trip(
+            bookingID, 
+            distance, 
+            startTime, 
+            endTime, 
+            total, 
+            fuelCost, 
+            waitTimeCostPerMin, 
+            disputeCost, 
+            waitTimeCost,
+            milesCost
+            );
     }
 
 }
