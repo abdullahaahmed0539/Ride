@@ -189,6 +189,8 @@ class _RiderBooking extends State<RiderBooking> {
     }
     newGoogleMapController!
         .animateCamera(CameraUpdate.newCameraPosition(camPosition!));
+        await searchLocationFromGeographicCoOrdinated(
+        userCurrentLocation!, context);
     initializeGeofireListener();
   }
 

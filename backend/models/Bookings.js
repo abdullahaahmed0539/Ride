@@ -26,7 +26,6 @@ const bookingSchema = new mongoose.Schema({
     trim: true,
   },
   status: {
-    //insearch, ongoing, completed, cancelled
     type: String,
     require: [true, "Status is required."],
     trim: true,

@@ -118,6 +118,7 @@ class _LocationPickerState extends State<LocationPicker> {
                 userDropLocation != null
                     ? LongButton(
                         handler: () async {
+                          
                           Provider.of<LocationProvider>(context, listen: false)
                               .updateDropoffLocationAddress(userDropLocation!);
                           var origin = Provider.of<LocationProvider>(context,
@@ -142,8 +143,6 @@ class _LocationPickerState extends State<LocationPicker> {
                           }
 
                           widget.setShowLocationPicker(false);
-
-                          
                         },
                         isActive: true,
                         buttonText: 'Next',
@@ -189,9 +188,13 @@ class _LocationPickerState extends State<LocationPicker> {
       enabled: enabled,
       autofocus: false,
       autocorrect: false,
-      style: label == 'Pickup'? const TextStyle(
-          fontFamily: 'SF-Pro-Rounded', fontSize: 18, color: Color.fromARGB(255, 157, 157, 157)):const TextStyle(
-          fontFamily: 'SF-Pro-Rounded', fontSize: 18, color: Colors.white),
+      style: label == 'Pickup'
+          ? const TextStyle(
+              fontFamily: 'SF-Pro-Rounded',
+              fontSize: 18,
+              color: Color.fromARGB(255, 157, 157, 157))
+          : const TextStyle(
+              fontFamily: 'SF-Pro-Rounded', fontSize: 18, color: Colors.white),
       decoration: InputDecoration(
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(5),

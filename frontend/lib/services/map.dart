@@ -16,7 +16,7 @@ import 'package:provider/provider.dart';
 import '../api calls/map.dart';
 import '../providers/driver.dart';
 
-Future<String> searchLocationFromGeographicCoOrdinated(
+Future<void> searchLocationFromGeographicCoOrdinated(
     Position position, context) async {
   String apiUrl =
       "https://maps.googleapis.com/maps/api/geocode/json?latlng=${position.latitude},${position.longitude}&key=$map_key";
@@ -28,10 +28,11 @@ Future<String> searchLocationFromGeographicCoOrdinated(
         locationName: humanReadableAddress,
         lat: position.latitude,
         long: position.longitude);
+    print('-----------------------');
+    print(userPickupAddress);
     Provider.of<LocationProvider>(context, listen: false)
         .updatePickupLocationAddress(userPickupAddress);
   }
-  return humanReadableAddress;
 }
 
 Future<DirectionDetailsInfo?> obtainDirectionDetails(

@@ -39,6 +39,7 @@ exports.register = async (req, res) => {
       "FormatError",
       "Either phone number, metamask wallet or email is invalid"
     );
+    return;
   } 
   
   //creating a new user
