@@ -63,11 +63,12 @@ class _RatingState extends State<Rating> {
   }
 
   void onRaiseDispute() async {
-    
     Response response = await addRating();
     addRatingResponseHandler(response);
     if (response.statusCode == 201) {
-      Navigator.of(context).pushNamed(DisputeGuidelines.routeName);
+       final total =
+          ModalRoute.of(context)!.settings.arguments as int;
+      Navigator.of(context).pushNamed(DisputeGuidelines.routeName,arguments: total );
     }
   }
 
@@ -184,7 +185,7 @@ class _RatingState extends State<Rating> {
                             handler: () {},
                             buttonText: 'Done',
                             isActive: false)),
-              ]): Spinner(text: 'Adding rating', height: 100,),
+              ]): Spinner(text: 'Adding rating', height: 0,),
         ),
       ),
     );

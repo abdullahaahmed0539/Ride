@@ -42,12 +42,16 @@ const disputeSchema = new mongoose.Schema({
     require: [true, "Publishing date is required."],
     trim: true,
   },
+  amount: {
+    type: Number,
+    require: [true, "Riders vote is required."],
+  },
   status: {
     type: String,
     require: [true, "Status is required."],
     trim: true,
   },
-  votedBy: { type: [String], },
+  votedBy: { type: [String] },
 });
 
 const Dispute = mongoose.model("Dispute", disputeSchema);

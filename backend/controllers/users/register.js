@@ -65,6 +65,7 @@ exports.register = async (req, res) => {
     onCreationResponse(res, data);
   } catch (err) {
     //Error handling for not unique or any other server error
+    console.log(err)
     err.name === "MongoServerError" && err.code === 11000
       ? notUniqueResponse(res, err, errorCodes.NOT_UNIQUE)
       : serverErrorResponse(res, err, errorCodes.SERVER_ERROR);

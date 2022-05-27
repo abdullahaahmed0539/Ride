@@ -83,10 +83,16 @@ class _VotingState extends State<Voting> {
   }
 
   void vote() async {
+    setState(() {
+      isLoading = true;
+    });
     User user = Provider.of<UserProvider>(context, listen: false).user;
     Response response = await addVote(user.id, disputeDetail['_id'],
         _groupValue, user.phoneNumber, user.token);
     voteResponseHandler(response);
+    setState(() {
+      isLoading = false;
+    });
   }
 
   @override
@@ -205,6 +211,6 @@ class _VotingState extends State<Voting> {
                                       isActive: true))
                             ]),
                       )
-                    : Spinner(text: 'Fetching dispute', height: 300))));
+                    : Spinner(text: 'Please wait', height: 300))));
   }
 }

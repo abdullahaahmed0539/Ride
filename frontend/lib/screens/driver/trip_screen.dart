@@ -11,6 +11,7 @@ import 'package:frontend/models/user.dart';
 import 'package:frontend/models/rider_ride_request_info.dart';
 import 'package:frontend/providers/driver.dart';
 import 'package:frontend/providers/user.dart';
+import 'package:frontend/widgets/ui/spinner.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart';
@@ -56,6 +57,7 @@ class _NewTripScreenState extends State<NewTripScreen> {
   bool isRequestDirectionDetails = false;
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
   bool nearby = false;
+  bool hasEnded = false;
 
   void setRideRequestStatus(val) {
     if (mounted) {
@@ -121,6 +123,10 @@ class _NewTripScreenState extends State<NewTripScreen> {
 
       streamSubscriptionDriverLivePosition!.cancel();
 
+      setState(() {
+        hasEnded = false;
+      });
+
       showDialog(
           barrierDismissible: false,
           context: context,
@@ -154,6 +160,9 @@ class _NewTripScreenState extends State<NewTripScreen> {
     Booking booking =
         Provider.of<BookingProvider>(context, listen: false).booking;
 
+    setState(() {
+      hasEnded = true;
+    });
     Response response = await setComplete(driver.driverId, booking.id,
         tripDirectionDetails!.distanceValue!, user.phoneNumber, user.token);
     setTripCompleteResponseHandler(response);
@@ -438,7 +447,14 @@ class _NewTripScreenState extends State<NewTripScreen> {
                     setRideRequestStatus: setRideRequestStatus,
                     rideRequestStatus: rideRequestStatus,
                     drawPolylineFromPickupToDropoff:
-                        drawPolylineFromPickupToDropoff))
+                        drawPolylineFromPickupToDropoff)),
+            hasEnded
+                ? Positioned(
+                    top: 300,
+                    left: 0,
+                    right: 0,
+                    child: Spinner(text: 'Calculating fare', height: 0))
+                : Container()
           ],
         ),
       ),

@@ -828,6 +828,7 @@ class _RiderBooking extends State<RiderBooking> {
                             child: ConfirmRide(
                               searchDrivers: saveRideRequestInformation,
                               editTripDetails: removeMarkers,
+                              scaffoldKey: scaffoldKey
                             ),
                           )
                     : Positioned(

@@ -123,7 +123,7 @@ class _HomeState extends State<Home> {
           child: SingleChildScrollView(
             physics: const AlwaysScrollableScrollPhysics(),
             child: Column(children: [
-              const NavigationMenu(),
+              NavigationMenu(scaffoldKey: scaffoldKey),
               DisputesOnYouShortCut(
                 disputesOnMe: disputesOnMe,
               ),

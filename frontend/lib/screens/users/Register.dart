@@ -172,7 +172,7 @@ class _RegisterState extends State<Register> {
                                     isActive: false),
                               )
                       ])
-                : Spinner(text: 'Registering', height: 200),
+                : Spinner(text: 'Registering', height: 0),
           )),
     );
   }

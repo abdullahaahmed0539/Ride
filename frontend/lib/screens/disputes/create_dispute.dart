@@ -7,6 +7,7 @@ import 'package:frontend/providers/booking.dart';
 import 'package:frontend/providers/user.dart';
 import 'package:frontend/services/user_alert.dart';
 import 'package:frontend/widgets/ui/dark_text_field.dart';
+import 'package:frontend/widgets/ui/spinner.dart';
 import 'package:http/http.dart';
 import 'package:provider/provider.dart';
 import '../../widgets/ui/long_button.dart';
@@ -26,6 +27,7 @@ class _PublishDisputeState extends State<PublishDispute> {
   String shortDescription = '';
   String description = '';
   bool agreed = false;
+  bool isLoading = false;
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
 
   void setSubject(String val) {
@@ -52,6 +54,10 @@ class _PublishDisputeState extends State<PublishDispute> {
         Provider.of<BookingProvider>(context, listen: false).booking;
     String appMode =
         Provider.of<AppProvider>(context, listen: false).app.getAppMode();
+    final total = ModalRoute.of(context)!.settings.arguments as int;
+    setState(() {
+      isLoading = true;
+    });
     if (appMode == 'driver') {
       Response response = await createDispute(
           user.id,
@@ -59,6 +65,7 @@ class _PublishDisputeState extends State<PublishDispute> {
           subject,
           shortDescription,
           description,
+          total,
           'driver',
           user.phoneNumber,
           user.token);
@@ -71,6 +78,7 @@ class _PublishDisputeState extends State<PublishDispute> {
           subject,
           shortDescription,
           description,
+          total,
           'rider',
           user.phoneNumber,
           user.token);
@@ -80,9 +88,12 @@ class _PublishDisputeState extends State<PublishDispute> {
 
   createDisputeResponseHandler(Response response) {
     if (response.statusCode == 201) {
-     Navigator.of(context)
-         .pushNamedAndRemoveUntil(Home.routeName, (route) => false);
+      Navigator.of(context)
+          .pushNamedAndRemoveUntil(Home.routeName, (route) => false);
     } else {
+      setState(() {
+        isLoading = false;
+      });
       snackBar(scaffoldKey, 'Error occured. Please try again.');
     }
   }
@@ -99,7 +110,7 @@ class _PublishDisputeState extends State<PublishDispute> {
           title: const Text('Create dispute'),
         ),
         body: SingleChildScrollView(
-          child: Container(
+          child: !isLoading? Container(
             margin: const EdgeInsets.symmetric(horizontal: 20),
             child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -124,11 +135,12 @@ class _PublishDisputeState extends State<PublishDispute> {
                   Container(
                     margin: const EdgeInsets.only(top: 15),
                     child: DarkTextField(
-                        label: 'Short description',
-                        placeholder: 'Enter short description',
-                        onChangeHandler: (val) => setShortDescription(val),
-                        keyboardType: TextInputType.text,
-                        color: Colors.transparent,),
+                      label: 'Short description',
+                      placeholder: 'Enter short description',
+                      onChangeHandler: (val) => setShortDescription(val),
+                      keyboardType: TextInputType.text,
+                      color: Colors.transparent,
+                    ),
                   ),
                   Container(
                     margin: const EdgeInsets.only(top: 15),
@@ -179,7 +191,7 @@ class _PublishDisputeState extends State<PublishDispute> {
                               handler: () {},
                               isActive: false))
                 ]),
-          ),
+          ): Spinner(text: 'Publishing', height: 250),
         ),
       ),
     );

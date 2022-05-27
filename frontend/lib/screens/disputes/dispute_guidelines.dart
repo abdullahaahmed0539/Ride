@@ -75,8 +75,14 @@ class _DisputeGuidelinesState extends State<DisputeGuidelines> {
                             margin: const EdgeInsets.only(top: 20, bottom: 40),
                             child: LongButton(
                                 buttonText: 'Next',
-                                handler: () => Navigator.of(context)
-                                    .pushNamed(PublishDispute.routeName),
+                                handler: () {
+                                  final total = ModalRoute.of(context)!
+                                      .settings
+                                      .arguments as int;
+                                  Navigator.of(context).pushNamed(
+                                      PublishDispute.routeName,
+                                      arguments: total);
+                                },
                                 isActive: true))
                         : Container(
                             margin: const EdgeInsets.only(top: 20, bottom: 40),

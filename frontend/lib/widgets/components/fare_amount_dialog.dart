@@ -103,8 +103,10 @@ class _FairCollectionDialogState extends State<FairCollectionDialog> {
                     'rider') {
                   widget.customDispose!();
                 }
+                var total = widget.total;
                 Navigator.of(context).pushNamedAndRemoveUntil(
-                    Rating.routeName, (route) => false);
+                    Rating.routeName, (route) => false,
+                    arguments: total);
               },
               buttonText: 'Finish',
               isActive: true),

@@ -14,6 +14,7 @@ mongoose
     useUnifiedTopology: true,
   })
   .then(() => {
+    console.log(MONGODB)
     process.stdout.write("Database connection:");
     console.log("\x1b[32m", "SUCCESS");
     console.log("\x1b[0m", `\n`);

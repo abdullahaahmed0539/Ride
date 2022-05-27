@@ -1,6 +1,8 @@
 const Dispute = require("../../models/Disputes");
 const Driver = require("../../models/Drivers");
-const {errorCodes} = require("../../helper/errorCodes");
+const User = require("../../models/Users");
+const { errorCodes } = require("../../helper/errorCodes");//
+const { collectDisputeAmount } = require("../../blockchain/callingBlockchain");
 const {
   serverErrorResponse,
   onMissingValResponse,
@@ -14,6 +16,7 @@ exports.createDispute = async (req, res) => {
     shortDescription,
     initiatorsClaim,
     disputeBy,
+    amount
   } = req.body;
   let { defenderId } = req.body
   if (
@@ -22,6 +25,7 @@ exports.createDispute = async (req, res) => {
     !subject ||
     !shortDescription ||
     !initiatorsClaim ||
+    !amount ||
     !disputeBy
   ) {
     onMissingValResponse(
@@ -34,7 +38,10 @@ exports.createDispute = async (req, res) => {
 
   if (disputeBy == "rider") {
     try {
-      defenderId = (await Driver.findById({ _id: defenderId }).select("userId")).userId;
+      const driver = await Driver.findById({ _id: defenderId }).select(
+        "userId"
+      );
+      defenderId = driver.userId;
     } catch (error) {
       console.log(error.message);
     }
@@ -48,13 +55,22 @@ exports.createDispute = async (req, res) => {
     initiatorsClaim,
     initiatorsVote: 0,
     defendentsVote: 0,
+    amount,
     publishedOn: new Date(),
     status: "pending",
   });
 
   try {
+    const initiatorWalletAddress = (await User.findById({ _id: initiatorId }).select('walletAddress')).walletAddress
+    const defendentWalletAddress = (await User.findById({ _id: defenderId }).select('walletAddress')).walletAddress
+    await collectDisputeAmount(
+      initiatorWalletAddress,
+      Math.ceil(amount / 2),
+      defendentWalletAddress
+    );
     await newDispute.save();
     onCreationResponse(res, {});
+    console.log(err)
   } catch (err) {
     serverErrorResponse(res, err, errorCodes.SERVER_ERROR);
   }

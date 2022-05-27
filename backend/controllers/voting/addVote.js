@@ -1,5 +1,7 @@
 const Dispute = require("../../models/Disputes");
+const User = require("../../models/Users");
 const { errorCodes } = require("../../helper/errorCodes");
+const {disputeResult} = require('../../blockchain/callingBlockchain')
 
 const {
   serverErrorResponse,
@@ -47,10 +49,38 @@ exports.addVote = async (req, res) => {
     }
 
     await Dispute.updateOne({ _id: disputeId }, data);
+    const updatedDispute = await Dispute.findOne({
+      _id: disputeId,
+      status: "completed",
+    });
+
+    if (dispute.defendentsVote + dispute.initiatorsVote + 1 >= 5) {
+      const initiatorWalletAddress = (
+        await User.findById({ _id: updatedDispute.initiatorId }).select(
+          "walletAddress"
+        )
+      ).walletAddress;
+      const defendentWalletAddress = (
+        await User.findById({ _id: updatedDispute.defenderId }).select(
+          "walletAddress"
+        )
+      ).walletAddress;
+      
+      await disputeResult(
+        initiatorWalletAddress,
+        defendentWalletAddress,
+        dispute.amount,
+        dispute.initiatorsVote,
+        dispute.defendentsVote
+      );
+    }
+    
+
     onCreationResponse(res, {
       vote: "successful",
     });
   } catch (error) {
+    console.log(error)
     serverErrorResponse(res, error, errorCodes.SERVER_ERROR);
   }
 };

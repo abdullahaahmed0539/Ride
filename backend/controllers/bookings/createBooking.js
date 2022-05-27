@@ -1,7 +1,8 @@
 const Booking = require("../../models/Bookings");
 const User = require("../../models/Users");
 const Driver = require("../../models/Drivers");
-const {errorCodes} = require("../../helper/errorCodes");
+const { errorCodes } = require("../../helper/errorCodes");
+const { bookingLog } = require('../../blockchain/callingBlockchain')
 const {
   serverErrorResponse,
   onMissingValResponse,
@@ -96,10 +97,18 @@ exports.createBooking = async (req, res) => {
   });
 
   try {
-    await newBooking.save();
+    const bookingSaved =  await newBooking.save();
     await Driver.updateOne({ _id: driverId }, { isBusy: true });
+    await bookingLog(
+      bookingSaved._id,
+      riderId,
+      driverId,
+      bookingSaved.bookingTime,
+      pickup,
+      dropoff); //
     onCreationResponse(res, {booking: newBooking});
   } catch (err) {
+    console.log(err)
     serverErrorResponse(res, err, errorCodes.SERVER_ERROR);
   }
 };

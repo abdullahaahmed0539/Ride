@@ -1,15 +1,24 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:frontend/models/user.dart';
+import 'package:frontend/providers/user.dart';
 import 'package:frontend/screens/disputes/dispute_tabs.dart';
 import 'package:frontend/screens/profile.dart';
 import 'package:frontend/screens/driver/driver_map_for_ride.dart';
+import 'package:frontend/services/user_alert.dart';
+import 'package:http/http.dart';
 import 'package:provider/provider.dart';
+import '../../api calls/wallet.dart';
 import '../../providers/app.dart';
 import '../../screens/booking/rider_booking.dart';
 import '../ui/card_button.dart';
 import '../../screens/users/wallet.dart';
 
 class NavigationMenu extends StatelessWidget {
-  const NavigationMenu({Key? key}) : super(key: key);
+  final scaffoldKey;
+  const NavigationMenu({this.scaffoldKey, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -38,9 +47,33 @@ class NavigationMenu extends StatelessWidget {
                       const Color(0xffEABD2A),
                       Icons.commute,
                       'Booking',
-                      () => Navigator.pushNamed(context, RiderBooking.routeName))
-                  : CardButton( const Color.fromARGB(255, 240, 115, 76), Icons.commute,
-                      'Find rides', () => Navigator.pushNamed(context, DriverMapForRide.routeName)),
+                      () =>
+                          Navigator.pushNamed(context, RiderBooking.routeName))
+                  : CardButton(const Color.fromARGB(255, 240, 115, 76),
+                      Icons.commute, 'Find rides', () async {
+                      User user =
+                          Provider.of<UserProvider>(context, listen: false)
+                              .user;
+                      Response response = await getBalance(
+                          user.phoneNumber, user.walletAddress, user.token);
+                      if (response.statusCode == 200) {
+                        var balance =
+                            jsonDecode(response.body)['data']['balance'];
+                        if (balance < 200) {
+                          Fluttertoast.showToast(
+                              msg: 'Insufficient balance. Please top-up.',
+                              backgroundColor: Theme.of(context).primaryColor,
+                              gravity: ToastGravity.BOTTOM,
+                              timeInSecForIosWeb: 3);
+                        } else {
+                          Navigator.pushNamed(
+                              context, DriverMapForRide.routeName);
+                        }
+                      } else {
+                        snackBar(scaffoldKey,
+                            'Server Error. Sorry for inconvinience Please try later. ');
+                      }
+                    }),
 
               Expanded(
                 child: CardButton(

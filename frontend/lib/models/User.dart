@@ -25,6 +25,7 @@ class User {
   PhoneNumber get phoneNumber => _phoneNumber!;
   String get token => _token!;
   String get email => _email!;
+  String get walletAddress => _walletAddress!;
   bool get isDriver => _isDriver!;
 
   String getFullName() {

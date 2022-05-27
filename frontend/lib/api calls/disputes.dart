@@ -136,6 +136,7 @@ Future<Response> createDispute(
     String subject,
     String shortDescription,
     String initiatorsClaim,
+    var amount,
     String disputeBy,
     PhoneNumber phoneNumber,
     String token) async {
@@ -144,11 +145,12 @@ Future<Response> createDispute(
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': 'Bearer $token'
       },
-      body: jsonEncode(<String, String>{
+      body: jsonEncode(<String, dynamic>{
         'phoneNumber': '${phoneNumber.countryCode}${phoneNumber.number}',
         'initiatorId': initiatorId,
         'defenderId': defenderId,
         'subject': subject,
+        'amount': amount,
         'shortDescription': shortDescription,
         'initiatorsClaim': initiatorsClaim,
         'disputeBy': disputeBy

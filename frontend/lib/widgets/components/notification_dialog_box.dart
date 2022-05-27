@@ -13,6 +13,7 @@ import 'package:frontend/providers/booking.dart';
 import 'package:frontend/providers/driver.dart';
 import 'package:frontend/providers/user.dart';
 import 'package:frontend/screens/driver/trip_screen.dart';
+import 'package:frontend/widgets/ui/spinner.dart';
 import 'package:http/http.dart';
 import 'package:provider/provider.dart';
 
@@ -29,6 +30,8 @@ class NotificationDialogBox extends StatefulWidget {
 }
 
 class _NotificationDialogBoxState extends State<NotificationDialogBox> {
+  bool isLoading = false;
+
   void createBookingResponseHandler(
       Response response, Driver driver, BuildContext context) {
     var error = json.decode(response.body)['error'];
@@ -92,6 +95,9 @@ class _NotificationDialogBoxState extends State<NotificationDialogBox> {
       }
 
       if (rideRequestId == widget.riderRideRequestInformation!.rideRequestId) {
+        setState(() {
+          isLoading = true;
+        });
         Response response = await createBooking(
             widget.riderRideRequestInformation!.riderId!,
             driver.driverId,
@@ -122,7 +128,7 @@ class _NotificationDialogBoxState extends State<NotificationDialogBox> {
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
             color: const Color.fromARGB(255, 52, 53, 56)),
-        child: Column(mainAxisSize: MainAxisSize.min, children: [
+        child: !isLoading? Column(mainAxisSize: MainAxisSize.min, children: [
           const SizedBox(
             height: 10,
           ),
@@ -237,7 +243,18 @@ class _NotificationDialogBoxState extends State<NotificationDialogBox> {
               ],
             )
           ])
-        ]),
+        ]): 
+        
+        Container(
+          height: 200,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Spinner(text: 'Accepting...', height: 0),
+            ],
+          ),
+        ),
       ),
     );
   }

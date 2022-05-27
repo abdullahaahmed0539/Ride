@@ -235,7 +235,7 @@ class _RiderDetailsState extends State<RiderDetails> {
                           color: Colors.white,
                           size: 22,
                         ),
-                        label: const Text('Call driver')),
+                        label: const Text('Call rider')),
                   ],
                 ),
                 const Divider(

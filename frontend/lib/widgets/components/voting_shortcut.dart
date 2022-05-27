@@ -25,7 +25,7 @@ class VotingShortcut extends StatelessWidget {
                 alignment: Alignment.topLeft,
                 margin: const EdgeInsets.only(top: 12, left: 12, bottom: 15),
                 child: Text(
-                  'THERE MIGHT BE SOME DISPUTES ON YOU',
+                  'DISPUTES YOU CAN VOTE ON',
                   style: Theme.of(context).textTheme.titleSmall,
                 ),
               ),

@@ -7,8 +7,7 @@ const disputeRouter = require("./routes/dispute");
 const tripRouter = require("./routes/trip");
 const requestRouter = require("./routes/request");
 const paymentRouter = require("./routes/payment");
-
-
+const walletRouter = require("./routes/wallet");
 
 const app = express();
 
@@ -22,5 +21,6 @@ app.use("/bookings", bookingRouter);
 app.use("/disputes", disputeRouter);
 app.use("/requests", requestRouter);
 app.use("/payments", paymentRouter);
+app.use("/wallet", walletRouter);
 
 module.exports = app;

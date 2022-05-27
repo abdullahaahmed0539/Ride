@@ -1,15 +1,26 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:frontend/api%20calls/wallet.dart';
 import 'package:frontend/global/global.dart';
+import 'package:frontend/models/user.dart';
+import 'package:frontend/screens/users/wallet.dart';
 import 'package:frontend/services/map.dart';
 import 'package:frontend/widgets/ui/long_button.dart';
+import 'package:http/http.dart';
 import 'package:provider/provider.dart';
 
 import '../../providers/location.dart';
+import '../../providers/user.dart';
+import '../../services/user_alert.dart';
 
 class ConfirmRide extends StatelessWidget {
   final Function searchDrivers;
   final Function editTripDetails;
+  final scaffoldKey;
   const ConfirmRide({
+    required this.scaffoldKey,
     required this.searchDrivers,
     required this.editTripDetails,
     Key? key,
@@ -41,10 +52,11 @@ class ConfirmRide extends StatelessWidget {
                       style: Theme.of(context).textTheme.bodyMedium,
                     ),
                     Text(
-                      tripDirectionDetailsInfo != null? 
-                      calculateEstimatedFareAmountBasedOnDistance(
-                              tripDirectionDetailsInfo!)
-                          .toString():'',
+                      tripDirectionDetailsInfo != null
+                          ? calculateEstimatedFareAmountBasedOnDistance(
+                                  tripDirectionDetailsInfo!)
+                              .toString()
+                          : '',
                       style: Theme.of(context).textTheme.titleLarge,
                     ),
                   ],
@@ -55,7 +67,9 @@ class ConfirmRide extends StatelessWidget {
                     Container(
                       margin: const EdgeInsets.only(top: 2),
                       child: TextButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.pushNamed(context, Wallet.routeName);
+                        },
                         child: Text(
                           'Buy RideCoins',
                           style: TextStyle(
@@ -133,7 +147,9 @@ class ConfirmRide extends StatelessWidget {
                             style: Theme.of(context).textTheme.titleSmall,
                           ),
                           Text(
-                            tripDirectionDetailsInfo != null? '${(((tripDirectionDetailsInfo!.distanceValue)!/1000)).toStringAsFixed(2)} Km': '',
+                            tripDirectionDetailsInfo != null
+                                ? '${(((tripDirectionDetailsInfo!.distanceValue)! / 1000)).toStringAsFixed(2)} Km'
+                                : '',
                             style: Theme.of(context).textTheme.titleSmall,
                           ),
                         ],
@@ -165,7 +181,33 @@ class ConfirmRide extends StatelessWidget {
                   ],
                 ),
                 LongButton(
-                    handler: () => searchDrivers(),
+                    handler: () async {
+                      User user =
+                          Provider.of<UserProvider>(context, listen: false)
+                              .user;
+                      Response response = await getBalance(
+                          user.phoneNumber, user.walletAddress, user.token);
+                      if (response.statusCode == 200) {
+                        var walletBalance =
+                            jsonDecode(response.body)['data']['balance'];
+                        if (walletBalance <
+                            calculateEstimatedFareAmountBasedOnDistance(
+                                tripDirectionDetailsInfo!)) {
+                          Fluttertoast.showToast(
+                              msg:
+                                  'Current balance less than estimated fair. Please buy RideCoins.',
+                              backgroundColor: Colors.red,
+                              gravity: ToastGravity.BOTTOM,
+                              timeInSecForIosWeb: 3);
+                          return;
+                        } else {
+                          searchDrivers();
+                        }
+                      } else {
+                        snackBar(scaffoldKey,
+                            'Server Error. Sorry for inconvinience Please try later. ');
+                      }
+                    },
                     buttonText: 'Confirm',
                     isActive: true)
               ],
